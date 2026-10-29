@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" fill="none">
+  <defs>
+    <linearGradient id="wall" x1="600" y1="0" x2="600" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3F4F3"/><stop offset="1" stop-color="#E4E6E3"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="605" y1="86" x2="605" y2="336" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#283C50"/><stop offset=".56" stop-color="#71939A"/><stop offset="1" stop-color="#EAA36F"/>
+    </linearGradient>
+    <linearGradient id="desk" x1="600" y1="414" x2="600" y2="591" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D8B99A"/><stop offset="1" stop-color="#B68D6E"/>
+    </linearGradient>
+    <linearGradient id="deskTop" x1="600" y1="409" x2="600" y2="561" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7CEB4"/><stop offset="1" stop-color="#C5A284"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+    <filter id="smallShadow" x="-30%" y="-40%" width="160%" height="180%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+  <path fill="url(#wall)" d="M0 0h1200v456H0z"/>
+  <path fill="#D7D9D7" d="M0 448h1200v18H0z"/>
+  <path fill="#D6E0E0" d="M939 72h178v282H939z"/>
+  <path fill="#EEF3F0" d="M956 88h145v249H956z"/>
+  <path fill="#D0D9D6" d="M1024 88h8v249h-8zM956 205h145v8H956z"/>
+  <path fill="#D9C6B2" d="M80 118h155v177H80z"/>
+  <path fill="#F5E9DC" d="M94 132h127v149H94z"/>
+  <path fill="#DDA579" d="m115 252 38-72 21 35 22-42 20 79H115Z"/>
+  <ellipse cx="602" cy="584" fill="#514339" opacity=".18" rx="493" ry="36" filter="url(#shadow)"/>
+
+  <!-- Monitor and stand -->
+  <rect x="420" y="72" width="370" height="280" rx="20" fill="#292B2D"/>
+  <rect x="434" y="86" width="342" height="250" rx="10" fill="url(#screen)"/>
+  <circle cx="704" cy="147" r="34" fill="#FFE0AA"/>
+  <circle cx="704" cy="147" r="48" fill="#FFE0AA" opacity=".15"/>
+  <path d="m434 250 76-73 55 57 76-91 73 88 38-39 24 30v114H434V250Z" fill="#59777B"/>
+  <path d="m434 278 67-48 55 39 73-61 72 54 47-31 28 27v83H434v-63Z" fill="#3F5A5D"/>
+  <path d="M434 292c67-28 119-25 165-4 54 25 106 17 177-13v61H434v-44Z" fill="#28393D"/>
+  <path d="M464 107h52m-52 13h31" stroke="#FFFFFF" stroke-opacity=".52" stroke-width="4" stroke-linecap="round"/>
+  <rect x="510" y="184" width="190" height="62" rx="14" fill="#202629" fill-opacity=".78"/>
+  <rect x="523" y="196" width="38" height="38" rx="11" fill="#FF5A00"/>
+  <text x="542" y="222" fill="#FFFFFF" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="middle">TN</text>
+  <text x="572" y="213" fill="#FFFFFF" font-family="Arial,sans-serif" font-size="20" font-weight="700">Technest</text>
+  <circle cx="680" cy="207" r="3" fill="#FF5A00"/>
+  <text x="572" y="230" fill="#E8E5E0" font-family="Arial,sans-serif" font-size="8" letter-spacing="1.2">BETTER TOOLS. BRIGHTER DAYS.</text>
+  <rect x="453" y="309" width="304" height="17" rx="8.5" fill="#17242A" fill-opacity=".62"/>
+  <circle cx="467" cy="317" r="4" fill="#F1A16E"/>
+  <circle cx="480" cy="317" r="4" fill="#F5D29F"/>
+  <circle cx="493" cy="317" r="4" fill="#A8C0B7"/>
+  <path d="M512 317h78" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
+  <path d="M569 352h72l22 76H547l22-76Z" fill="#555451"/>
+  <path d="M515 424h180l34 17H480l35-17Z" fill="#3C3B39"/>
+
+  <!-- Desk plant and lamp -->
+  <path d="M70 447h85l-8 62H78l-8-62Z" fill="#B87F59"/>
+  <path d="M111 449c-3-78-44-89-35-121 29 4 45 40 44 71 6-69 44-87 65-76 0 36-27 58-54 69 40-22 70-10 76 9-25 25-55 21-84 15 31 17 37 43 22 57h-34Z" fill="#71866D"/>
+  <path d="M109 436h9" stroke="#5E6F59" stroke-width="4" stroke-linecap="round"/>
+  <path d="m303 424 22-160" stroke="#5D564E" stroke-width="10" stroke-linecap="round"/>
+  <path d="m267 268 53-49 80 27-37 53-96-31Z" fill="#E87532"/>
+  <path d="m292 278 72 23" stroke="#FFD0A8" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+
+  <!-- Desk top and legs -->
+  <path d="m86 402 1030 7 74 148H14l72-155Z" fill="url(#deskTop)"/>
+  <path d="m14 557 1176 0-15 48H31l-17-48Z" fill="url(#desk)"/>
+  <path d="m134 605 42 0-17 91h-46l21-91ZM1011 605h42l22 91h-46l-18-91Z" fill="#6F5948"/>
+  <path d="M35 456h1125M24 483h1155M24 512h1165" stroke="#A78466" stroke-opacity=".2" stroke-width="3"/>
+
+  <!-- Fixed keyboard -->
+  <ellipse cx="578" cy="522" fill="#544538" opacity=".25" rx="197" ry="18" filter="url(#smallShadow)"/>
+  <path d="m389 443 352 4 33 84-364-1-21-87Z" fill="#37393A"/>
+  <path d="m399 451 330 4 23 61-339-2-14-63Z" fill="#4A4C4B"/>
+  <g fill="#E6DCCF">
+    <path d="m411 460 28 1 4 10-29-1-3-10ZM446 461l28 1 4 10-29-1-3-10ZM481 462l28 1 4 10-29-1-3-10ZM516 462l28 1 4 10-29-1-3-10ZM551 463l28 1 4 10-29-1-3-10ZM586 463l28 1 4 10-29-1-3-10ZM621 464l28 1 4 10-29-1-3-10ZM656 464l28 1 4 10-29-1-3-10ZM691 465l27 1 4 10-28-1-3-10Z"/>
+    <path d="m416 478 29 1 4 11-30-1-3-11ZM452 479l29 1 4 11-30-1-3-11ZM488 479l29 1 4 11-30-1-3-11ZM524 480l29 1 4 11-30-1-3-11ZM560 480l29 1 4 11-30-1-3-11ZM596 481l29 1 4 11-30-1-3-11ZM632 481l29 1 4 11-30-1-3-11ZM668 482l29 1 4 11-30-1-3-11Z"/>
+    <path d="m434 497 37 1 4 10-38-1-3-10ZM480 497l37 1 4 10-38-1-3-10ZM526 498l88 1 4 10-89-1-3-10ZM623 499l37 1 4 10-38-1-3-10ZM669 499l31 1 4 10-32-1-3-10Z"/>
+  </g>
+
+  <!-- Fixed mouse -->
+  <ellipse cx="848" cy="509" fill="#544538" opacity=".25" rx="54" ry="13" filter="url(#smallShadow)"/>
+  <path d="M817 464c0-23 14-37 34-36 21 1 35 18 35 42v28c0 28-15 42-36 40-21-2-33-17-33-42v-32Z" fill="#343637"/>
+  <path d="M850 430v29" stroke="#77716A" stroke-width="3"/>
+  <path d="M850 431v16" stroke="#E5D6C7" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Fixed headphones -->
+  <path d="M231 482v-39c0-57 35-93 79-93s79 36 79 93v39" stroke="#393B3B" stroke-width="19" stroke-linecap="round"/>
+  <rect x="214" y="451" width="39" height="75" rx="17" fill="#302F2D"/>
+  <rect x="367" y="451" width="39" height="75" rx="17" fill="#302F2D"/>
+  <rect x="222" y="460" width="22" height="56" rx="11" fill="#6C6B67"/>
+  <rect x="376" y="460" width="22" height="56" rx="11" fill="#6C6B67"/>
+
+  <!-- Fixed accessory hub -->
+  <ellipse cx="991" cy="512" fill="#544538" opacity=".24" rx="71" ry="14" filter="url(#smallShadow)"/>
+  <path d="m926 464 115 3 19 45-120-2-14-46Z" fill="#686765"/>
+  <circle cx="950" cy="483" r="5" fill="#D7CFC7"/><circle cx="971" cy="484" r="5" fill="#D7CFC7"/>
+  <rect x="990" y="479" width="35" height="7" rx="3.5" fill="#D7CFC7"/>
+</svg>
