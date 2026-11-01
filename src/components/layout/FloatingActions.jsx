@@ -56,6 +56,7 @@ export default function FloatingActions({ language = "vi" }) {
           aria-label={vi ? "Lên đầu trang" : "Back to top"}
           title={vi ? "Lên đầu trang" : "Back to top"}
         >
+          <span className="floating-top-label">{vi ? "Lên đầu trang" : "Back to top"}</span>
           <ArrowUp size={20} />
         </button>
       )}

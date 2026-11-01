@@ -1,9 +1,12 @@
 import { ArrowRight, Heart, Plus, Scale, Sparkles } from "lucide-react";
 import { formatPrice } from "../../utils/formatCurrency";
 import ProductImage from "../common/ProductImage";
+import HomeProductRail from "./HomeProductRail";
+import { discountPercent, isDiscounted } from "../../domain/catalog";
 
 function MiniProductCard({
   product,
+  rank,
   language,
   addToCart,
   favorites,
@@ -14,8 +17,10 @@ function MiniProductCard({
 }) {
   const price = formatPrice(product.price);
   const isFavorite = favorites.includes(product.id);
+  const discounted = isDiscounted(product);
+  const discount = discountPercent(product);
   return (
-    <article className="mini-product-card">
+    <article className="mini-product-card trending-product-card">
       <div className="mini-product-image">
         <button
           className="mini-product-image-trigger"
@@ -24,6 +29,10 @@ function MiniProductCard({
         >
           <ProductImage src={product.image} alt={product.name} loading="lazy" />
         </button>
+        <span className="trending-rank" aria-label={`Rank ${rank}`}>
+          {String(rank).padStart(2, "0")}
+        </span>
+        {discounted && <span className="mini-discount-badge">-{discount}%</span>}
         <button
           className={`favorite-button ${isFavorite ? "is-favorite" : ""}`}
           onClick={() => toggleFavorite(product.id)}
@@ -38,11 +47,6 @@ function MiniProductCard({
         >
           <Scale size={15} />
         </button>
-        {product.stock <= 5 && (
-          <span className="mini-stock-badge">
-            {language === "vi" ? `Còn ${product.stock}` : `${product.stock} left`}
-          </span>
-        )}
       </div>
       <div className="mini-product-info">
         <span className="product-brand">{product.brand}</span>
@@ -51,8 +55,12 @@ function MiniProductCard({
             {product.name}
           </button>
         </h3>
+        {product.description && <p className="mini-product-description">{product.description}</p>}
         <div className="mini-product-bottom">
-          <strong>{price}</strong>
+          <div className="mini-product-price">
+            <strong>{price}</strong>
+            {discounted && <del>{formatPrice(product.oldPrice)}</del>}
+          </div>
           <button
             onClick={() => addToCart(product)}
             aria-label={language === "vi" ? "Thêm vào giỏ" : "Add to cart"}
@@ -69,43 +77,40 @@ export default function TrendingSection({
   products,
   language,
   t,
-  setActiveCategory,
-  setSearch,
   addToCart,
   favorites,
   toggleFavorite,
   compareIds,
   toggleCompare,
   onViewProduct,
+  cms,
 }) {
   return (
     <section className="home-trending-section unified-section">
       <div className="section-heading">
         <div>
           <span className="section-kicker">
-            {language === "vi" ? "ĐƯỢC CỘNG ĐỒNG LỰA CHỌN" : "COMMUNITY FAVORITES"}
+            {cms?.eyebrow ?? (language === "vi" ? "ĐƯỢC CỘNG ĐỒNG LỰA CHỌN" : "COMMUNITY FAVORITES")}
           </span>
           <h2>
-            {t.trending} <Sparkles size={22} className="heading-sparkle" />
+            {cms?.title ?? t.trending} <Sparkles size={22} className="heading-sparkle" />
           </h2>
-          <p>{t.trendingDesc}</p>
+          <p>{cms?.description ?? t.trendingDesc}</p>
         </div>
-        <a
-          href="#products"
-          className="text-link"
-          onClick={() => {
-            setActiveCategory("all");
-            setSearch("");
-          }}
-        >
-          {t.viewAll} <ArrowRight size={16} />
+        <a href={cms?.ctaUrl ?? "/products"} className="text-link">
+          {cms?.ctaLabel ?? t.viewAll} <ArrowRight size={16} />
         </a>
       </div>
-      <div className="mini-product-grid">
-        {[products[2], products[0], products[1], products[5]].map((product) => (
+      <HomeProductRail
+        className="mini-product-grid"
+        language={language}
+        label={language === "vi" ? "Danh sách sản phẩm thịnh hành" : "Trending products"}
+      >
+        {products.slice(0, cms?.limit || 8).map((product, index) => (
           <MiniProductCard
             key={`trending-${product.id}`}
             product={product}
+            rank={index + 1}
             language={language}
             addToCart={addToCart}
             favorites={favorites}
@@ -115,7 +120,7 @@ export default function TrendingSection({
             onViewProduct={onViewProduct}
           />
         ))}
-      </div>
+      </HomeProductRail>
     </section>
   );
 }

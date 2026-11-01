@@ -1,0 +1,368 @@
+{
+  "date": "2026-10-31",
+  "adminRoutes": 16,
+  "responsiveChecks": 48,
+  "widths": [
+    390,
+    768,
+    1440
+  ],
+  "checks": [
+    {
+      "route": "/admin",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/products",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/categories",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/brands",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/inventory",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/orders",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/customers",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/settings",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/banners",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/vouchers",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/staff",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/audit",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/emails",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/after-sales",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/reports",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/imports",
+      "width": 1440,
+      "scroll": 1440,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/products",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/categories",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/brands",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/inventory",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/orders",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/customers",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/settings",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/banners",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/vouchers",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/staff",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/audit",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/emails",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/after-sales",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/reports",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/imports",
+      "width": 768,
+      "scroll": 768,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/products",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/categories",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/brands",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/inventory",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/orders",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/customers",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/settings",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/banners",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/vouchers",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/staff",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/audit",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/emails",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/after-sales",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/reports",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    },
+    {
+      "route": "/admin/imports",
+      "width": 390,
+      "scroll": 390,
+      "broken": [],
+      "alerts": []
+    }
+  ],
+  "formChecks": {
+    "desktop": [
+      "banners",
+      "vouchers",
+      "staff",
+      "after-sales"
+    ],
+    "mobile": [
+      "banners",
+      "vouchers",
+      "staff",
+      "after-sales"
+    ],
+    "payloadsCaptured": [
+      "banner create",
+      "bulk product status"
+    ],
+    "productGalleryUploadControl": true
+  },
+  "backendNote": "GET requests exercised actual PostgreSQL data through a temporary read-only server with test auth. Browser mutations were intercepted. Real backend writes were verified separately inside a rolled-back PostgreSQL transaction. No test customer emails sent."
+}

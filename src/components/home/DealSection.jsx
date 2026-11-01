@@ -1,12 +1,12 @@
 import { ArrowRight, Heart, Scale, ShoppingCart, Sparkles } from "lucide-react";
 import { formatPrice } from "../../utils/formatCurrency";
 import ProductImage from "../common/ProductImage";
+import HomeProductRail from "./HomeProductRail";
+import { discountPercent, isDiscounted } from "../../domain/catalog";
 
 export default function DealSection({
   products,
   t,
-  setSortBy,
-  setActiveCategory,
   language,
   addToCart,
   favorites,
@@ -14,29 +14,32 @@ export default function DealSection({
   compareIds,
   toggleCompare,
   onViewProduct,
+  cms,
 }) {
   return (
     <section className="deal-feature unified-section">
       <div className="deal-feature-copy">
         <span className="deal-label">
-          <Sparkles size={14} /> TECHNEST DEALS
+          <Sparkles size={14} /> {cms?.eyebrow ?? "TECHNEST DEALS"}
         </span>
-        <h2>{t.dealTitle}</h2>
-        <p>{t.dealDesc}</p>
-        <a
-          href="#products"
-          className="deal-button"
-          onClick={() => {
-            setSortBy("priceLow");
-            setActiveCategory("all");
-          }}
-        >
-          {t.exploreMore} <ArrowRight size={17} />
+        <h2>{cms?.title ?? t.dealTitle}</h2>
+        <p>{cms?.description ?? t.dealDesc}</p>
+        <a href={cms?.ctaUrl ?? "/products?sale=1&sort=priceLow"} className="deal-button">
+          {cms?.ctaLabel ?? t.exploreMore} <ArrowRight size={17} />
         </a>
       </div>
-      <div className="deal-products">
-        {[products[3], products[7], products[4]].map((product) => (
-          <div className="deal-product" key={`deal-${product.id}`}>
+      <HomeProductRail
+        className="deal-products"
+        language={language}
+        label={language === "vi" ? "Danh sách sản phẩm khuyến mãi" : "Deals"}
+      >
+        {products.slice(0, cms?.limit || 6).map((product) => (
+          <article className="deal-product" key={`deal-${product.id}`}>
+            {isDiscounted(product) && (
+              <span className="deal-discount-badge">
+                {language === "vi" ? "GIẢM" : "SAVE"} {discountPercent(product)}%
+              </span>
+            )}
             <button
               type="button"
               className="deal-product-image"
@@ -50,14 +53,13 @@ export default function DealSection({
                 {product.name}
               </button>
             </span>
-            <strong>{formatPrice(product.price)}</strong>
-            {product.stock <= 5 && (
-              <small className="deal-stock-note">
-                {language === "vi"
-                  ? `Sắp hết · còn ${product.stock}`
-                  : `Low stock · ${product.stock} left`}
-              </small>
+            {product.description && (
+              <p className="deal-product-description">{product.description}</p>
             )}
+            <div className="deal-price-row">
+              <strong>{formatPrice(product.price)}</strong>
+              {isDiscounted(product) && <del>{formatPrice(product.oldPrice)}</del>}
+            </div>
             <div className="deal-product-actions">
               <button
                 type="button"
@@ -77,15 +79,16 @@ export default function DealSection({
               </button>
               <button
                 type="button"
+                disabled={product.stockStatus !== "IN_STOCK"}
                 onClick={() => addToCart(product)}
                 aria-label={language === "vi" ? "Thêm vào giỏ" : "Add to cart"}
               >
                 <ShoppingCart size={15} />
               </button>
             </div>
-          </div>
+          </article>
         ))}
-      </div>
+      </HomeProductRail>
     </section>
   );
 }

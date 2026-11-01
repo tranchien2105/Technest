@@ -1,213 +1,239 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Check, ShoppingCart, X } from "lucide-react";
-import { categories, content, heroSlides, products } from "./data/products";
+import { content } from "./data/storeContent";
 import HomePage from "./pages/HomePage";
-import StorePages from "./pages/StorePages";
+import StoreRoutes from "./routing/StoreRoutes";
+import { useNavigation } from "./routing/useNavigation";
+import { useCatalog } from "./hooks/useCatalog";
+import { useCart } from "./hooks/useCart";
+import { useProductLists } from "./hooks/useProductLists";
+import { usePersistentState } from "./hooks/usePersistentState";
+import { readStored } from "./domain/storage";
+import { useToast } from "./hooks/useToast";
+import { buyNowUrl } from "./domain/checkout";
+import { canPurchaseStock } from "./domain/cart";
+import { clearAuth, hasRefreshSession, logout, restoreSession } from "./api/authClient";
+import { NotificationsProvider } from "./hooks/useNotifications.jsx";
 import CartDrawer from "./components/cart/CartDrawer";
 import FloatingActions from "./components/layout/FloatingActions";
+import AdminApp from "./admin/AdminApp";
+import { useHomepageConfig } from "./hooks/useHomepageConfig";
 import "./index.css";
 
-const read = (key, fallback) => {
-  try {
-    return JSON.parse(localStorage.getItem(key)) ?? fallback;
-  } catch {
-    return fallback;
-  }
-};
-
 function App() {
+  const homepage = useHomepageConfig();
   const [language, setLanguage] = useState("vi");
-  const [route, setRoute] = useState(() =>
-    location.pathname === "/checkout"
-      ? `/login?next=${encodeURIComponent(location.pathname + location.search)}`
-      : location.pathname + location.search,
-  );
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authState, setAuthState] = useState({ ready: false, user: null });
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [sortBy, setSortBy] = useState("recommended");
-  const [favorites, setFavorites] = useState(() => read("technest-favorites", []));
-  const [cart, setCart] = useState(() => read("technest-cart", []));
-  const [orders, setOrders] = useState(() => read("technest-orders", []));
-  const [compareIds, setCompareIds] = useState(() => read("technest-compare", []));
-  const [viewedIds, setViewedIds] = useState(() => {
-    const saved = read("technest-viewed", []);
-    const match = location.pathname.match(/^\/products\/([^/]+)$/);
-    const initialProduct = match && products.find((item) => item.id === Number(match[1]));
-    return initialProduct
-      ? [initialProduct.id, ...saved.filter((id) => id !== initialProduct.id)].slice(0, 8)
-      : saved;
-  });
   const [drawer, setDrawer] = useState(null);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [toast, setToast] = useState("");
-  const toastTimer = useRef(null);
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const t = content[language];
-  const navigate = (url, allowCheckout = false) => {
-    const destination =
-      url.split("?")[0] === "/checkout" && !authenticated && !allowCheckout
-        ? `/login?next=${encodeURIComponent(url)}`
-        : url;
-    history.pushState({}, "", destination);
-    setRoute(destination);
-    const viewedMatch = destination.split("?")[0].match(/^\/products\/([^/]+)$/);
-    const viewedProduct =
-      viewedMatch && products.find((item) => item.id === Number(viewedMatch[1]));
-    if (viewedProduct) {
-      setViewedIds((current) =>
-        [viewedProduct.id, ...current.filter((id) => id !== viewedProduct.id)].slice(0, 8),
-      );
-    }
-    setDrawer(null);
-    if (destination.split("?")[0] === "/") setSelectedProduct(null);
-    window.scrollTo(0, 0);
-  };
-
-  useEffect(() => {
-    if (location.pathname === "/checkout" && !authenticated)
-      history.replaceState(
-        {},
-        "",
-        `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
-      );
-    const onPop = () => {
-      if (location.pathname === "/checkout" && !authenticated) {
-        const loginUrl = `/login?next=${encodeURIComponent(location.pathname + location.search)}`;
-        history.replaceState({}, "", loginUrl);
-        setRoute(loginUrl);
-      } else setRoute(location.pathname + location.search);
-      const viewedMatch = location.pathname.match(/^\/products\/([^/]+)$/);
-      const viewedProduct =
-        viewedMatch && products.find((item) => item.id === Number(viewedMatch[1]));
-      if (viewedProduct) {
-        setViewedIds((current) =>
-          [viewedProduct.id, ...current.filter((id) => id !== viewedProduct.id)].slice(0, 8),
-        );
-      }
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, [authenticated]);
-  useEffect(() => {
-    localStorage.setItem("technest-cart", JSON.stringify(cart));
-  }, [cart]);
-  useEffect(() => {
-    localStorage.setItem("technest-favorites", JSON.stringify(favorites));
-  }, [favorites]);
-  useEffect(() => {
-    localStorage.setItem("technest-compare", JSON.stringify(compareIds));
-  }, [compareIds]);
-  useEffect(() => {
-    localStorage.setItem("technest-viewed", JSON.stringify(viewedIds));
-  }, [viewedIds]);
-  useEffect(() => {
-    const timer = setInterval(() => setActiveSlide((i) => (i + 1) % heroSlides.length), 5000);
-    return () => clearInterval(timer);
-  }, []);
-  useEffect(() => {
-    const click = (e) => {
-      const a = e.target.closest("a[href]");
-      if (a && a.origin === location.origin && a.pathname.startsWith("/")) {
-        e.preventDefault();
-        navigate(a.pathname + a.search);
-      }
-    };
-    document.addEventListener("click", click);
-    return () => document.removeEventListener("click", click);
+  const { toast, notify, dismissToast } = useToast();
+  const { cart, setCart, subtotal, cartCount, addItem, changeQuantity, removeFromCart } = useCart();
+  const [favorites, setFavorites] = usePersistentState("technest-favorites", []);
+  const [compareIds, setCompareIds] = usePersistentState("technest-compare", []);
+  const [orders, setOrders] = useState([]);
+  const authenticated = Boolean(authState.user);
+  const {
+    route,
+    path,
+    navigate: navigateRoute,
+  } = useNavigation(authenticated || (!authState.ready && hasRefreshSession()));
+  const navigate = useCallback(
+    (url, allowAuthenticatedDestination = false) => {
+      navigateRoute(url, allowAuthenticatedDestination);
+      setDrawer(null);
+      setMobileMenu(false);
+      setSearchOpen(false);
+    },
+    [navigateRoute],
+  );
+  const catalog = useCatalog({
+    // The Admin visual preview must load the same catalog as the real Homepage.
+    route: path.startsWith("/admin") ? "/" : route,
+    navigate,
+    productIds: [
+      ...favorites,
+      ...compareIds,
+      ...readStored("technest-viewed", []),
+      ...cart.map((item) => item.productId || item.id),
+      ...(homepage.config?.sections?.featured?.productIds || []),
+    ],
   });
+  const lists = useProductLists(
+    catalog.products,
+    [favorites, setFavorites],
+    [compareIds, setCompareIds],
+  );
+  const { favoriteProducts, viewedProducts, toggleFavorite } = lists;
+  const { activeCategory, setActiveCategory, sortBy, setSortBy, visibleProducts } = catalog;
+  const selectedCatalogIds = new Set(catalog.products.map((product) => String(product.id)));
+  const cartCatalogReady =
+    !catalog.loading &&
+    !catalog.error &&
+    cart.every((item) => selectedCatalogIds.has(String(item.productId || item.id)));
+  const cartStockReady =
+    cartCatalogReady && cart.every((item) => canPurchaseStock(item, item.quantity));
+  const t = content[language];
+  const recordVisit = lists.recordVisit;
 
-  const [currentPath] = route.split("?");
-  const query =
-    currentPath === "/search"
-      ? new URLSearchParams(route.split("?")[1] || "").get("q") || ""
-      : currentPath === "/"
-        ? search
-        : "";
-  const routeCategory =
-    currentPath === "/products"
-      ? new URLSearchParams(route.split("?")[1] || "").get("category")
-      : null;
-  const currentCategory =
-    routeCategory && categories.some((item) => item.id === routeCategory)
-      ? routeCategory
-      : activeCategory;
-  const visibleProducts = useMemo(() => {
-    let list = products.filter(
-      (p) =>
-        (currentCategory === "all" || p.category === currentCategory) &&
-        (!query ||
-          `${p.name} ${p.brand} ${p.category} ${p.description}`
-            .toLowerCase()
-            .includes(query.toLowerCase())),
+  useEffect(() => {
+    if (catalog.loading || catalog.error) return;
+    const byId = new Map(catalog.products.map((product) => [String(product.id), product]));
+    setCart((current) =>
+      current.flatMap((item) => {
+        const currentProduct = byId.get(String(item.productId || item.id));
+        if (!currentProduct) return [];
+        const variant =
+          currentProduct.variants?.find(
+            (candidate) => candidate.id === String(item.variantId || item.id),
+          ) || currentProduct.variants?.[0];
+        return [
+          {
+            ...item,
+            ...currentProduct,
+            ...(variant
+              ? {
+                  variantId: variant.id,
+                  sku: variant.sku,
+                  price: variant.price ?? currentProduct.price,
+                  oldPrice: variant.compareAtPrice ?? currentProduct.oldPrice,
+                  availableQuantity: variant.availableQuantity,
+                  inStock: variant.inStock,
+                  stockStatus: variant.stockStatus,
+                }
+              : {}),
+            id: String(variant?.id || currentProduct.id),
+            productId: String(currentProduct.id),
+            quantity: item.quantity,
+          },
+        ];
+      }),
     );
-    if (sortBy === "priceLow") list = [...list].sort((a, b) => a.price - b.price);
-    if (sortBy === "priceHigh") list = [...list].sort((a, b) => b.price - a.price);
-    if (sortBy === "newest") list = [...list].reverse();
-    return list;
-  }, [currentCategory, query, sortBy]);
-  const cartCount = cart.reduce((n, p) => n + p.quantity, 0);
-  const subtotal = cart.reduce((n, p) => n + p.price * p.quantity, 0);
-  const favoriteProducts = products.filter((p) => favorites.includes(p.id));
-  const notify = (message, action = null) => {
-    window.clearTimeout(toastTimer.current);
-    setToast({ message, action });
-    toastTimer.current = window.setTimeout(() => setToast(null), action ? 5000 : 3200);
-  };
-  const addToCart = (product, quantity = 1) => {
-    setCart((old) => {
-      const found = old.find((p) => p.id === product.id);
-      return found
-        ? old.map((p) => (p.id === product.id ? { ...p, quantity: p.quantity + quantity } : p))
-        : [...old, { ...product, quantity }];
+    setFavorites((current) => current.filter((id) => byId.has(String(id))).map(String));
+    setCompareIds((current) => current.filter((id) => byId.has(String(id))).map(String));
+  }, [catalog.loading, catalog.error, catalog.products, setCart, setFavorites, setCompareIds]);
+
+  useEffect(() => {
+    recordVisit(route);
+  }, [route, recordVisit]);
+
+  useEffect(() => {
+    let active = true;
+    restoreSession().then((session) => {
+      if (active) setAuthState({ ready: true, user: session?.user || null });
     });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (authState.user) return undefined;
+    let active = true;
+    const restoreOnReturn = () => {
+      if (document.visibilityState === "hidden" || !hasRefreshSession()) return;
+      restoreSession().then((session) => {
+        if (active && session?.user) setAuthState({ ready: true, user: session.user });
+      });
+    };
+    window.addEventListener("focus", restoreOnReturn);
+    window.addEventListener("pageshow", restoreOnReturn);
+    document.addEventListener("visibilitychange", restoreOnReturn);
+    return () => {
+      active = false;
+      window.removeEventListener("focus", restoreOnReturn);
+      window.removeEventListener("pageshow", restoreOnReturn);
+      document.removeEventListener("visibilitychange", restoreOnReturn);
+    };
+  }, [authState.user]);
+
+  const onAuthenticate = useCallback((user) => {
+    setAuthState({ ready: true, user });
+  }, []);
+  const onLogout = async () => {
+    try {
+      await logout();
+    } catch {
+      notify(
+        language === "vi"
+          ? "Không thể xác nhận đăng xuất với máy chủ. Hãy thử lại khi backend hoạt động."
+          : "Could not confirm sign-out with the server. Try again when the backend is available.",
+      );
+    } finally {
+      clearAuth();
+      setAuthState({ ready: true, user: null });
+      navigate("/");
+    }
+  };
+
+  const addToCart = (product, quantity = 1) => {
+    const variant =
+      product.variants?.find(
+        (item) => item.id === String(product.variantId || product.defaultVariantId),
+      ) || product.variants?.[0];
+    const item = variant
+      ? {
+          ...product,
+          variantId: variant.id,
+          sku: variant.sku,
+          price: variant.price ?? product.price,
+          oldPrice: variant.compareAtPrice ?? product.oldPrice,
+          availableQuantity: variant.availableQuantity,
+          inStock: variant.inStock,
+          stockStatus: variant.stockStatus,
+        }
+      : product;
+    const current = cart.find((line) => String(line.id) === String(item.variantId || item.id));
+    if (!canPurchaseStock(item, quantity, current?.quantity || 0)) {
+      notify(
+        language === "vi"
+          ? item.stockStatus === "OUT_OF_STOCK"
+            ? "Sản phẩm hiện đã hết hàng."
+            : "Chưa thể xác nhận tồn kho của sản phẩm. Vui lòng thử lại sau."
+          : item.stockStatus === "OUT_OF_STOCK"
+            ? "This product is out of stock."
+            : "Product availability cannot be confirmed yet. Please try again later.",
+      );
+      return false;
+    }
+    addItem(item, quantity);
     notify(
       language === "vi"
-        ? `Đã thêm ${quantity} × ${product.name} vào giỏ hàng`
-        : `Added ${quantity} × ${product.name} to your cart`,
+        ? `Đã thêm ${quantity} × ${item.name} vào giỏ hàng`
+        : `Added ${quantity} × ${item.name} to your cart`,
       language === "vi" ? "Xem giỏ hàng" : "View cart",
     );
+    return true;
   };
-  const changeQuantity = (id, delta) =>
-    setCart((old) =>
-      old.map((p) => (p.id === id ? { ...p, quantity: Math.max(1, p.quantity + delta) } : p)),
-    );
-  const removeFromCart = (id) => setCart((old) => old.filter((p) => p.id !== id));
-  const toggleFavorite = (id) =>
-    setFavorites((old) => (old.includes(id) ? old.filter((x) => x !== id) : [...old, id]));
-  const toggleCompare = (id) =>
-    setCompareIds((old) => {
-      if (old.includes(id)) return old.filter((item) => item !== id);
-      if (old.length >= 3) {
-        notify(
-          language === "vi"
-            ? "Bạn chỉ có thể so sánh tối đa 3 sản phẩm."
-            : "You can compare up to 3 products.",
-        );
-        return old;
-      }
-      return [...old, id];
-    });
-  const selectCategory = (id) => {
-    setActiveCategory(id);
-    setMobileMenu(false);
-    navigate("/products" + (id === "all" ? "" : `?category=${id}`));
+  const toggleCompare = (id) => {
+    if (!compareIds.some((value) => String(value) === String(id)) && compareIds.length >= 3) {
+      notify(
+        language === "vi"
+          ? "Bạn chỉ có thể so sánh tối đa 3 sản phẩm."
+          : "You can compare up to 3 products.",
+      );
+      return;
+    }
+    lists.toggleCompare(id);
   };
-  const viewProduct = (p) => {
-    navigate(`/products/${p.id}`);
-    setSelectedProduct(p);
-  };
+  const selectCategory = (id) =>
+    navigate("/products" + (id === "all" ? "" : `?category=${encodeURIComponent(id)}`));
   const props = {
     t,
     language,
     setLanguage,
-    categories,
-    products,
-    heroSlides,
-    activeSlide,
-    setActiveSlide,
+    categories: catalog.categories,
+    products: catalog.products,
+    catalog,
+    catalogLoading: catalog.loading,
+    catalogError: catalog.error,
+    catalogPagination: catalog.pagination,
+    catalogQuery: catalog.queryState,
+    brands: catalog.brands,
+    setCatalogQuery: catalog.setQuery,
+    cartCatalogReady,
+    cartStockReady,
     search,
     setSearch,
     searchOpen,
@@ -215,34 +241,29 @@ function App() {
     favorites,
     compareIds,
     toggleCompare,
-    viewedProducts: viewedIds.map((id) => products.find((item) => item.id === id)).filter(Boolean),
+    viewedProducts,
     cartCount,
     setDrawer,
     mobileMenu,
     setMobileMenu,
     notify,
-    activeCategory: currentCategory,
+    activeCategory,
     setActiveCategory,
     setSortBy,
     sortBy,
+    clearFilters: catalog.clearFilters,
     selectCategory,
     visibleProducts,
     toggleFavorite,
     addToCart,
-    selectedProduct,
-    onViewProduct: viewProduct,
-    onBackToHome: () => navigate("/"),
+    authUser: authState.user,
+    onViewProduct: (product) => navigate(`/products/${product.id}`),
     navigate,
+    homepageConfig: homepage.config,
   };
-  const [path] = route.split("?");
-  const productMatch = path.match(/^\/products\/([^/]+)$/);
-  const activeProduct = productMatch
-    ? products.find((p) => String(p.id) === productMatch[1])
-    : null;
   const pageProps = {
     ...props,
     route,
-    navigate,
     cart,
     subtotal,
     changeQuantity,
@@ -250,19 +271,36 @@ function App() {
     orders,
     setOrders,
     setCart,
-    authenticated,
-    onAuthenticate: () => setAuthenticated(true),
-    product: activeProduct,
-    compareIds,
-    toggleCompare,
-    viewedProducts: viewedIds.map((id) => products.find((item) => item.id === id)).filter(Boolean),
+    onAuthenticate,
+    onLogout,
+    authUser: authState.user,
+    buyNow: (product, quantity) => {
+      if (!addToCart(product, quantity)) return;
+      navigate(buyNowUrl(product.id, quantity, product.variantId));
+    },
   };
+  if (path.startsWith("/admin")) {
+    return (
+      <NotificationsProvider user={authState.user}>
+        <AdminApp
+          path={path}
+          authUser={authState.user}
+          authReady={authState.ready}
+          navigate={navigate}
+          onLogout={onLogout}
+          onAuthenticate={onAuthenticate}
+          storePreviewProps={props}
+        />
+      </NotificationsProvider>
+    );
+  }
   return (
+    <NotificationsProvider user={authState.user}>
     <main className="technest">
       <HomePage
         {...props}
         showHome={path === "/"}
-        pageContent={path !== "/" ? <StorePages {...pageProps} /> : null}
+        pageContent={path !== "/" ? <StoreRoutes {...pageProps} /> : null}
       />
       {toast && (
         <div className="toast-message" role="status" aria-live="polite">
@@ -280,8 +318,7 @@ function App() {
             type="button"
             aria-label={language === "vi" ? "Đóng thông báo" : "Dismiss notification"}
             onClick={() => {
-              window.clearTimeout(toastTimer.current);
-              setToast(null);
+              dismissToast();
             }}
           >
             <X size={17} />
@@ -294,6 +331,7 @@ function App() {
         t={t}
         language={language}
         cart={cart}
+        cartStockReady={cartStockReady}
         subtotal={subtotal}
         favoriteProducts={favoriteProducts}
         changeQuantity={changeQuantity}
@@ -320,6 +358,7 @@ function App() {
       )}
       <FloatingActions language={language} />
     </main>
+    </NotificationsProvider>
   );
 }
 export default App;

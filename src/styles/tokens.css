@@ -1,0 +1,47 @@
+/* Shared visual contract for Storefront, Account, Checkout and Admin. */
+:root {
+  --ui-paper: #ffffff;
+  --ui-ink: #111111;
+  --ui-muted: #444444;
+  --ui-line: #e5e7eb;
+  --ui-accent: #ff5a00;
+  --ui-accent-text: #a33800;
+  --ui-subtle: #f2f2f2;
+  --ui-success: #166534;
+  --ui-success-bg: #edf7ef;
+  --ui-warning: #854d0e;
+  --ui-warning-bg: #fff7db;
+  --ui-danger: #b42318;
+  --ui-danger-bg: #fff0ee;
+  --ui-info: #174c93;
+  --ui-info-bg: #edf4ff;
+  --ui-radius: 8px;
+  --ui-radius-control: 6px;
+  --ui-radius-badge: 4px;
+  --ui-radius-dialog: 10px;
+  --ui-border: 1px solid var(--ui-line);
+  --ui-border-strong: 1px solid var(--ui-line);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 14px rgba(0, 0, 0, 0.1);
+  --shadow-dropdown: 0 6px 20px rgba(0, 0, 0, 0.1);
+  --ui-shadow: var(--shadow-card);
+  --ui-shadow-lg: var(--shadow-card-hover);
+  --ui-content-width: 1200px;
+  --ui-accent-soft: color-mix(in srgb, var(--ui-accent) 8%, var(--ui-paper));
+  --ui-font: "DM Sans", Arial, sans-serif;
+  --ui-heading-font: "Manrope", Arial, sans-serif;
+  --ui-caption-size: 12px;
+
+  /* Existing component names remain aliases, so layout and behavior stay intact. */
+  --page: var(--ui-paper);
+  --surface: var(--ui-paper);
+  --surface-soft: var(--ui-subtle);
+  --surface-warm: var(--ui-subtle);
+  --ink: var(--ui-ink);
+  --muted: var(--ui-muted);
+  --line: var(--ui-line);
+  --accent: var(--ui-accent);
+  --accent-dark: var(--ui-accent-text);
+  --accent-soft: var(--ui-accent-soft);
+  --shadow: var(--ui-shadow);
+}

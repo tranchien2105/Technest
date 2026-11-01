@@ -1,0 +1,725 @@
+{
+  "date": "2026-10-31",
+  "note": "Private routes use browser fixtures; public catalog uses local API. Runtime style checks, not backend end-to-end tests.",
+  "routes": [
+    {
+      "name": "home",
+      "path": "/",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "products",
+      "path": "/products",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "search",
+      "path": "/search?q=keychron",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "product",
+      "path": "/products/1",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "favorites",
+      "path": "/favorites",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "compare",
+      "path": "/compare",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "setup",
+      "path": "/setup",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "cart",
+      "path": "/cart",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "checkout",
+      "path": "/checkout",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "success",
+      "path": "/order-success/9001",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "register",
+      "path": "/register",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "forgot-password",
+      "path": "/forgot-password",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "account",
+      "path": "/account",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "orders",
+      "path": "/account/orders",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "order-detail",
+      "path": "/account/orders/9001",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "profile",
+      "path": "/account/profile",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "addresses",
+      "path": "/account/addresses",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "security",
+      "path": "/account/security",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "not-found",
+      "path": "/ui-audit-not-found",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin",
+      "path": "/admin",
+      "width": 1440,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-products",
+      "path": "/admin/products",
+      "width": 1440,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-categories",
+      "path": "/admin/categories",
+      "width": 1440,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-brands",
+      "path": "/admin/brands",
+      "width": 1440,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-inventory",
+      "path": "/admin/inventory",
+      "width": 1440,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-orders",
+      "path": "/admin/orders",
+      "width": 1440,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-customers",
+      "path": "/admin/customers",
+      "width": 1440,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-fallback",
+      "path": "/admin/ui-audit-not-found",
+      "width": 1440,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-login",
+      "path": "/admin",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-denied",
+      "path": "/admin",
+      "width": 1440,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "category-filter",
+      "path": "/products?category=keyboards",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "brand-filter",
+      "path": "/products?brand=keychron",
+      "width": 1440,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "products",
+      "path": "/products",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "search",
+      "path": "/search?q=keychron",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "product",
+      "path": "/products/1",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "favorites",
+      "path": "/favorites",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "compare",
+      "path": "/compare",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "setup",
+      "path": "/setup",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "cart",
+      "path": "/cart",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "checkout",
+      "path": "/checkout",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "success",
+      "path": "/order-success/9001",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "register",
+      "path": "/register",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "forgot-password",
+      "path": "/forgot-password",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "account",
+      "path": "/account",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "orders",
+      "path": "/account/orders",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "order-detail",
+      "path": "/account/orders/9001",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "profile",
+      "path": "/account/profile",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "addresses",
+      "path": "/account/addresses",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "security",
+      "path": "/account/security",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "not-found",
+      "path": "/ui-audit-not-found",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin",
+      "path": "/admin",
+      "width": 390,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-products",
+      "path": "/admin/products",
+      "width": 390,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-categories",
+      "path": "/admin/categories",
+      "width": 390,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-brands",
+      "path": "/admin/brands",
+      "width": 390,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-inventory",
+      "path": "/admin/inventory",
+      "width": 390,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-orders",
+      "path": "/admin/orders",
+      "width": 390,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-customers",
+      "path": "/admin/customers",
+      "width": 390,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-fallback",
+      "path": "/admin/ui-audit-not-found",
+      "width": 390,
+      "mode": "ADMIN",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-login",
+      "path": "/admin",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "admin-denied",
+      "path": "/admin",
+      "width": 390,
+      "mode": "CUSTOMER",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "category-filter",
+      "path": "/products?category=keyboards",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    },
+    {
+      "name": "brand-filter",
+      "path": "/products?brand=keychron",
+      "width": 390,
+      "mode": "GUEST",
+      "overflow": false,
+      "hardShadows": [],
+      "surfaceErrors": [],
+      "errors": []
+    }
+  ],
+  "interactions": [
+    {
+      "interaction": "search dropdown, Escape and submit",
+      "pass": true
+    },
+    {
+      "interaction": "wishlist toggle and add-to-cart toast",
+      "pass": true
+    },
+    {
+      "interaction": "form focus visible and text input",
+      "pass": true
+    },
+    {
+      "interaction": "admin standalone login",
+      "pass": true
+    },
+    {
+      "interaction": "admin mobile menu",
+      "pass": true
+    },
+    {
+      "interaction": "admin order detail open/close",
+      "pass": true
+    },
+    {
+      "interaction": "customer mobile menu",
+      "pass": true
+    },
+    {
+      "interaction": "CartDrawer component fixture",
+      "pass": true
+    }
+  ],
+  "responsive": [
+    {
+      "responsive": 320,
+      "overflow": false,
+      "cardWidth": 138
+    },
+    {
+      "responsive": 390,
+      "overflow": false,
+      "cardWidth": 173
+    },
+    {
+      "responsive": 768,
+      "overflow": false,
+      "cardWidth": 355
+    },
+    {
+      "responsive": 1440,
+      "overflow": false,
+      "cardWidth": 591
+    }
+  ],
+  "contrastSamples": [
+    {
+      "name": "home",
+      "contrast": []
+    },
+    {
+      "name": "checkout",
+      "contrast": []
+    },
+    {
+      "name": "admin",
+      "contrast": []
+    }
+  ],
+  "checks": {
+    "lint": "pass",
+    "build": "pass; JS chunk ~700kB warning",
+    "tests": "4/4 files pass",
+    "diffCheck": "pass",
+    "frontend": "HTTP 200 localhost:5173",
+    "backend": "HTTP 200 localhost:3000/api/v1/products",
+    "audioCommand": "exit 0; one attempt"
+  }
+}

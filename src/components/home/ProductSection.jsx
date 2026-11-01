@@ -6,11 +6,13 @@ import {
   Search,
   SlidersHorizontal,
   Sparkles,
+  BadgePercent,
   X,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 import ProductCard from "./ProductCard";
+import { discountPercent } from "../../domain/catalog";
 
 export default function ProductSection({
   visibleProducts,
@@ -27,14 +29,21 @@ export default function ProductSection({
   onViewProduct,
   compareIds,
   toggleCompare,
+  dealProducts = [],
   t,
+  cms,
 }) {
   const carouselRef = useRef(null);
   const dragRef = useRef(null);
   const draggedRef = useRef(false);
   const pausedRef = useRef(false);
   const resumeTimerRef = useRef(null);
-  const homeProducts = visibleProducts.slice(0, 8);
+  const homeProducts = visibleProducts.slice(0, cms?.limit || 8);
+  const discountedProducts = dealProducts.filter((product) => discountPercent(product) !== null);
+  const bestDiscount = discountedProducts.reduce(
+    (best, product) => Math.max(best, discountPercent(product)),
+    0,
+  );
   const pauseAfterInteraction = () => {
     pausedRef.current = true;
     window.clearTimeout(resumeTimerRef.current);
@@ -112,21 +121,54 @@ export default function ProductSection({
       <div className="section-heading">
         <div>
           <span className="section-kicker">
-            {language === "vi" ? "ĐƯỢC CHỌN LỌC CHO BẠN" : "CURATED FOR YOU"}
+            {cms?.eyebrow ?? (language === "vi" ? "ĐƯỢC CHỌN LỌC CHO BẠN" : "CURATED FOR YOU")}
           </span>
 
           <h2>
-            {t.featured}
+            {cms?.title ?? t.featured}
             <Sparkles size={22} className="heading-sparkle" />
           </h2>
 
-          <p>{t.featuredDesc}</p>
+          <p>{cms?.description ?? t.featuredDesc}</p>
         </div>
 
-        <a href="/products" className="text-link" onClick={handleViewAll}>
-          {t.viewAll}
-          <ArrowRight size={16} />
-        </a>
+        {bestDiscount > 0 && (
+          <div className="home-promo-stack">
+            <div className="home-section-promo">
+              <BadgePercent size={20} />
+              <span>
+                <strong>{language === "vi" ? "Ưu đãi đang mở" : "Current offers"}</strong>
+                <small>
+                  {language === "vi"
+                    ? `${discountedProducts.length} sản phẩm · giảm đến ${bestDiscount}%`
+                    : `${discountedProducts.length} products · save up to ${bestDiscount}%`}
+                </small>
+              </span>
+            </div>
+            <div
+              className="home-promo-products"
+              aria-label={language === "vi" ? "Một số sản phẩm đang giảm giá" : "Selected deals"}
+            >
+              {discountedProducts.slice(0, 3).map((product) => (
+                <span className="home-promo-product" key={`promo-${product.id}`} title={product.name}>
+                  <span>{product.name}</span>
+                  <strong>-{discountPercent(product)}%</strong>
+                </span>
+              ))}
+              <a href={cms?.ctaUrl ?? "/products"} className="home-promo-view-all">
+                {cms?.ctaLabel ?? t.viewAll}
+                <ArrowRight size={15} />
+              </a>
+            </div>
+          </div>
+        )}
+
+        {bestDiscount === 0 && (
+          <a href={cms?.ctaUrl ?? "/products"} className="text-link">
+            {cms?.ctaLabel ?? t.viewAll}
+            <ArrowRight size={16} />
+          </a>
+        )}
       </div>
 
       <div className="product-toolbar">
@@ -146,23 +188,46 @@ export default function ProductSection({
           </span>
         </span>
 
-        <label className="sort-select">
-          <SlidersHorizontal size={16} />
-          <span>{t.sort}:</span>
+        <div className="product-toolbar-actions">
+          <label className="sort-select">
+            <SlidersHorizontal size={16} />
+            <span>{t.sort}:</span>
 
-          <select
-            value={sortBy}
-            onChange={(event) => setSortBy(event.target.value)}
-            aria-label={t.sort}
+            <select
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+              aria-label={t.sort}
+            >
+              <option value="recommended">{t.recommended}</option>
+              <option value="priceLow">{t.priceLow}</option>
+              <option value="priceHigh">{t.priceHigh}</option>
+              <option value="newest">{t.newest}</option>
+            </select>
+
+            <ChevronDown size={15} />
+          </label>
+          <div
+            className="home-carousel-controls"
+            aria-label={
+              language === "vi" ? "Điều khiển danh sách sản phẩm" : "Product carousel controls"
+            }
           >
-            <option value="recommended">{t.recommended}</option>
-            <option value="priceLow">{t.priceLow}</option>
-            <option value="priceHigh">{t.priceHigh}</option>
-            <option value="newest">{t.newest}</option>
-          </select>
-
-          <ChevronDown size={15} />
-        </label>
+            <button
+              type="button"
+              onClick={() => scrollProducts(-1)}
+              aria-label={language === "vi" ? "Cuộn sang trái" : "Scroll left"}
+            >
+              <ChevronLeft size={19} />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollProducts(1)}
+              aria-label={language === "vi" ? "Cuộn sang phải" : "Scroll right"}
+            >
+              <ChevronRight size={19} />
+            </button>
+          </div>
+        </div>
       </div>
 
       {activeCategory !== "all" && (
@@ -176,27 +241,6 @@ export default function ProductSection({
         </div>
       )}
 
-      <div
-        className="home-carousel-controls"
-        aria-label={
-          language === "vi" ? "Điều khiển danh sách sản phẩm" : "Product carousel controls"
-        }
-      >
-        <button
-          type="button"
-          onClick={() => scrollProducts(-1)}
-          aria-label={language === "vi" ? "Cuộn sang trái" : "Scroll left"}
-        >
-          <ChevronLeft size={19} />
-        </button>
-        <button
-          type="button"
-          onClick={() => scrollProducts(1)}
-          aria-label={language === "vi" ? "Cuộn sang phải" : "Scroll right"}
-        >
-          <ChevronRight size={19} />
-        </button>
-      </div>
       <div
         className="home-product-carousel"
         ref={carouselRef}

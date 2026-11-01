@@ -1,4 +1,5 @@
 import ProductCard from "./ProductCard";
+import HomeProductRail from "./HomeProductRail";
 
 export default function FeatureProductShelf({
   products,
@@ -18,7 +19,11 @@ export default function FeatureProductShelf({
       <div className="section-heading">
         <h2>{title}</h2>
       </div>
-      <div className="product-grid">
+      <HomeProductRail
+        className="product-grid"
+        language={language}
+        label={language === "vi" ? "Sản phẩm vừa xem" : "Recently viewed products"}
+      >
         {products.map((product) => (
           <ProductCard
             key={product.id}
@@ -33,7 +38,7 @@ export default function FeatureProductShelf({
             onViewProduct={onViewProduct}
           />
         ))}
-      </div>
+      </HomeProductRail>
     </section>
   );
 }

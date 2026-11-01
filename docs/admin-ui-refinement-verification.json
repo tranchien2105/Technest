@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-31",
+  "scope": [
+    "overview",
+    "products",
+    "categories",
+    "brands",
+    "inventory",
+    "orders",
+    "customers",
+    "settings"
+  ],
+  "responsive": {
+    "widths": [
+      390,
+      768,
+      1440
+    ],
+    "additionalProductWidths": [
+      1280,
+      1920
+    ],
+    "routesChecked": 8,
+    "viewportOverflow": false,
+    "tableColumnMismatch": false
+  },
+  "pageSizes": {
+    "resources": [
+      "products",
+      "categories",
+      "brands",
+      "inventory",
+      "orders",
+      "customers"
+    ],
+    "options": [
+      50,
+      100,
+      200,
+      500
+    ],
+    "default": 50,
+    "uiRowsMatchApi": true,
+    "persistsAfterReload": true
+  },
+  "images": {
+    "xmlValidated": 180,
+    "browserDecoded": 180,
+    "brokenAfterRepair": 0,
+    "repairedMalformedSvgFiles": 9,
+    "primaryImageSelectionFixed": true,
+    "fallbackTestPassed": true
+  },
+  "checks": {
+    "frontendLint": "passed",
+    "frontendBuild": "passed",
+    "backendTypecheck": "passed",
+    "backendLint": "passed",
+    "backendBuild": "passed",
+    "backendTests": {
+      "passed": 53,
+      "skipped": 2
+    },
+    "finalPostgresIntegrationTests": {
+      "passed": 6
+    },
+    "frontendBuildWarning": "JavaScript chunk approximately 800 kB"
+  },
+  "browserInteractions": [
+    {
+      "interaction": "product stock filter",
+      "pass": true
+    },
+    {
+      "interaction": "image fallback",
+      "pass": true
+    },
+    {
+      "interaction": "order detail",
+      "pass": true
+    },
+    {
+      "interaction": "inventory history",
+      "pass": true
+    },
+    {
+      "interaction": "customer detail",
+      "pass": true
+    },
+    {
+      "interaction": "mobile navigation",
+      "pass": true
+    },
+    {
+      "interaction": "page size 200 persists after reload",
+      "pass": true
+    },
+    {
+      "interaction": "browser decodes every local catalog SVG",
+      "images": 180,
+      "broken": 0,
+      "pass": true
+    },
+    {
+      "interaction": "mobile icon alignment",
+      "centers": [
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "method": "Read-only local audit server uses PostgreSQL data with a simulated ADMIN session; production auth is unchanged. No save/delete/status mutation performed in browser audit.",
+  "screenshots": "/tmp/technest-admin-refinement/",
+  "dev": {
+    "frontend": 5173,
+    "backend": 3000,
+    "postgres": "up",
+    "redis": "up"
+  }
+}

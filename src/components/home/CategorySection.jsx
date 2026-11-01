@@ -1,16 +1,15 @@
 import { Sparkles } from "lucide-react";
 
 export default function CategorySection({
-  categories,
+  categories = [],
   language,
   activeCategory,
   selectCategory,
-  setSortBy,
+  navigate,
   t,
 }) {
   const showDeals = () => {
-    setSortBy("priceLow");
-    selectCategory("all");
+    navigate("/products?sale=1&sort=priceLow");
   };
   return (
     <section className="quick-categories" aria-label="Product categories">

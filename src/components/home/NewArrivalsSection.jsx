@@ -1,7 +1,8 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Heart, Plus, Scale } from "lucide-react";
 import { formatPrice } from "../../utils/formatCurrency";
-import { Heart, Plus, Scale } from "lucide-react";
 import ProductImage from "../common/ProductImage";
+import HomeProductRail from "./HomeProductRail";
+import { discountPercent, isDiscounted } from "../../domain/catalog";
 
 function ArrivalCard({
   product,
@@ -14,9 +15,11 @@ function ArrivalCard({
   toggleCompare,
 }) {
   const isFavorite = favorites.includes(product.id);
+  const discounted = isDiscounted(product);
+  const discount = discountPercent(product);
   return (
-    <article className="mini-product-card">
-      <div className="mini-product-image">
+    <article className="arrival-product-card">
+      <div className="arrival-product-image">
         <button
           className="mini-product-image-trigger"
           onClick={() => onViewProduct(product)}
@@ -24,6 +27,8 @@ function ArrivalCard({
         >
           <ProductImage src={product.image} alt={product.name} loading="lazy" />
         </button>
+        <span className="arrival-new-badge">{language === "vi" ? "VỪA VỀ" : "NEW"}</span>
+        {discounted && <span className="mini-discount-badge">-{discount}%</span>}
         <button
           className={`favorite-button ${isFavorite ? "is-favorite" : ""}`}
           onClick={() => toggleFavorite(product.id)}
@@ -38,22 +43,22 @@ function ArrivalCard({
         >
           <Scale size={15} />
         </button>
-        {product.stock <= 5 && (
-          <span className="mini-stock-badge">
-            {language === "vi" ? `Còn ${product.stock}` : `${product.stock} left`}
-          </span>
-        )}
       </div>
-      <div className="mini-product-info">
+      <div className="arrival-product-info">
         <span className="product-brand">{product.brand}</span>
         <h3>
           <button className="mini-product-title" onClick={() => onViewProduct(product)}>
             {product.name}
           </button>
         </h3>
-        <div className="mini-product-bottom">
-          <strong>{formatPrice(product.price)}</strong>
+        {product.description && <p className="arrival-product-description">{product.description}</p>}
+        <div className="arrival-product-bottom">
+          <div className="arrival-product-price">
+            <strong>{formatPrice(product.price)}</strong>
+            {discounted && <del>{formatPrice(product.oldPrice)}</del>}
+          </div>
           <button
+            className="arrival-add-button"
             onClick={() => addToCart(product)}
             aria-label={language === "vi" ? "Thêm vào giỏ" : "Add to cart"}
           >
@@ -69,38 +74,34 @@ export default function NewArrivalsSection({
   products,
   language,
   t,
-  setSortBy,
-  setActiveCategory,
   addToCart,
   favorites,
   toggleFavorite,
   compareIds,
   toggleCompare,
   onViewProduct,
+  cms,
 }) {
   return (
     <section className="home-new-section unified-section">
       <div className="section-heading">
         <div>
           <span className="section-kicker">
-            {language === "vi" ? "MỚI NHẤT TRONG CỬA HÀNG" : "FRESH IN STORE"}
+            {cms?.eyebrow ?? (language === "vi" ? "MỚI NHẤT TRONG CỬA HÀNG" : "FRESH IN STORE")}
           </span>
-          <h2>{t.newArrivals}</h2>
-          <p>{t.newArrivalsDesc}</p>
+          <h2>{cms?.title ?? t.newArrivals}</h2>
+          <p>{cms?.description ?? t.newArrivalsDesc}</p>
         </div>
-        <a
-          href="#products"
-          className="text-link"
-          onClick={() => {
-            setSortBy("newest");
-            setActiveCategory("all");
-          }}
-        >
-          {t.viewAll} <ArrowRight size={16} />
+        <a href={cms?.ctaUrl ?? "/products?sort=newest"} className="text-link">
+          {cms?.ctaLabel ?? t.viewAll} <ArrowRight size={16} />
         </a>
       </div>
-      <div className="mini-product-grid mini-product-grid-four">
-        {[products[7], products[4], products[6], products[3]].map((product) => (
+      <HomeProductRail
+        className="arrival-product-rail"
+        language={language}
+        label={language === "vi" ? "Danh sách sản phẩm mới" : "New arrivals"}
+      >
+        {products.slice(0, cms?.limit || 8).map((product) => (
           <ArrivalCard
             key={`new-${product.id}`}
             product={product}
@@ -113,7 +114,7 @@ export default function NewArrivalsSection({
             onViewProduct={onViewProduct}
           />
         ))}
-      </div>
+      </HomeProductRail>
     </section>
   );
 }

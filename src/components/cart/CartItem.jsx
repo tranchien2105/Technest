@@ -9,12 +9,25 @@ export default function CartItem({ item, onChangeQuantity, onRemove, t }) {
       <div className="drawer-product-info">
         <strong>{item.name}</strong>
         <span>{formatPrice(item.price)}</span>
+        {item.stockStatus !== "IN_STOCK" || item.quantity > item.availableQuantity ? (
+          <small className="low-stock-note">
+            {item.stockStatus === "OUT_OF_STOCK"
+              ? "Hết hàng"
+              : item.stockStatus === "IN_STOCK"
+                ? `Chỉ còn ${item.availableQuantity} sản phẩm`
+                : "Chưa xác nhận tồn kho"}
+          </small>
+        ) : null}
         <div className="quantity-control">
           <button onClick={() => onChangeQuantity(item.id, -1)} aria-label="Decrease quantity">
             <Minus size={13} />
           </button>
           <span>{item.quantity}</span>
-          <button onClick={() => onChangeQuantity(item.id, 1)} aria-label="Increase quantity">
+          <button
+            disabled={item.stockStatus !== "IN_STOCK" || item.quantity >= item.availableQuantity}
+            onClick={() => onChangeQuantity(item.id, 1)}
+            aria-label="Increase quantity"
+          >
             <Plus size={13} />
           </button>
         </div>

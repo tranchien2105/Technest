@@ -1,0 +1,32 @@
+{
+  "reports": [
+    {
+      "check": "structured product and SKU editing, metadata preservation, save payload and image ordering",
+      "passed": true
+    },
+    {
+      "check": "editor responsive",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "check": "editor responsive",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "check": "new product has structured fields and removable rows",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "frontendTests": "passed (including 5 new structured editor regression cases)",
+  "adminApiTests": {
+    "passed": 4
+  },
+  "frontendLint": "passed",
+  "frontendBuild": "passed",
+  "backendLint": "passed",
+  "backendBuild": "passed",
+  "databaseWritesDuringBrowserAudit": false
+}

@@ -1,9 +1,12 @@
+import { apiAssetUrl } from "../../api/apiClient";
+
 const FALLBACK_IMAGE = "/images/technest-product-placeholder.svg";
 
 export default function ProductImage({ src, alt = "", ...props }) {
   return (
     <img
-      src={src || FALLBACK_IMAGE}
+      key={src || FALLBACK_IMAGE}
+      src={apiAssetUrl(src) || FALLBACK_IMAGE}
       alt={alt}
       onError={(event) => {
         if (event.currentTarget.dataset.fallbackApplied) return;

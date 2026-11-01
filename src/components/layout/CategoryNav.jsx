@@ -8,7 +8,6 @@ export default function CategoryNav({
   setActiveCategory,
   setSearch,
   setMobileMenu,
-  setSortBy,
   selectCategory,
   t,
   navigate,
@@ -21,8 +20,8 @@ export default function CategoryNav({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const showDeals = () => {
-    setSortBy("priceLow");
-    selectCategory("all");
+    setMobileMenu(false);
+    navigate?.("/products?sale=1&sort=priceLow");
   };
 
   return (

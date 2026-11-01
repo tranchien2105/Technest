@@ -1,6 +1,8 @@
 import { ArrowRight, Heart, Scale, ShoppingCart } from "lucide-react";
 import { formatPrice } from "../../utils/formatCurrency";
 import ProductImage from "../common/ProductImage";
+import { compareMoney } from "../../domain/cart";
+import { discountPercent, isDiscounted } from "../../domain/catalog";
 
 function getBadgeLabel(badge, language) {
   const labels = {
@@ -27,6 +29,8 @@ export default function ProductCard({
 }) {
   const isFavorite = favorites.includes(product.id);
   const isCompared = compareIds.includes(product.id);
+  const unavailable = product.stockStatus !== "IN_STOCK";
+  const discounted = isDiscounted(product);
 
   return (
     <article className="product-card">
@@ -42,7 +46,9 @@ export default function ProductCard({
 
         {product.badge && (
           <span className={`product-badge badge-${product.badge}`}>
-            {getBadgeLabel(product.badge, language)}
+            {product.badge === "sale" && discounted
+              ? `${language === "vi" ? "GIẢM" : "SAVE"} ${discountPercent(product)}%`
+              : getBadgeLabel(product.badge, language)}
           </span>
         )}
 
@@ -69,11 +75,6 @@ export default function ProductCard({
             <Scale size={16} />
           </button>
         )}
-        {product.stock <= 5 && (
-          <span className="low-stock-badge">
-            {language === "vi" ? `Chỉ còn ${product.stock}` : `Only ${product.stock} left`}
-          </span>
-        )}
       </div>
 
       <div className="product-info">
@@ -89,23 +90,32 @@ export default function ProductCard({
           </button>
         </h3>
 
-        <p className="product-description">{product.description}</p>
-
-        <div className="product-rating">
-          <span className="rating-star">★</span>
-          <strong>{product.rating.toFixed(1)}</strong>
-          <span>
-            ({product.reviews} {t.rating})
-          </span>
-        </div>
-
         <div className="product-price-row">
           <strong>{formatPrice(product.price)}</strong>
-          {product.oldPrice && <del>{formatPrice(product.oldPrice)}</del>}
+          {product.oldPrice && compareMoney(product.oldPrice, product.price) > 0 && (
+            <del>{formatPrice(product.oldPrice)}</del>
+          )}
+          {discounted && <span className="price-discount-badge">-{discountPercent(product)}%</span>}
         </div>
-        <button type="button" className="add-cart-button" onClick={() => addToCart(product)}>
+        <p className="product-description">{product.description}</p>
+        <button
+          type="button"
+          className="add-cart-button"
+          disabled={unavailable}
+          onClick={() => addToCart(product)}
+        >
           <ShoppingCart size={17} />
-          <span>{t.addCart}</span>
+          <span>
+            {unavailable
+              ? language === "vi"
+                ? product.stockStatus === "OUT_OF_STOCK"
+                  ? "Hết hàng"
+                  : "Chưa xác nhận tồn kho"
+                : product.stockStatus === "OUT_OF_STOCK"
+                  ? "Out of stock"
+                  : "Stock unconfirmed"
+              : t.addCart}
+          </span>
           <ArrowRight size={16} />
         </button>
       </div>

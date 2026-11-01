@@ -5,7 +5,7 @@ export default function Footer({ t, language, notify }) {
     <footer className="site-footer" id="footer">
       <div className="footer-main">
         <div className="footer-brand-column">
-          <a className="brand" href="#home">
+          <a className="brand" href="/#home">
             <span className="brand-mark" aria-hidden="true">
               <span>T</span>
               <i>N</i>
@@ -16,14 +16,19 @@ export default function Footer({ t, language, notify }) {
             <span className="brand-tagline">Better Tools. Brighter Days.</span>
           </a>
           <p>{t.footerDesc}</p>
+          <p className="footer-product-range">
+            {language === "vi"
+              ? "Bàn phím · Chuột · Màn hình · Âm thanh · Phụ kiện"
+              : "Keyboards · Mice · Monitors · Audio · Accessories"}
+          </p>
           <div className="footer-socials">
-            <a href="#products" aria-label="Instagram">
+            <a href="/#products" aria-label="Instagram">
               ig
             </a>
-            <a href="#products" aria-label="Facebook">
+            <a href="/#products" aria-label="Facebook">
               f
             </a>
-            <a href="#products" aria-label="Youtube">
+            <a href="/#products" aria-label="Youtube">
               ▶
             </a>
           </div>
@@ -34,12 +39,16 @@ export default function Footer({ t, language, notify }) {
           <a href="#footer">{t.guide}</a>
           <a href="#footer">{t.shippingPolicy}</a>
           <a href="#footer">{t.returns}</a>
+          <a href="/account/orders">{language === "vi" ? "Tra cứu đơn hàng" : "Track an order"}</a>
         </div>
         <div className="footer-column">
           <h3>{t.about}</h3>
-          <a href="#products">{t.featured}</a>
-          <a href="#home">{t.home}</a>
-          <a href="#footer">{t.contact}</a>
+          <a href="/#products">{t.featured}</a>
+          <a href="/#home">{t.home}</a>
+          <a href="/products?sort=newest">{language === "vi" ? "Sản phẩm mới" : "New arrivals"}</a>
+          <a href="/products?category=keyboards">{language === "vi" ? "Bàn phím" : "Keyboards"}</a>
+          <a href="/products?category=mice">{language === "vi" ? "Chuột" : "Mice"}</a>
+          <a href="/products?category=monitors">{language === "vi" ? "Màn hình" : "Monitors"}</a>
         </div>
         <div className="footer-newsletter">
           <h3>{t.newsletter}</h3>
@@ -61,7 +70,9 @@ export default function Footer({ t, language, notify }) {
       <div className="footer-bottom">
         <span>© 2026 TECHNEST</span>
         <span>{t.copyright}</span>
-        <a href="#home">BACK TO TOP ↑</a>
+        <a className="footer-back-top" href="/#home">
+          {language === "vi" ? "LÊN ĐẦU TRANG" : "BACK TO TOP"} <span aria-hidden="true">↑</span>
+        </a>
       </div>
     </footer>
   );

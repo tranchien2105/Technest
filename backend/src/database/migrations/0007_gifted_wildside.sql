@@ -1,0 +1,1 @@
+ALTER TYPE "public"."order_email_event_type" ADD VALUE 'ORDER_PROCESSING' BEFORE 'ORDER_SHIPPED';

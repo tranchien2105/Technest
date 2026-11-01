@@ -1,0 +1,28 @@
+import { privateRequest } from "./privateClient";
+
+export const adminApi = {
+  overview: (options) => privateRequest("/admin/overview", options),
+  inventory: (query = "", options = {}) => privateRequest(`/admin/inventory${query ? `?${query}` : ""}`, options),
+  customers: (query = "", options = {}) => privateRequest(`/admin/customers${query ? `?${query}` : ""}`, options),
+  stock: (variantId, options) => privateRequest(`/admin/inventory/${encodeURIComponent(variantId)}`, options),
+  inbound: (variantId, body) => privateRequest(`/admin/inventory/${encodeURIComponent(variantId)}/inbound`, { method: "POST", body }),
+  adjust: (variantId, body) => privateRequest(`/admin/inventory/${encodeURIComponent(variantId)}/adjust`, { method: "POST", body }),
+  movements: (variantId, page = 1, limit = 50) => privateRequest(`/admin/inventory/${encodeURIComponent(variantId)}/movements?page=${page}&limit=${limit}`),
+  products: (query = "", options = {}) => privateRequest(`/admin/products${query ? `?${query}` : ""}`, options),
+  product: (id) => privateRequest(`/admin/products/${encodeURIComponent(id)}`),
+  saveProduct: (body, id) => privateRequest(`/admin/products${id ? `/${encodeURIComponent(id)}` : ""}`, { method: id ? "PATCH" : "POST", body }),
+  archiveProduct: (id) => privateRequest(`/admin/products/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  categories: (query = "", options = {}) => privateRequest(`/admin/categories${query ? `?${query}` : ""}`, options),
+  saveCategory: (body, id) => privateRequest(`/admin/categories${id ? `/${encodeURIComponent(id)}` : ""}`, { method: id ? "PATCH" : "POST", body }),
+  deleteCategory: (id) => privateRequest(`/admin/categories/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  brands: (query = "", options = {}) => privateRequest(`/admin/brands${query ? `?${query}` : ""}`, options),
+  saveBrand: (body, id) => privateRequest(`/admin/brands${id ? `/${encodeURIComponent(id)}` : ""}`, { method: id ? "PATCH" : "POST", body }),
+  deleteBrand: (id) => privateRequest(`/admin/brands/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  customer: (id) => privateRequest(`/admin/customers/${encodeURIComponent(id)}`),
+  customerStatus: (id, status) => privateRequest(`/admin/customers/${encodeURIComponent(id)}/status`, { method: "PATCH", body: { status } }),
+  settings: () => privateRequest("/admin/settings"),
+  updateSettings: (body) => privateRequest("/admin/settings", { method: "PATCH", body }),
+  homepage: (options = {}) => privateRequest("/admin/homepage", options),
+  saveHomepageDraft: (body) => privateRequest("/admin/homepage/draft", { method: "PATCH", body }),
+  publishHomepage: () => privateRequest("/admin/homepage/publish", { method: "POST" }),
+};

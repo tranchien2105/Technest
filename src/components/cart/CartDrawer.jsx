@@ -1,5 +1,6 @@
 import { ArrowRight, Heart, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { formatPrice } from "../../utils/formatCurrency";
+import { compareMoney, moneyRatio, subtractMoney } from "../../domain/cart";
 import ProductImage from "../common/ProductImage";
 import CartItem from "./CartItem";
 
@@ -27,6 +28,7 @@ export default function CartDrawer({
   t,
   language,
   cart,
+  cartStockReady,
   subtotal,
   favoriteProducts,
   changeQuantity,
@@ -69,16 +71,16 @@ export default function CartDrawer({
               <div className="drawer-summary">
                 <div className="shipping-progress">
                   <p>
-                    {subtotal >= 1000000
+                    {compareMoney(subtotal, 1000000) >= 0
                       ? language === "vi"
                         ? "Đơn hàng đã được miễn phí vận chuyển!"
                         : "Your order qualifies for free shipping!"
                       : language === "vi"
-                        ? `Mua thêm ${formatPrice(1000000 - subtotal)} để được miễn phí vận chuyển`
-                        : `Add ${formatPrice(1000000 - subtotal)} for free shipping`}
+                        ? `Mua thêm ${formatPrice(subtractMoney(1000000, subtotal))} để được miễn phí vận chuyển`
+                        : `Add ${formatPrice(subtractMoney(1000000, subtotal))} for free shipping`}
                   </p>
                   <div className="shipping-progress-track">
-                    <span style={{ width: `${Math.min(100, (subtotal / 1000000) * 100)}%` }} />
+                    <span style={{ width: `${Math.min(100, moneyRatio(subtotal, 1000000))}%` }} />
                   </div>
                 </div>
                 <div>
@@ -90,7 +92,18 @@ export default function CartDrawer({
                     ? "Phí vận chuyển sẽ được tính ở bước tiếp theo."
                     : "Shipping will be calculated at the next step."}
                 </p>
-                <button className="checkout-button" onClick={() => navigate?.("/checkout")}>
+                {!cartStockReady && (
+                  <p className="catalog-feedback" role="status">
+                    {language === "vi"
+                      ? "Cần xác nhận tồn kho của tất cả sản phẩm trước khi tiếp tục."
+                      : "Stock must be confirmed for every item before continuing."}
+                  </p>
+                )}
+                <button
+                  className="checkout-button"
+                  disabled={!cartStockReady}
+                  onClick={() => navigate?.("/checkout")}
+                >
                   {t.checkout} <ArrowRight size={17} />
                 </button>
                 <button className="continue-button" onClick={() => setDrawer(null)}>

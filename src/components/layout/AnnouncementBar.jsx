@@ -7,12 +7,14 @@ import {
   Truck,
 } from "lucide-react";
 
-export default function AnnouncementBar({ shipping, language }) {
+export default function AnnouncementBar({ shipping, language, config }) {
   const vi = language === "vi";
+  if (config?.visible === false) return null;
+  const shippingMessage = config?.text || shipping;
   const messages = (
     <>
       <span>
-        <Truck size={15} /> {shipping}
+        <Truck size={15} /> {config?.href ? <a href={config.href} style={{ color: "inherit", textDecoration: "none" }}>{shippingMessage}</a> : shippingMessage}
       </span>
       <span>
         <BadgeCheck size={15} />{" "}

@@ -3,6 +3,7 @@ import { Headphones, Keyboard, Laptop, Monitor, Mouse, Package } from "lucide-re
 export const products = [
   {
     id: 1,
+    createdAt: "2026-09-01T00:00:00.000Z",
     stock: 14,
     name: "Keychron K2 Pro",
     brand: "KEYCHRON",
@@ -18,6 +19,7 @@ export const products = [
   },
   {
     id: 2,
+    createdAt: "2026-09-02T00:00:00.000Z",
     stock: 5,
     name: "Logitech MX Master 3S",
     brand: "LOGITECH",
@@ -33,6 +35,7 @@ export const products = [
   },
   {
     id: 3,
+    createdAt: "2026-09-03T00:00:00.000Z",
     stock: 8,
     name: "Sony WH-1000XM5",
     brand: "SONY",
@@ -48,6 +51,7 @@ export const products = [
   },
   {
     id: 4,
+    createdAt: "2026-09-04T00:00:00.000Z",
     stock: 3,
     name: "USB-C Multiport Hub",
     brand: "TECHNEST SELECT",
@@ -63,6 +67,7 @@ export const products = [
   },
   {
     id: 5,
+    createdAt: "2026-09-05T00:00:00.000Z",
     stock: 9,
     name: "Mechanical Keyboard 75%",
     brand: "KEYCHRON",
@@ -78,6 +83,7 @@ export const products = [
   },
   {
     id: 6,
+    createdAt: "2026-09-06T00:00:00.000Z",
     stock: 12,
     name: "Wireless Precision Mouse",
     brand: "LOGITECH",
@@ -93,6 +99,7 @@ export const products = [
   },
   {
     id: 7,
+    createdAt: "2026-09-07T00:00:00.000Z",
     stock: 4,
     name: "Everyday Wireless Headphones",
     brand: "AUDIO",
@@ -108,6 +115,7 @@ export const products = [
   },
   {
     id: 8,
+    createdAt: "2026-09-08T00:00:00.000Z",
     stock: 2,
     name: "Aluminium Laptop Stand",
     brand: "TECHNEST SELECT",
@@ -118,11 +126,12 @@ export const products = [
     reviews: "274",
     badge: "hot",
     image:
-      "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=900&q=90",
+      "https://images.unsplash.com/photo-1658869402195-9f0ea192ecd5?auto=format&fit=crop&w=900&q=85",
     description: "Nâng màn hình lên tầm mắt để góc làm việc gọn gàng hơn.",
   },
   {
     id: 9,
+    createdAt: "2026-09-09T00:00:00.000Z",
     stock: 7,
     name: "Keychron K8 Pro",
     brand: "KEYCHRON",
@@ -138,6 +147,7 @@ export const products = [
   },
   {
     id: 10,
+    createdAt: "2026-09-10T00:00:00.000Z",
     stock: 11,
     name: "Logitech Pebble Mouse 2",
     brand: "LOGITECH",
@@ -153,6 +163,7 @@ export const products = [
   },
   {
     id: 11,
+    createdAt: "2026-09-11T00:00:00.000Z",
     stock: 6,
     name: "Sony WF-C700N",
     brand: "SONY",
@@ -168,6 +179,7 @@ export const products = [
   },
   {
     id: 12,
+    createdAt: "2026-09-12T00:00:00.000Z",
     stock: 3,
     name: "Anker 735 Charger 65W",
     brand: "ANKER",
@@ -183,6 +195,7 @@ export const products = [
   },
   {
     id: 13,
+    createdAt: "2026-09-13T00:00:00.000Z",
     stock: 5,
     name: "Logitech Brio 4K Webcam",
     brand: "LOGITECH",
@@ -198,6 +211,7 @@ export const products = [
   },
   {
     id: 14,
+    createdAt: "2026-09-14T00:00:00.000Z",
     stock: 10,
     name: "JBL Flip 6 Speaker",
     brand: "JBL",
@@ -213,6 +227,7 @@ export const products = [
   },
   {
     id: 15,
+    createdAt: "2026-09-15T00:00:00.000Z",
     stock: 4,
     name: "Keychron M3 Wireless Mouse",
     brand: "KEYCHRON",
@@ -228,6 +243,7 @@ export const products = [
   },
   {
     id: 16,
+    createdAt: "2026-09-16T00:00:00.000Z",
     stock: 8,
     name: "Baseus USB-C 8-in-1 Hub",
     brand: "BASEUS",
@@ -243,6 +259,7 @@ export const products = [
   },
   {
     id: 17,
+    createdAt: "2026-09-17T00:00:00.000Z",
     stock: 4,
     name: "Technest Comfort Wrist Rest",
     brand: "TECHNEST SELECT",
@@ -259,6 +276,7 @@ export const products = [
   },
   {
     id: 18,
+    createdAt: "2026-09-18T00:00:00.000Z",
     stock: 13,
     name: "Technest Desk Mat",
     brand: "TECHNEST SELECT",
@@ -275,6 +293,7 @@ export const products = [
   },
   {
     id: 19,
+    createdAt: "2026-09-19T00:00:00.000Z",
     stock: 3,
     name: "Technest Headphone Stand",
     brand: "TECHNEST SELECT",
@@ -291,6 +310,7 @@ export const products = [
   },
   {
     id: 20,
+    createdAt: "2026-09-20T00:00:00.000Z",
     stock: 8,
     name: "Technest Studio 27 4K Monitor",
     brand: "TECHNEST SELECT",
@@ -306,6 +326,7 @@ export const products = [
   },
   {
     id: 21,
+    createdAt: "2026-09-21T00:00:00.000Z",
     stock: 3,
     name: "Technest View 34 UltraWide",
     brand: "TECHNEST SELECT",
@@ -321,6 +342,7 @@ export const products = [
   },
   {
     id: 22,
+    createdAt: "2026-09-22T00:00:00.000Z",
     stock: 6,
     name: "Technest Creator 27 QHD",
     brand: "TECHNEST SELECT",
@@ -333,54 +355,6 @@ export const products = [
     image:
       "https://images.unsplash.com/photo-1585792180666-f7347c490ee2?auto=format&fit=crop&w=900&q=90",
     description: "Màn hình QHD cân bằng giữa chất lượng hiển thị và hiệu suất công việc mỗi ngày.",
-  },
-];
-
-export const heroSlides = [
-  {
-    image:
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=90",
-    alt: {
-      vi: "Góc làm việc hiện đại với màn hình và phụ kiện công nghệ",
-      en: "Modern workspace with a monitor and tech accessories",
-    },
-    tag: {
-      vi: "SẢN PHẨM CHÍNH HÃNG · TUYỂN CHỌN MỖI NGÀY",
-      en: "AUTHENTIC TECH · CURATED EVERY DAY",
-    },
-    title: { vi: "Nâng cấp nơi làm việc của bạn.", en: "Upgrade your workspace." },
-    desc: {
-      vi: "Bàn phím, chuột, tai nghe và phụ kiện công nghệ được chọn lọc cho hiệu suất cao hơn mỗi ngày.",
-      en: "Thoughtfully selected keyboards, mice, headphones and accessories for better everyday productivity.",
-    },
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1600&q=90",
-    alt: {
-      vi: "Bàn phím cơ trong góc setup tông màu ấm",
-      en: "Mechanical keyboard in a warm-toned workspace",
-    },
-    tag: { vi: "GÕ ÊM HƠN · LÀM VIỆC CẢM HỨNG HƠN", en: "BETTER TYPING · BETTER FLOW" },
-    title: { vi: "Tìm chiếc bàn phím hợp gu.", en: "Find your perfect keyboard." },
-    desc: {
-      vi: "Từ bàn phím cơ nhỏ gọn đến góc setup tối giản, chọn công cụ đúng với cách bạn làm việc.",
-      en: "From compact mechanical keyboards to minimalist setups, find the right tools for your workflow.",
-    },
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1600&q=90",
-    alt: {
-      vi: "Tai nghe chụp tai cho làm việc và giải trí",
-      en: "Over-ear headphones for work and entertainment",
-    },
-    tag: { vi: "TẬP TRUNG VÀO ĐIỀU QUAN TRỌNG", en: "FOCUS ON WHAT MATTERS" },
-    title: { vi: "Âm thanh tốt, ngày làm việc tốt.", en: "Great sound, better days." },
-    desc: {
-      vi: "Khám phá tai nghe và phụ kiện âm thanh cho những giờ tập trung, thư giãn và giải trí.",
-      en: "Explore audio gear for focused work, downtime and everyday entertainment.",
-    },
   },
 ];
 
