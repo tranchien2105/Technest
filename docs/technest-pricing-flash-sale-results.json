@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-11-03T15:25:16.665Z",
+  "database": "technest_dev",
+  "isolation": "Single rollback transaction; service transactions use savepoints; no worker or external email runtime",
+  "result": "PASS",
+  "checks": [
+    "catalog/regular variant/Flash Sale quote use correct VND and selected image",
+    "wrong variant, draft/paused/cancelled/ended/upcoming/expired offers rejected",
+    "stale expensive deal, voucher stacking and exhausted quota rejected",
+    "quote=create price snapshots; same key replays one order; quota/customer/stock hold enforced",
+    "expired pending Flash Sale order cancels and releases stock+quota; no unrelated expiry sweep",
+    "cancel releases quota+stock; ship consumes once; fresh reads reflect transitions"
+  ],
+  "persistedFixtureProducts": 0
+}

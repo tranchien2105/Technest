@@ -22,7 +22,7 @@ export default function FloatingActions({ language = "vi" }) {
         className="floating-action floating-contact"
         type="button"
         onClick={scrollToContact}
-        aria-label={vi ? "Liên hệ Technest" : "Contact Technest"}
+        aria-label={vi ? "TN — Liên hệ Technest" : "TN — Contact Technest"}
         title={vi ? "Liên hệ" : "Contact"}
       >
         <svg className="technest-mascot" viewBox="0 0 88 88" role="img" aria-hidden="true">

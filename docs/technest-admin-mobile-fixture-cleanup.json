@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-04T08:13:52.504Z",
+  "runId": "browser-e2e-9465df1d-0c03-438c-bcd6-7edb2b8f339b",
+  "fixtureIds": {
+    "userId": 436,
+    "productId": "18386"
+  },
+  "remaining": {
+    "users": 0,
+    "products": 0,
+    "orders": 0
+  },
+  "rolledBack": true,
+  "requests": [],
+  "droppedResponses": 0
+}

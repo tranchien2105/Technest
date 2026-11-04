@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { apiGet, normalizeProduct } from "../api/apiClient";
 import { allProductsCategory, presentCategory } from "../domain/categoryPresentation";
-import { updateRouteQuery } from "../routing/navigation";
+import { updateCatalogQuery, updateRouteQuery } from "../routing/navigation";
+import { productUrl } from "../routing/productUrl";
 
 const initialData = {
   products: [],
@@ -28,28 +29,38 @@ function normalizeList(data) {
   };
 }
 
-export function useCatalog({ route, navigate, productIds = [] }) {
+export function useCatalog({ route, navigate, productIds = [], homeFeaturedSort = "newest", homeArrivalSort = "newest" }) {
   const url = new URL(route, "http://technest.local");
-  const listing = ["/products", "/search"].includes(url.pathname);
+  const categorySlug = /^\/categories\/([a-z0-9-]+)$/.exec(url.pathname)?.[1];
+  const brandSlug = /^\/brands\/([a-z0-9-]+)$/.exec(url.pathname)?.[1];
+  const listing = ["/products", "/search"].includes(url.pathname) || Boolean(categorySlug || brandSlug);
   const home = url.pathname === "/";
   const setup = url.pathname === "/setup";
-  const productId = /^\/products\/(\d+)$/.exec(url.pathname)?.[1] || null;
+  const productId = /^\/products\/([a-z0-9-]+)$/.exec(url.pathname)?.[1] || null;
+  const catalogRoute = url.pathname + (productId ? "" : url.search);
   const idsKey = [
     ...new Set(productIds.map(String).filter((id) => /^\d+$/.test(id) && id !== productId)),
   ]
     .sort()
     .join(",");
-  const routeKey = `${url.pathname}${url.search}|${idsKey}`;
+  const featuredSort = url.searchParams.get("sort") || homeFeaturedSort;
+  const routeKey = `${catalogRoute}|${idsKey}|${home ? `${featuredSort}:${homeArrivalSort}` : ""}`;
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [brandTotal, setBrandTotal] = useState(0);
   const [data, setData] = useState(initialData);
-  const queryState = Object.fromEntries(url.searchParams);
+  useEffect(() => {
+    if (!productId || data.routeKey !== routeKey || !data.detailProduct?.slug) return;
+    const canonical = productUrl(data.detailProduct);
+    if (url.pathname !== canonical) navigate(canonical + url.search + url.hash, false, { replace: true });
+  }, [productId, data.routeKey, data.detailProduct, routeKey, url.pathname, url.search, url.hash, navigate]);
+  const queryState = { ...Object.fromEntries(url.searchParams), ...(categorySlug ? {category:categorySlug} : {}), ...(brandSlug ? {brand:brandSlug} : {}) };
 
   useEffect(() => {
     const controller = new AbortController();
     Promise.all([
       apiGet("/categories", { signal: controller.signal }),
-      apiGet("/brands", { signal: controller.signal }),
+      apiGet("/brands?limit=50&paginated=1", { signal: controller.signal }),
     ])
       .then(([categoryData, brandData]) => {
         setCategories(
@@ -57,7 +68,8 @@ export function useCatalog({ route, navigate, productIds = [] }) {
             ? [allProductsCategory, ...categoryData.map(presentCategory)]
             : [allProductsCategory],
         );
-        setBrands(Array.isArray(brandData) ? brandData : []);
+        setBrands(Array.isArray(brandData) ? brandData : brandData?.items || []);
+        setBrandTotal(brandData?.pagination?.total || (Array.isArray(brandData) ? brandData.length : 0));
       })
       .catch((error) => {
         if (error.name !== "AbortError") {
@@ -71,7 +83,7 @@ export function useCatalog({ route, navigate, productIds = [] }) {
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
-    const routeUrl = new URL(route, "http://technest.local");
+    const routeUrl = new URL(catalogRoute, "http://technest.local");
     const save = (next) => setData({ ...initialData, ...next, routeKey, loading: false });
     const load = async () => {
       try {
@@ -81,11 +93,10 @@ export function useCatalog({ route, navigate, productIds = [] }) {
         if (home) {
           const [requests, selectedResult] = await Promise.all([
             Promise.allSettled([
-              apiGet(listUrl({ featured: "1", limit: "24", sort: "recommended" }), { signal }),
+              apiGet(listUrl({ limit: "24", page: featuredSort === "newest" ? "2" : "1", sort: featuredSort }), { signal }),
               apiGet(listUrl({ trending: "1", limit: "24", sort: "recommended" }), { signal }),
-              apiGet(listUrl({ sale: "1", limit: "24", sort: "priceLow" }), { signal }),
-              apiGet(listUrl({ sort: "newest", limit: "24" }), { signal }),
-              apiGet(listUrl({ sort: "recommended", limit: "100" }), { signal }),
+              apiGet(listUrl({ sale: "1", limit: "24", sort: "newest" }), { signal }),
+              apiGet(listUrl({ sort: homeArrivalSort, limit: "24" }), { signal }),
             ]),
             Promise.allSettled([selectionsPromise]),
           ]);
@@ -109,11 +120,12 @@ export function useCatalog({ route, navigate, productIds = [] }) {
               ]),
             ).values(),
           ];
+          const occupied = new Set([...lists[0].items, ...lists[3].items].map((item) => item.id));
           save({
             products: all,
             featuredProducts: lists[0].items,
             trendingProducts: lists[1].items,
-            dealProducts: lists[2].items,
+            dealProducts: lists[2].items.filter((item) => !occupied.has(item.id)),
             newArrivalProducts: lists[3].items,
             error: errors[0] || null,
           });
@@ -126,6 +138,10 @@ export function useCatalog({ route, navigate, productIds = [] }) {
           if (q) params.set("q", q);
           for (const key of ["category", "brand", "minPrice", "maxPrice", "sort", "sale", "page"])
             if (routeUrl.searchParams.has(key)) params.set(key, routeUrl.searchParams.get(key));
+          const categoryMatch = /^\/categories\/([a-z0-9-]+)$/.exec(routeUrl.pathname);
+          const brandMatch = /^\/brands\/([a-z0-9-]+)$/.exec(routeUrl.pathname);
+          if (categoryMatch) params.set("category",categoryMatch[1]);
+          if (brandMatch) params.set("brand",brandMatch[1]);
           params.set("limit", "24");
           const [listResult, selectedResult] = await Promise.allSettled([
             apiGet(`/products?${params}`, { signal }).then(normalizeList),
@@ -163,6 +179,14 @@ export function useCatalog({ route, navigate, productIds = [] }) {
           ]);
           if (detailResult.status === "rejected") throw detailResult.reason;
           const product = detailResult.value;
+          const selected = selectedResult.status === "fulfilled" ? selectedResult.value.items : [];
+          // Render the purchasable product as soon as its own API confirms it.
+          // Related recommendations are noncritical and must not delay the gallery.
+          if (!signal.aborted) save({
+            detailProduct: product,
+            products: [...new Map([product, ...selected].map((item) => [item.id, item])).values()],
+            error: selectedResult.status === "rejected" ? selectedResult.reason : null,
+          });
           const [recommendationsResult] = await Promise.allSettled([
             apiGet(listUrl({ category: product.category, limit: "8", sort: "recommended" }), {
               signal,
@@ -173,8 +197,6 @@ export function useCatalog({ route, navigate, productIds = [] }) {
               recommendationsResult.status === "fulfilled"
                 ? recommendationsResult.value.items.filter((item) => item.id !== product.id)
                 : [];
-            const selected =
-              selectedResult.status === "fulfilled" ? selectedResult.value.items : [];
             save({
               detailProduct: product,
               products: [
@@ -182,12 +204,9 @@ export function useCatalog({ route, navigate, productIds = [] }) {
                   [product, ...related, ...selected].map((item) => [item.id, item]),
                 ).values(),
               ],
-              error:
-                recommendationsResult.status === "rejected"
-                  ? recommendationsResult.reason
-                  : selectedResult.status === "rejected"
-                    ? selectedResult.reason
-                    : null,
+              // A failed suggestions request must not block purchasing the
+              // independently confirmed product or invalidate the cart.
+              error: selectedResult.status === "rejected" ? selectedResult.reason : null,
             });
           }
           return;
@@ -227,12 +246,12 @@ export function useCatalog({ route, navigate, productIds = [] }) {
     };
     void load();
     return () => controller.abort();
-  }, [route, routeKey, home, listing, productId, setup, idsKey]);
+  }, [catalogRoute, routeKey, home, listing, productId, setup, idsKey, featuredSort, homeArrivalSort]);
 
-  const activeCategory = listing ? url.searchParams.get("category") || "all" : "all";
-  const sortBy = url.searchParams.get("sort") || "recommended";
+  const activeCategory = listing ? categorySlug || url.searchParams.get("category") || "all" : "all";
+  const sortBy = url.searchParams.get("sort") || "newest";
   const setQuery = (key, value) => {
-    navigate(updateRouteQuery(route, { [key]: value, page: null }));
+    navigate(updateCatalogQuery(route, key, value));
   };
   const setActiveCategory = (category) => setQuery("category", category);
   const setSortBy = (sort) => setQuery("sort", sort);
@@ -254,6 +273,7 @@ export function useCatalog({ route, navigate, productIds = [] }) {
     loading: data.routeKey !== routeKey,
     categories,
     brands,
+    brandTotal,
     activeCategory,
     sortBy,
     setActiveCategory,

@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 import type { createCatalogService } from "./catalog.service.js";
 import { AppError } from "../../shared/errors.js";
 import { sendData } from "../../shared/response.js";
-import type { ListProductsQuery } from "./catalog.schemas.js";
+import type { ListProductsQuery, ListBrandsQuery } from "./catalog.schemas.js";
 
 type CatalogService = ReturnType<typeof createCatalogService>;
 
@@ -21,7 +21,9 @@ export function createCatalogController(service: CatalogService) {
     sendData(response, await service.categoriesList());
   };
   const brands: RequestHandler = async (_request, response) => {
-    sendData(response, await service.brandsList());
+    const query = response.locals.validated.query as ListBrandsQuery;
+    const result = await service.brandsList(query);
+    sendData(response, query.paginated === "1" ? result : Array.isArray(result) ? result : result.items);
   };
   return { list, detail, categories, brands };
 }

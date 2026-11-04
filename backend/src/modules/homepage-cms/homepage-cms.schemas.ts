@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const safeUrl = z.string().max(500).refine((value) => value === "" || value.startsWith("/") || value.startsWith("#") || /^https:\/\//i.test(value), "Chỉ cho phép đường dẫn nội bộ, anchor hoặc HTTPS.");
-const sectionKeys = ["categories", "featured", "deals", "campaigns", "promotional-banners", "style", "trending", "new-arrivals", "trusted-brands", "feature-banner", "services", "shopping-guide", "bottom-banners", "popular-searches"] as const;
+const sectionKeys = ["categories", "featured", "deals", "flash-sale", "campaigns", "promotional-banners", "style", "trending", "new-arrivals", "trusted-brands", "feature-banner", "services", "shopping-guide", "bottom-banners", "popular-searches"] as const;
 const section = z.object({
   visible: z.boolean(),
   eyebrow: z.string().trim().max(80).optional(),

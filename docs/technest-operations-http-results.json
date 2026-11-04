@@ -1,0 +1,101 @@
+{
+  "checkedAt": "2026-11-03T15:25:46.365Z",
+  "base": "http://127.0.0.1:3000",
+  "checks": [
+    {
+      "path": "/api/v1/health",
+      "status": 200,
+      "requestId": "ad7a5299-c3d5-480b-9845-26592652272a",
+      "cacheControl": "no-store",
+      "robots": "noindex, nofollow",
+      "body": {
+        "success": true,
+        "data": {
+          "status": "ok",
+          "timestamp": "2026-11-03T15:25:46.205Z",
+          "uptime": 204,
+          "dependencies": {
+            "postgres": {
+              "status": "up",
+              "latencyMs": 4
+            },
+            "redis": {
+              "status": "up",
+              "latencyMs": 4
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "/api/v1/health/live",
+      "status": 200,
+      "requestId": "0eb07f4f-4c31-470f-8164-18b8c77ce114",
+      "cacheControl": "no-store",
+      "robots": "noindex, nofollow",
+      "body": {
+        "success": true,
+        "data": {
+          "status": "ok",
+          "timestamp": "2026-11-03T15:25:46.254Z",
+          "uptime": 204
+        }
+      }
+    },
+    {
+      "path": "/api/v1/health/ready",
+      "status": 200,
+      "requestId": "a2c06c9d-9df1-46d9-92c0-f3e57816818b",
+      "cacheControl": "no-store",
+      "robots": "noindex, nofollow",
+      "body": {
+        "success": true,
+        "data": {
+          "status": "ok",
+          "timestamp": "2026-11-03T15:25:46.288Z",
+          "uptime": 204,
+          "dependencies": {
+            "postgres": {
+              "status": "up",
+              "latencyMs": 16
+            },
+            "redis": {
+              "status": "up",
+              "latencyMs": 2
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "/api/v1/missing",
+      "status": 404,
+      "requestId": "b2a581a5-85b8-48a7-8a6a-2f7da39a81c0",
+      "cacheControl": null,
+      "robots": "noindex, nofollow",
+      "body": {
+        "success": false,
+        "error": {
+          "code": "NOT_FOUND",
+          "message": "Route not found"
+        },
+        "requestId": "b2a581a5-85b8-48a7-8a6a-2f7da39a81c0"
+      }
+    },
+    {
+      "path": "/api/v1/admin/products/references?type=brands",
+      "status": 401,
+      "requestId": "984c1cf6-eaee-4da7-aa1e-3583652443ab",
+      "cacheControl": null,
+      "robots": "noindex, nofollow",
+      "body": {
+        "success": false,
+        "error": {
+          "code": "UNAUTHENTICATED",
+          "message": "Bearer access token is required"
+        },
+        "requestId": "984c1cf6-eaee-4da7-aa1e-3583652443ab"
+      }
+    }
+  ]
+}

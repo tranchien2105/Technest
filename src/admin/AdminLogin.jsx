@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { getMe, login } from "../api/authClient";
 import "./admin-login.css";
+import PasswordInput from "../components/common/PasswordInput";
 
 export default function AdminLogin({ path, navigate, onAuthenticate }) {
   const [busy, setBusy] = useState(false);
@@ -41,7 +42,7 @@ export default function AdminLogin({ path, navigate, onAuthenticate }) {
         <p className="admin-login-description">Đăng nhập bằng tài khoản quản trị hoặc nhân viên đã được cấp quyền.</p>
         <form onSubmit={submit}>
           <label>Email<input name="email" type="email" autoComplete="username" required /></label>
-          <label>Mật khẩu<input name="password" type="password" autoComplete="current-password" required /></label>
+          <label>Mật khẩu<PasswordInput name="password" autoComplete="current-password" required /></label>
           {error && <p className="admin-login-error" role="alert">{error}</p>}
           <button type="submit" disabled={busy}>{busy ? "Đang xác minh…" : "Đăng nhập"}<ArrowRight size={17} /></button>
         </form>

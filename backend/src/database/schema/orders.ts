@@ -80,6 +80,10 @@ export const orderItems = pgTable(
     quantity: integer("quantity").notNull(),
     unitPrice: bigint("unit_price", { mode: "bigint" }).notNull(),
     lineTotal: bigint("line_total", { mode: "bigint" }).notNull(),
+    flashSaleCampaignId: bigint("flash_sale_campaign_id", { mode: "bigint" }),
+    flashSaleItemId: bigint("flash_sale_item_id", { mode: "bigint" }),
+    flashSaleOriginalPrice: bigint("flash_sale_original_price", { mode: "bigint" }),
+    flashSaleDiscountAmount: bigint("flash_sale_discount_amount", { mode: "bigint" }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
@@ -88,6 +92,7 @@ export const orderItems = pgTable(
     check("order_items_unit_price_check", sql`${table.unitPrice} >= 0`),
     check("order_items_line_total_check", sql`${table.lineTotal} >= 0`),
     check("order_items_quantity_check", sql`${table.quantity} > 0`),
+    check("order_items_flash_sale_snapshot_check", sql`(${table.flashSaleItemId} IS NULL AND ${table.flashSaleCampaignId} IS NULL AND ${table.flashSaleOriginalPrice} IS NULL AND ${table.flashSaleDiscountAmount} IS NULL) OR (${table.flashSaleItemId} IS NOT NULL AND ${table.flashSaleCampaignId} IS NOT NULL AND ${table.flashSaleOriginalPrice} > ${table.unitPrice} AND ${table.flashSaleDiscountAmount} > 0)`),
   ],
 );
 

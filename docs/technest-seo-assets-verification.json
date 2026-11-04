@@ -1,0 +1,7 @@
+{
+  "mode": "HTTP assets from Express frontend build",
+  "path": "/assets/index-C0abTGpR.js",
+  "status": 200,
+  "type": "text/javascript; charset=utf-8",
+  "cache": "public, max-age=31536000, immutable"
+}

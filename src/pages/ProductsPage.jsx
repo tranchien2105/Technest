@@ -1,3 +1,5 @@
+import BrandFilter from "../components/store/BrandFilter";
+import { useState } from "react";
 import {
   ArrowDownWideNarrow,
   ArrowRight,
@@ -8,6 +10,8 @@ import {
 import { tx } from "../utils/translate";
 import { Empty } from "../components/store/PageElements";
 import ProductGrid from "../components/store/ProductGrid";
+import CurrencyInput from "../components/common/CurrencyInput";
+import "./ProductsPage.css";
 
 export default function ProductsPage({
   route,
@@ -16,6 +20,7 @@ export default function ProductsPage({
   categories,
   visibleProducts = [],
   brands = [],
+  brandCount,
   catalogLoading = false,
   catalogError = null,
   catalogPagination = null,
@@ -47,7 +52,18 @@ export default function ProductsPage({
   const lang = language === "vi";
   const min = catalogQuery.minPrice || "";
   const max = catalogQuery.maxPrice || "";
+  const [minDraft, setMinDraft] = useState(min);
+  const [maxDraft, setMaxDraft] = useState(max);
   const filtered = visibleProducts;
+  const selectedCategory = categories
+    .slice(1)
+    .flatMap((category) => [category, ...(category.children || [])])
+    .find((category) => category.id === activeCategory);
+  const categoryName = selectedCategory
+    ? language === "vi"
+      ? selectedCategory.name
+      : selectedCategory.nameEn || selectedCategory.en || selectedCategory.name
+    : brands.find((brand) => brand.id === catalogQuery.brand)?.name || "";
   const filterControls = (
     <div className="store-filters">
       <label>
@@ -66,40 +82,25 @@ export default function ProductsPage({
           ))}
         </select>
       </label>
-      <label>
-        {tx("Brand", "Thương hiệu", lang)}
-        <select
-          value={catalogQuery.brand || "all"}
-          onChange={(e) => setCatalogQuery("brand", e.target.value)}
-        >
-          <option value="all">{tx("All brands", "Tất cả thương hiệu", lang)}</option>
-          {brands.map((brand) => (
-            <option key={brand.id} value={brand.id}>
-              {brand.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <BrandFilter brands={brands} value={catalogQuery.brand || "all"} onChange={(value) => setCatalogQuery("brand", value)} language={language}/>
       <label>
         {tx("Min price", "Giá thấp nhất", lang)}
-        <input
+        <CurrencyInput
           key={`min-${min}`}
-          type="number"
-          min="0"
-          defaultValue={min}
-          onBlur={(event) => setCatalogQuery("minPrice", event.currentTarget.value)}
-          placeholder="₫"
+          value={minDraft}
+          onValueChange={setMinDraft}
+          onBlur={(event) => setCatalogQuery("minPrice", event.currentTarget.value.replace(/\D/g, ""))}
+          placeholder="Giá thấp nhất"
         />
       </label>
       <label>
         {tx("Max price", "Giá cao nhất", lang)}
-        <input
+        <CurrencyInput
           key={`max-${max}`}
-          type="number"
-          min="0"
-          defaultValue={max}
-          onBlur={(event) => setCatalogQuery("maxPrice", event.currentTarget.value)}
-          placeholder="₫"
+          value={maxDraft}
+          onValueChange={setMaxDraft}
+          onBlur={(event) => setCatalogQuery("maxPrice", event.currentTarget.value.replace(/\D/g, ""))}
+          placeholder="Giá cao nhất"
         />
       </label>
       <label>
@@ -115,6 +116,8 @@ export default function ProductsPage({
         type="button"
         className="text-link"
         onClick={() => {
+          setMinDraft("");
+          setMaxDraft("");
           clearFilters();
         }}
       >
@@ -125,25 +128,33 @@ export default function ProductsPage({
   const cards = (items) => <ProductGrid {...cardProps} items={items} />;
 
   const q = new URL(route, "http://technest.local").searchParams.get("q") || "";
-  const brandsCount = brands.length;
+  const brandsCount = brandCount ?? brands.length;
   return (
-    <section className="store-page">
+    <section className={`store-page catalog-page${categoryName ? " catalog-page-category" : ""}`}>
       <div className="store-breadcrumb">
         <a href="/">{tx("Home", "Trang chủ", lang)}</a> /{" "}
         {path === "/search"
           ? `${tx("Search", "Tìm kiếm", lang)}: “${q}”`
-          : tx("Products", "Sản phẩm", lang)}
+          : categoryName || tx("Products", "Sản phẩm", lang)}
       </div>
       <header className="catalog-hero">
         <div className="catalog-hero-copy">
           <span className="section-kicker">{tx("TECHNEST STORE", "CỬA HÀNG TECHNEST", lang)}</span>
           <h1>
-            {path === "/search"
+            {categoryName
+              ? categoryName
+              : path === "/search"
               ? `${tx("Results for", "Kết quả tìm kiếm cho", lang)} “${q}”`
               : tx("Find the right tech for you", "Chọn công nghệ phù hợp với bạn", lang)}
           </h1>
           <p>
-            {path === "/search"
+            {categoryName
+              ? tx(
+                  `Browse our ${categoryName.toLowerCase()} selection and refine by brand or price.`,
+                  `Khám phá sản phẩm ${categoryName.toLowerCase()} và lọc theo thương hiệu hoặc mức giá.`,
+                  lang,
+                )
+              : path === "/search"
               ? tx(
                   "Explore matching products and refine your results below.",
                   "Khám phá sản phẩm phù hợp và tinh chỉnh kết quả bên dưới.",
@@ -213,7 +224,11 @@ export default function ProductsPage({
           <span className="section-kicker">
             {tx("CURATED FOR YOU", "DÀNH RIÊNG CHO BẠN", lang)}
           </span>
-          <h2>{tx("Explore the collection", "Khám phá bộ sưu tập", lang)}</h2>
+          <h2>
+            {categoryName
+              ? tx(`Products in ${categoryName}`, `Sản phẩm ${categoryName.toLowerCase()}`, lang)
+              : tx("Explore the collection", "Khám phá bộ sưu tập", lang)}
+          </h2>
         </div>
         <span>
           {catalogPagination?.total ?? filtered.length} {tx("items", "sản phẩm", lang)}
@@ -252,29 +267,61 @@ export default function ProductsPage({
         />
       )}
       {catalogPagination?.totalPages > 1 && (
-        <nav
-          className="catalog-pagination"
-          aria-label={tx("Product pages", "Trang sản phẩm", lang)}
-        >
-          <button
-            type="button"
-            disabled={catalogPagination.page <= 1}
-            onClick={() => setCatalogQuery("page", String(catalogPagination.page - 1))}
-          >
-            {tx("Previous", "Trước", lang)}
-          </button>
-          <span>
-            {catalogPagination.page} / {catalogPagination.totalPages}
-          </span>
-          <button
-            type="button"
-            disabled={catalogPagination.page >= catalogPagination.totalPages}
-            onClick={() => setCatalogQuery("page", String(catalogPagination.page + 1))}
-          >
-            {tx("Next", "Sau", lang)}
-          </button>
-        </nav>
+        <CatalogPagination
+          pagination={catalogPagination}
+          onPageChange={(page) => setCatalogQuery("page", String(page))}
+          language={language}
+        />
       )}
     </section>
+  );
+}
+
+function CatalogPagination({ pagination, onPageChange, language }) {
+  const lang = language === "vi";
+  const page = Number(pagination.page);
+  const totalPages = Number(pagination.totalPages);
+  const limit = Number(pagination.limit) || 24;
+  const total = Number(pagination.total) || 0;
+  const start = Math.max(1, Math.min(page - 2, totalPages - 4));
+  const pages = Array.from({ length: Math.min(5, totalPages) }, (_, index) => start + index);
+  const firstItem = total ? (page - 1) * limit + 1 : 0;
+  const lastItem = Math.min(page * limit, total);
+  const jump = (nextPage) => {
+    onPageChange(nextPage);
+    document.getElementById("catalog-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <nav className="catalog-pagination" aria-label={tx("Product pages", "Trang sản phẩm", lang)}>
+      <p className="catalog-pagination-count">
+        {tx("Showing", "Đang xem", lang)} <strong>{firstItem}–{lastItem}</strong> {tx("of", "/", lang)} <strong>{total}</strong>
+      </p>
+      <div className="catalog-pagination-controls">
+        <button type="button" className="catalog-page-step" disabled={page <= 1} onClick={() => jump(page - 1)}>
+          {tx("Previous", "Trước", lang)}
+        </button>
+        {start > 1 && <>
+          <button type="button" className="catalog-page-number" onClick={() => jump(1)}>1</button>
+          {start > 2 && <span className="catalog-page-ellipsis" aria-hidden="true">…</span>}
+        </>}
+        {pages.map((number) => (
+          <button
+            key={number}
+            type="button"
+            className="catalog-page-number"
+            aria-current={number === page ? "page" : undefined}
+            onClick={() => jump(number)}
+          >{number}</button>
+        ))}
+        {start + pages.length - 1 < totalPages && <>
+          {start + pages.length < totalPages && <span className="catalog-page-ellipsis" aria-hidden="true">…</span>}
+          <button type="button" className="catalog-page-number" onClick={() => jump(totalPages)}>{totalPages}</button>
+        </>}
+        <button type="button" className="catalog-page-step" disabled={page >= totalPages} onClick={() => jump(page + 1)}>
+          {tx("Next", "Sau", lang)}
+        </button>
+      </div>
+    </nav>
   );
 }

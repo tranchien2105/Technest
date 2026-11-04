@@ -27,6 +27,7 @@ import {
   internalUrl,
   routePage,
   shouldHandleLink,
+  updateCatalogQuery,
   updateRouteQuery,
 } from "../src/routing/navigation.js";
 import { orderTimeline } from "../src/domain/orderTracking.js";
@@ -66,11 +67,23 @@ test("category URL updates, clears and browser history URLs determine the filter
   assert.equal(categoryFromRoute(changed, categories), "mice");
   assert.equal(categoryFromRoute(initial, categories), "keyboards");
   const cleared = updateRouteQuery(changed, { category: "all", sort: "recommended", sale: null });
-  assert.equal(cleared, "/products");
+  assert.equal(cleared, "/products?sort=recommended");
   assert.equal(categoryFromRoute("/products?category=unknown", categories), "all");
   assert.equal(
     updateRouteQuery("/search?q=wireless#results", { category: "mice" }),
     "/search?q=wireless&category=mice#results",
+  );
+});
+
+test("catalog pagination preserves current filters while filter changes reset the page", () => {
+  const route = "/products?category=mice&brand=logitech&sort=newest&page=3";
+  assert.equal(
+    updateCatalogQuery(route, "page", "4"),
+    "/products?category=mice&brand=logitech&sort=newest&page=4",
+  );
+  assert.equal(
+    updateCatalogQuery(route, "brand", "razer"),
+    "/products?category=mice&brand=razer&sort=newest",
   );
 });
 

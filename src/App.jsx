@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import {useSeo} from "./hooks/useSeo";
+import { productUrl as getProductUrl } from "./routing/productUrl";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Check, ShoppingCart, X } from "lucide-react";
 import { content } from "./data/storeContent";
 import HomePage from "./pages/HomePage";
@@ -16,9 +18,10 @@ import { clearAuth, hasRefreshSession, logout, restoreSession } from "./api/auth
 import { NotificationsProvider } from "./hooks/useNotifications.jsx";
 import CartDrawer from "./components/cart/CartDrawer";
 import FloatingActions from "./components/layout/FloatingActions";
-import AdminApp from "./admin/AdminApp";
 import { useHomepageConfig } from "./hooks/useHomepageConfig";
 import "./index.css";
+
+const AdminApp = lazy(() => import("./admin/AdminApp"));
 
 function App() {
   const homepage = useHomepageConfig();
@@ -39,9 +42,10 @@ function App() {
     path,
     navigate: navigateRoute,
   } = useNavigation(authenticated || (!authState.ready && hasRefreshSession()));
+  useSeo(route);
   const navigate = useCallback(
-    (url, allowAuthenticatedDestination = false) => {
-      navigateRoute(url, allowAuthenticatedDestination);
+    (url, allowAuthenticatedDestination = false, options) => {
+      navigateRoute(url, allowAuthenticatedDestination, options);
       setDrawer(null);
       setMobileMenu(false);
       setSearchOpen(false);
@@ -49,6 +53,8 @@ function App() {
     [navigateRoute],
   );
   const catalog = useCatalog({
+    homeFeaturedSort: homepage.config?.sections?.featured?.sort && homepage.config.sections.featured.sort !== "recommended" ? homepage.config.sections.featured.sort : "newest",
+    homeArrivalSort: homepage.config?.sections?.["new-arrivals"]?.sort || "newest",
     // The Admin visual preview must load the same catalog as the real Homepage.
     route: path.startsWith("/admin") ? "/" : route,
     navigate,
@@ -96,14 +102,14 @@ function App() {
               ? {
                   variantId: variant.id,
                   sku: variant.sku,
-                  price: variant.price ?? currentProduct.price,
-                  oldPrice: variant.compareAtPrice ?? currentProduct.oldPrice,
-                  availableQuantity: variant.availableQuantity,
+                  price: item.flashSaleItemId ? item.flashSalePrice : variant.price ?? currentProduct.price,
+                  oldPrice: item.flashSaleItemId ? item.oldPrice : variant.compareAtPrice ?? currentProduct.oldPrice,
+                  availableQuantity: item.flashSaleItemId ? Math.min(item.flashSaleAvailableQuantity ?? item.availableQuantity, variant.availableQuantity) : variant.availableQuantity,
                   inStock: variant.inStock,
                   stockStatus: variant.stockStatus,
                 }
               : {}),
-            id: String(variant?.id || currentProduct.id),
+            id: item.flashSaleItemId ? `${String(variant?.id || currentProduct.id)}:flash:${item.flashSaleItemId}` : String(variant?.id || currentProduct.id),
             productId: String(currentProduct.id),
             quantity: item.quantity,
           },
@@ -177,14 +183,15 @@ function App() {
           ...product,
           variantId: variant.id,
           sku: variant.sku,
-          price: variant.price ?? product.price,
-          oldPrice: variant.compareAtPrice ?? product.oldPrice,
-          availableQuantity: variant.availableQuantity,
+          price: product.flashSaleItemId ? product.flashSalePrice : variant.price ?? product.price,
+          oldPrice: product.flashSaleItemId ? product.oldPrice : variant.compareAtPrice ?? product.oldPrice,
+          availableQuantity: product.flashSaleItemId ? Math.min(product.flashSaleAvailableQuantity ?? variant.availableQuantity, variant.availableQuantity) : variant.availableQuantity,
           inStock: variant.inStock,
           stockStatus: variant.stockStatus,
         }
       : product;
-    const current = cart.find((line) => String(line.id) === String(item.variantId || item.id));
+    const lineId = `${String(item.variantId || item.id)}${item.flashSaleItemId ? `:flash:${item.flashSaleItemId}` : ""}`;
+    const current = cart.find((line) => String(line.id) === lineId);
     if (!canPurchaseStock(item, quantity, current?.quantity || 0)) {
       notify(
         language === "vi"
@@ -218,7 +225,7 @@ function App() {
     lists.toggleCompare(id);
   };
   const selectCategory = (id) =>
-    navigate("/products" + (id === "all" ? "" : `?category=${encodeURIComponent(id)}`));
+    navigate(id === "all" ? "/products" : `/categories/${encodeURIComponent(id)}`);
   const props = {
     t,
     language,
@@ -231,6 +238,7 @@ function App() {
     catalogPagination: catalog.pagination,
     catalogQuery: catalog.queryState,
     brands: catalog.brands,
+    brandCount: catalog.brandTotal,
     setCatalogQuery: catalog.setQuery,
     cartCatalogReady,
     cartStockReady,
@@ -257,7 +265,7 @@ function App() {
     toggleFavorite,
     addToCart,
     authUser: authState.user,
-    onViewProduct: (product) => navigate(`/products/${product.id}`),
+    onViewProduct: (product) => navigate(getProductUrl(product)),
     navigate,
     homepageConfig: homepage.config,
   };
@@ -282,15 +290,17 @@ function App() {
   if (path.startsWith("/admin")) {
     return (
       <NotificationsProvider user={authState.user}>
-        <AdminApp
-          path={path}
-          authUser={authState.user}
-          authReady={authState.ready}
-          navigate={navigate}
-          onLogout={onLogout}
-          onAuthenticate={onAuthenticate}
-          storePreviewProps={props}
-        />
+        <Suspense fallback={<div className="route-loading-state admin-route-loading" role="status"><span /><span /><span /></div>}>
+          <AdminApp
+            path={path}
+            authUser={authState.user}
+            authReady={authState.ready}
+            navigate={navigate}
+            onLogout={onLogout}
+            onAuthenticate={onAuthenticate}
+            storePreviewProps={props}
+          />
+        </Suspense>
       </NotificationsProvider>
     );
   }

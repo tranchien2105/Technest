@@ -18,6 +18,8 @@ import AdminCatalogPanel from "./AdminCatalogPanel";
 import AdminCustomersPanel from "./AdminCustomersPanel";
 import AdminSettingsPanel from "./AdminSettingsPanel";
 import AdminHomepageCms from "./AdminHomepageCms";
+import AdminFlashSalesPanel from "./AdminFlashSalesPanel";
+import AdminLoadingSkeleton from "./AdminLoadingSkeleton";
 import "./admin.css";
 
 const sections = [
@@ -27,6 +29,7 @@ const sections = [
   ["/admin/brands", "Thương hiệu", Activity],
   ["/admin/inventory", "Tồn kho", Warehouse],
   ["/admin/orders", "Đơn hàng", ShoppingBag],
+  ["/admin/flash-sales", "Flash Sale", Activity],
   ["/admin/customers", "Khách hàng", Users],
   ["/admin/imports", "Nhập / xuất Excel", ClipboardList],
   ["/admin/homepage", "Trang chủ · Visual CMS", LayoutDashboard],
@@ -80,7 +83,7 @@ export default function AdminApp({ path, authUser, authReady, navigate, onLogout
     if (variantStatus) query.set("status", variantStatus);
     return query.toString();
   }, [page, limit, debouncedSearch, stockFilter, variantStatus]);
-  const scopes = { "/admin": "dashboard", "/admin/categories": "catalog", "/admin/brands": "catalog", "/admin/imports": "products", "/admin/homepage": "homepage" };
+  const scopes = { "/admin": "dashboard", "/admin/categories": "catalog", "/admin/brands": "catalog", "/admin/imports": "products", "/admin/homepage": "homepage", "/admin/flash-sales": "flash-sales" };
   const scope = scopes[path] || path.split("/")[2];
   const permitted = canAdmin(authUser, scope);
   const canWrite = canAdmin(authUser, scope, true);
@@ -127,11 +130,11 @@ export default function AdminApp({ path, authUser, authReady, navigate, onLogout
       <header className="admin-topbar"><button className="admin-icon-button admin-mobile-menu" aria-label="Mở menu" onClick={() => setMobileOpen(true)}><Menu size={21}/></button><div className="admin-breadcrumb">Technest <ChevronRight size={14}/> <strong>{title}</strong></div><div className="admin-top-user"><span>{(authUser.fullName || authUser.email).slice(0, 1).toUpperCase()}</span><div><strong>{authUser.fullName || "Quản trị viên"}</strong><small>{authUser.role}</small></div></div></header>
       <div className="admin-content"><div className="admin-page-heading"><div><span className="admin-eyebrow">TECHNEST CONTROL CENTER</span><h1>{title}</h1><p>{path === "/admin" ? "Theo dõi tình hình vận hành từ dữ liệu hiện có." : `Quản lý ${title.toLowerCase()} bằng dữ liệu từ hệ thống.`}</p></div></div>
 
-      {!permitted ? <div className="admin-panel"><h2>Bạn chưa được cấp quyền cho mục này.</h2><p>Chọn một mục được cấp quyền trong menu quản trị.</p></div> : path === "/admin/homepage" ? <AdminHomepageCms canWrite={authUser.role === "ADMIN"} previewProps={storePreviewProps}/> : scope === "banners" ? <AdminBannerManagement canWrite={canWrite} previewProps={storePreviewProps}/> : ["vouchers","staff","audit","emails","after-sales"].includes(scope) ? <AdminOperationsPanel key={scope} kind={scope} canWrite={canWrite}/> : path === "/admin/reports" ? <AdminReportsPanel/> : path === "/admin/imports" ? canWrite ? <AdminImportPanel user={authUser}/> : <div className="admin-panel">Bạn cần quyền thay đổi sản phẩm để nhập dữ liệu.</div> : path === "/admin/inventory" ? <Inventory canWrite={canWrite} data={data} loading={loading} error={error} onAction={runStockAction} onHistory={showStockHistory}
+      {!permitted ? <div className="admin-panel"><h2>Bạn chưa được cấp quyền cho mục này.</h2><p>Chọn một mục được cấp quyền trong menu quản trị.</p></div> : path === "/admin/homepage" ? <AdminHomepageCms canWrite={authUser.role === "ADMIN"} previewProps={storePreviewProps}/> : path === "/admin/flash-sales" ? <AdminFlashSalesPanel canWrite={canWrite}/> : scope === "banners" ? <AdminBannerManagement canWrite={canWrite} previewProps={storePreviewProps}/> : ["vouchers","staff","audit","emails","after-sales"].includes(scope) ? <AdminOperationsPanel key={scope} kind={scope} canWrite={canWrite}/> : path === "/admin/reports" ? <AdminReportsPanel/> : path === "/admin/imports" ? canWrite ? <AdminImportPanel user={authUser}/> : <div className="admin-panel">Bạn cần quyền thay đổi sản phẩm để nhập dữ liệu.</div> : path === "/admin/inventory" ? <Inventory canWrite={canWrite} data={data} loading={loading} error={error} onAction={runStockAction} onHistory={showStockHistory}
         search={search} onSearch={(value) => { setSearch(value); setPage(1); }} stockFilter={stockFilter} onStockFilter={(value) => { setStockFilter(value); setPage(1); }}
         status={variantStatus} onStatus={(value) => { setVariantStatus(value); setPage(1); }}
         limit={limit} onLimitChange={(value) => { setLimit(value); setPage(1); }} setPage={setPage}/>
-        : path === "/admin" ? (loading ? <div className="admin-state">Đang tải dữ liệu…</div> : error ? <div className="admin-state admin-error"><strong>Không tải được dữ liệu</strong><p>{error}</p><button onClick={() => setRefreshVersion((value) => value + 1)}>Thử lại</button></div> : <Overview data={data} navigate={navigate}/>)
+        : path === "/admin" ? (loading ? <AdminLoadingSkeleton variant="dashboard" label="Đang tải tổng quan…" /> : error ? <div className="admin-state admin-error"><strong>Không tải được dữ liệu</strong><p>{error}</p><button onClick={() => setRefreshVersion((value) => value + 1)}>Thử lại</button></div> : <Overview data={data} navigate={navigate}/>)
         : path === "/admin/customers" ? <AdminCustomersPanel canWrite={canWrite}/> : path === "/admin/products" ? <AdminCatalogPanel canWrite={canWrite} key={path} kind="products"/> : path === "/admin/categories" ? <AdminCatalogPanel canWrite={canWrite} key={path} kind="categories"/> : path === "/admin/brands" ? <AdminCatalogPanel canWrite={canWrite} key={path} kind="brands"/> : path === "/admin/orders" ? <OrdersPanel canWrite={canWrite}/> : path === "/admin/settings" ? <AdminSettingsPanel canWrite={canWrite}/> : <Unavailable/>}
 
       {toast && <div className="admin-toast" role="status">{toast}<button onClick={() => setToast("")}>Đóng</button></div>}

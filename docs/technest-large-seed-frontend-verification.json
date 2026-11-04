@@ -1,0 +1,43 @@
+{
+  "verification": "Live development API + actual Homepage section React SSR; not browser E2E",
+  "curatedProducts": 60,
+  "newArrivalNames": [
+    "Apple USB-C Digital AV Multiport Adapter",
+    "Elgato Stream Deck MK.2",
+    "Logitech MX Brio",
+    "Kingston XS1000 External SSD",
+    "SanDisk Extreme Portable SSD",
+    "Samsung T7 Shield Portable SSD",
+    "TP-Link Deco X50",
+    "TP-Link Archer AX55"
+  ],
+  "featuredNames": [
+    "ZOWIE EC2-CW",
+    "HyperX Pulsefire Haste 2 Wireless",
+    "Microsoft Surface Precision Mouse",
+    "Corsair M75 Air Wireless",
+    "ASUS ROG Harpe Ace Aim Lab Edition",
+    "SteelSeries Rival 5",
+    "Razer Basilisk V3 Pro",
+    "Razer Viper V3 Pro"
+  ],
+  "brandNames": [
+    "ELGATO",
+    "ZOWIE",
+    "XIAOMI",
+    "UGREEN",
+    "TP-LINK",
+    "TASCAM",
+    "SHURE",
+    "SANDISK",
+    "PIONEER",
+    "PHILIPS",
+    "ORICO",
+    "NZXT"
+  ],
+  "newArrivalCount": 8,
+  "manualFeaturedIds": [],
+  "distinctSectionIds": 24,
+  "illustrationAssetsServed": 14,
+  "ssrPass": true
+}

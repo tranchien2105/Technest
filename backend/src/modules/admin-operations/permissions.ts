@@ -14,6 +14,7 @@ export const permissionScopes = [
   "vouchers",
   "reports",
   "after-sales",
+  "flash-sales",
   "emails",
   "audit",
 ] as const;
@@ -57,6 +58,7 @@ export function adminAccess(): RequestHandler {
       vouchers: "vouchers",
       reports: "reports",
       "after-sales": "after-sales",
+      "flash-sales": "flash-sales",
       emails: "emails",
       audit: "audit",
     };

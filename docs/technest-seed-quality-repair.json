@@ -1,0 +1,740 @@
+{
+  "database": "technest_dev",
+  "counts": {
+    "products": 5060,
+    "brands": 51,
+    "variants": 10060,
+    "images": 15060,
+    "inventories": 10060,
+    "orders": 2014,
+    "order_items": 5019,
+    "old_bad_products": 0,
+    "old_bad_brands": 0,
+    "curated_products": 60,
+    "curated_brands": 32
+  },
+  "originalDataPreserved": {
+    "products": {
+      "matchesOriginalCount": true,
+      "matchesOriginalDigest": true,
+      "count": 5000
+    },
+    "brands": {
+      "matchesOriginalCount": true,
+      "matchesOriginalDigest": true,
+      "count": 50
+    },
+    "product_variants": {
+      "matchesOriginalCount": true,
+      "matchesOriginalDigest": true,
+      "count": 10000
+    },
+    "product_images": {
+      "matchesOriginalCount": true,
+      "matchesOriginalDigest": true,
+      "count": 15000
+    },
+    "inventories": {
+      "matchesOriginalCount": true,
+      "matchesOriginalDigest": true,
+      "count": 10000
+    },
+    "orders": {
+      "matchesOriginalCount": true,
+      "matchesOriginalDigest": true,
+      "count": 2014
+    },
+    "order_items": {
+      "matchesOriginalCount": true,
+      "matchesOriginalDigest": true,
+      "count": 5019
+    }
+  },
+  "categoryDistribution": [
+    {
+      "slug": "accessories",
+      "products": 3
+    },
+    {
+      "slug": "adapters",
+      "products": 1
+    },
+    {
+      "slug": "audio",
+      "products": 4
+    },
+    {
+      "slug": "conference-audio",
+      "products": 1
+    },
+    {
+      "slug": "gaming-headsets",
+      "products": 2
+    },
+    {
+      "slug": "keyboards",
+      "products": 12
+    },
+    {
+      "slug": "mice",
+      "products": 12
+    },
+    {
+      "slug": "microphones",
+      "products": 1
+    },
+    {
+      "slug": "monitors",
+      "products": 12
+    },
+    {
+      "slug": "storage",
+      "products": 3
+    },
+    {
+      "slug": "streaming",
+      "products": 1
+    },
+    {
+      "slug": "studio-headphones",
+      "products": 1
+    },
+    {
+      "slug": "usb-hubs",
+      "products": 3
+    },
+    {
+      "slug": "webcams",
+      "products": 1
+    },
+    {
+      "slug": "wireless-earbuds",
+      "products": 3
+    }
+  ],
+  "qualityChecks": {
+    "orphan_products": 0,
+    "invalid_prices": 0,
+    "missing_images": 0,
+    "missing_inventory": 0,
+    "duplicate_product_slugs": 0,
+    "duplicate_brand_slugs": 0,
+    "duplicate_skus": 0,
+    "duplicate_curated_names": 0,
+    "duplicate_brand_names": 0,
+    "affected_orders": 0,
+    "affected_flash_sale": 0
+  },
+  "brands": [
+    "ACER",
+    "ANKER",
+    "APPLE",
+    "ASUS",
+    "AUDIO-TECHNICA",
+    "BASEUS",
+    "BENQ",
+    "BOSE",
+    "COOLER MASTER",
+    "CORSAIR",
+    "DELL",
+    "ELGATO",
+    "GIGABYTE",
+    "HYPERX",
+    "JBL",
+    "KEYCHRON",
+    "KINGSTON",
+    "LENOVO",
+    "LG",
+    "LOGITECH",
+    "MARSHALL",
+    "MICROSOFT",
+    "RAZER",
+    "SAMSUNG",
+    "SANDISK",
+    "SENNHEISER",
+    "SHURE",
+    "SONY",
+    "STEELSERIES",
+    "TP-LINK",
+    "UGREEN",
+    "ZOWIE"
+  ],
+  "products": [
+    {
+      "name": "Apple USB-C Digital AV Multiport Adapter",
+      "brand": "APPLE",
+      "category": "Cáp chuyển đổi",
+      "slug": "tn-curated-20261102-apple-usb-c-digital-av-multiport-adapter",
+      "price": "2190000",
+      "image_type": "adapter",
+      "sku": "TNQ26-060-STD"
+    },
+    {
+      "name": "Elgato Stream Deck MK.2",
+      "brand": "ELGATO",
+      "category": "Thiết bị streaming",
+      "slug": "tn-curated-20261102-elgato-stream-deck-mk-2",
+      "price": "3990000",
+      "image_type": "streaming",
+      "sku": "TNQ26-059-STD"
+    },
+    {
+      "name": "Logitech MX Brio",
+      "brand": "LOGITECH",
+      "category": "Webcam",
+      "slug": "tn-curated-20261102-logitech-mx-brio",
+      "price": "5990000",
+      "image_type": "webcam",
+      "sku": "TNQ26-058-STD"
+    },
+    {
+      "name": "Kingston XS1000 External SSD",
+      "brand": "KINGSTON",
+      "category": "Lưu trữ di động",
+      "slug": "tn-curated-20261102-kingston-xs1000-external-ssd",
+      "price": "1890000",
+      "image_type": "storage",
+      "sku": "TNQ26-057-STD"
+    },
+    {
+      "name": "SanDisk Extreme Portable SSD",
+      "brand": "SANDISK",
+      "category": "Lưu trữ di động",
+      "slug": "tn-curated-20261102-sandisk-extreme-portable-ssd",
+      "price": "2490000",
+      "image_type": "storage",
+      "sku": "TNQ26-056-STD"
+    },
+    {
+      "name": "Samsung T7 Shield Portable SSD",
+      "brand": "SAMSUNG",
+      "category": "Lưu trữ di động",
+      "slug": "tn-curated-20261102-samsung-t7-shield-portable-ssd",
+      "price": "2990000",
+      "image_type": "storage",
+      "sku": "TNQ26-055-STD"
+    },
+    {
+      "name": "TP-Link Deco X50",
+      "brand": "TP-LINK",
+      "category": "Phụ kiện",
+      "slug": "tn-curated-20261102-tp-link-deco-x50",
+      "price": "3290000",
+      "image_type": "network",
+      "sku": "TNQ26-054-STD"
+    },
+    {
+      "name": "TP-Link Archer AX55",
+      "brand": "TP-LINK",
+      "category": "Phụ kiện",
+      "slug": "tn-curated-20261102-tp-link-archer-ax55",
+      "price": "2490000",
+      "image_type": "network",
+      "sku": "TNQ26-053-STD"
+    },
+    {
+      "name": "Baseus Metal Gleam Series Hub",
+      "brand": "BASEUS",
+      "category": "USB hub",
+      "slug": "tn-curated-20261102-baseus-metal-gleam-series-hub",
+      "price": "1290000",
+      "image_type": "hub",
+      "sku": "TNQ26-052-STD"
+    },
+    {
+      "name": "UGREEN Revodok Pro 109",
+      "brand": "UGREEN",
+      "category": "USB hub",
+      "slug": "tn-curated-20261102-ugreen-revodok-pro-109",
+      "price": "2190000",
+      "image_type": "hub",
+      "sku": "TNQ26-051-STD"
+    },
+    {
+      "name": "Anker 737 Power Bank",
+      "brand": "ANKER",
+      "category": "Phụ kiện",
+      "slug": "tn-curated-20261102-anker-737-power-bank",
+      "price": "3290000",
+      "image_type": "charger",
+      "sku": "TNQ26-050-STD"
+    },
+    {
+      "name": "Anker 555 USB-C Hub",
+      "brand": "ANKER",
+      "category": "USB hub",
+      "slug": "tn-curated-20261102-anker-555-usb-c-hub",
+      "price": "2190000",
+      "image_type": "hub",
+      "sku": "TNQ26-049-STD"
+    },
+    {
+      "name": "Shure MV7+",
+      "brand": "SHURE",
+      "category": "Microphone",
+      "slug": "tn-curated-20261102-shure-mv7",
+      "price": "7990000",
+      "image_type": "microphone",
+      "sku": "TNQ26-048-STD"
+    },
+    {
+      "name": "Logitech Zone Vibe Wireless",
+      "brand": "LOGITECH",
+      "category": "Thiết bị họp trực tuyến",
+      "slug": "tn-curated-20261102-logitech-zone-vibe-wireless",
+      "price": "3290000",
+      "image_type": "audio",
+      "sku": "TNQ26-047-STD"
+    },
+    {
+      "name": "HyperX Cloud Alpha Wireless",
+      "brand": "HYPERX",
+      "category": "Tai nghe gaming",
+      "slug": "tn-curated-20261102-hyperx-cloud-alpha-wireless",
+      "price": "4990000",
+      "image_type": "audio",
+      "sku": "TNQ26-046-STD"
+    },
+    {
+      "name": "Marshall Major V",
+      "brand": "MARSHALL",
+      "category": "Tai nghe & âm thanh",
+      "slug": "tn-curated-20261102-marshall-major-v",
+      "price": "3990000",
+      "image_type": "audio",
+      "sku": "TNQ26-045-STD"
+    },
+    {
+      "name": "Audio-Technica ATH-SQ1TW",
+      "brand": "AUDIO-TECHNICA",
+      "category": "Tai nghe true wireless",
+      "slug": "tn-curated-20261102-audio-technica-ath-sq1tw",
+      "price": "1990000",
+      "image_type": "earbuds",
+      "sku": "TNQ26-044-STD"
+    },
+    {
+      "name": "Sennheiser HD 560S",
+      "brand": "SENNHEISER",
+      "category": "Tai nghe kiểm âm",
+      "slug": "tn-curated-20261102-sennheiser-hd-560s",
+      "price": "4290000",
+      "image_type": "audio",
+      "sku": "TNQ26-043-STD"
+    },
+    {
+      "name": "Bose QuietComfort Ultra Earbuds",
+      "brand": "BOSE",
+      "category": "Tai nghe true wireless",
+      "slug": "tn-curated-20261102-bose-quietcomfort-ultra-earbuds",
+      "price": "7990000",
+      "image_type": "earbuds",
+      "sku": "TNQ26-042-STD"
+    },
+    {
+      "name": "JBL Flip 6",
+      "brand": "JBL",
+      "category": "Tai nghe & âm thanh",
+      "slug": "tn-curated-20261102-jbl-flip-6",
+      "price": "2490000",
+      "image_type": "speaker",
+      "sku": "TNQ26-041-STD"
+    },
+    {
+      "name": "JBL Live 770NC",
+      "brand": "JBL",
+      "category": "Tai nghe & âm thanh",
+      "slug": "tn-curated-20261102-jbl-live-770nc",
+      "price": "3990000",
+      "image_type": "audio",
+      "sku": "TNQ26-040-STD"
+    },
+    {
+      "name": "Sony WH-CH720N",
+      "brand": "SONY",
+      "category": "Tai nghe & âm thanh",
+      "slug": "tn-curated-20261102-sony-wh-ch720n",
+      "price": "2990000",
+      "image_type": "audio",
+      "sku": "TNQ26-039-STD"
+    },
+    {
+      "name": "Sony WF-1000XM5",
+      "brand": "SONY",
+      "category": "Tai nghe true wireless",
+      "slug": "tn-curated-20261102-sony-wf-1000xm5",
+      "price": "5990000",
+      "image_type": "earbuds",
+      "sku": "TNQ26-038-STD"
+    },
+    {
+      "name": "Sony INZONE H9",
+      "brand": "SONY",
+      "category": "Tai nghe gaming",
+      "slug": "tn-curated-20261102-sony-inzone-h9",
+      "price": "6990000",
+      "image_type": "audio",
+      "sku": "TNQ26-037-STD"
+    },
+    {
+      "name": "ZOWIE EC2-CW",
+      "brand": "ZOWIE",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-zowie-ec2-cw",
+      "price": "3990000",
+      "image_type": "mouse",
+      "sku": "TNQ26-036-STD"
+    },
+    {
+      "name": "HyperX Pulsefire Haste 2 Wireless",
+      "brand": "HYPERX",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-hyperx-pulsefire-haste-2-wireless",
+      "price": "2490000",
+      "image_type": "mouse",
+      "sku": "TNQ26-035-STD"
+    },
+    {
+      "name": "Microsoft Surface Precision Mouse",
+      "brand": "MICROSOFT",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-microsoft-surface-precision-mouse",
+      "price": "2190000",
+      "image_type": "mouse",
+      "sku": "TNQ26-034-STD"
+    },
+    {
+      "name": "Corsair M75 Air Wireless",
+      "brand": "CORSAIR",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-corsair-m75-air-wireless",
+      "price": "3290000",
+      "image_type": "mouse",
+      "sku": "TNQ26-033-STD"
+    },
+    {
+      "name": "ASUS ROG Harpe Ace Aim Lab Edition",
+      "brand": "ASUS",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-asus-rog-harpe-ace-aim-lab-edition",
+      "price": "3990000",
+      "image_type": "mouse",
+      "sku": "TNQ26-032-STD"
+    },
+    {
+      "name": "SteelSeries Rival 5",
+      "brand": "STEELSERIES",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-steelseries-rival-5",
+      "price": "2190000",
+      "image_type": "mouse",
+      "sku": "TNQ26-031-STD"
+    },
+    {
+      "name": "Razer Basilisk V3 Pro",
+      "brand": "RAZER",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-razer-basilisk-v3-pro",
+      "price": "3990000",
+      "image_type": "mouse",
+      "sku": "TNQ26-030-STD"
+    },
+    {
+      "name": "Razer Viper V3 Pro",
+      "brand": "RAZER",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-razer-viper-v3-pro",
+      "price": "3990000",
+      "image_type": "mouse",
+      "sku": "TNQ26-029-STD"
+    },
+    {
+      "name": "Logitech G Pro X Superlight 2",
+      "brand": "LOGITECH",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-logitech-g-pro-x-superlight-2",
+      "price": "3990000",
+      "image_type": "mouse",
+      "sku": "TNQ26-028-STD"
+    },
+    {
+      "name": "Logitech G502 X Lightspeed",
+      "brand": "LOGITECH",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-logitech-g502-x-lightspeed",
+      "price": "3290000",
+      "image_type": "mouse",
+      "sku": "TNQ26-027-STD"
+    },
+    {
+      "name": "Logitech MX Anywhere 3S",
+      "brand": "LOGITECH",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-logitech-mx-anywhere-3s",
+      "price": "1890000",
+      "image_type": "mouse",
+      "sku": "TNQ26-026-STD"
+    },
+    {
+      "name": "Logitech G502 X Plus",
+      "brand": "LOGITECH",
+      "category": "Chuột",
+      "slug": "tn-curated-20261102-logitech-g502-x-plus",
+      "price": "3990000",
+      "image_type": "mouse",
+      "sku": "TNQ26-025-STD"
+    },
+    {
+      "name": "Logitech G915 X",
+      "brand": "LOGITECH",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-logitech-g915-x",
+      "price": "5290000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-024-STD"
+    },
+    {
+      "name": "Cooler Master CK720",
+      "brand": "COOLER MASTER",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-cooler-master-ck720",
+      "price": "2790000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-023-STD"
+    },
+    {
+      "name": "HyperX Alloy Origins Core",
+      "brand": "HYPERX",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-hyperx-alloy-origins-core",
+      "price": "2490000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-022-STD"
+    },
+    {
+      "name": "ASUS ROG Strix Scope II 96 Wireless",
+      "brand": "ASUS",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-asus-rog-strix-scope-ii-96-wireless",
+      "price": "4990000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-021-STD"
+    },
+    {
+      "name": "Microsoft Designer Compact Keyboard",
+      "brand": "MICROSOFT",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-microsoft-designer-compact-keyboard",
+      "price": "2190000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-020-STD"
+    },
+    {
+      "name": "Corsair K70 RGB Pro",
+      "brand": "CORSAIR",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-corsair-k70-rgb-pro",
+      "price": "4990000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-019-STD"
+    },
+    {
+      "name": "SteelSeries Apex 7",
+      "brand": "STEELSERIES",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-steelseries-apex-7",
+      "price": "3990000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-018-STD"
+    },
+    {
+      "name": "Razer Huntsman V3 Pro TKL",
+      "brand": "RAZER",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-razer-huntsman-v3-pro-tkl",
+      "price": "5990000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-017-STD"
+    },
+    {
+      "name": "Keychron Q3 Max",
+      "brand": "KEYCHRON",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-keychron-q3-max",
+      "price": "5990000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-016-STD"
+    },
+    {
+      "name": "Keychron V1 Max",
+      "brand": "KEYCHRON",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-keychron-v1-max",
+      "price": "3690000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-015-STD"
+    },
+    {
+      "name": "Logitech MX Keys S",
+      "brand": "LOGITECH",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-logitech-mx-keys-s",
+      "price": "2790000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-014-STD"
+    },
+    {
+      "name": "Logitech G Pro X TKL LIGHTSPEED",
+      "brand": "LOGITECH",
+      "category": "Bàn phím",
+      "slug": "tn-curated-20261102-logitech-g-pro-x-tkl-lightspeed",
+      "price": "4990000",
+      "image_type": "keyboard",
+      "sku": "TNQ26-013-STD"
+    },
+    {
+      "name": "Lenovo ThinkVision P27h-30",
+      "brand": "LENOVO",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-lenovo-thinkvision-p27h-30",
+      "price": "10990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-012-STD"
+    },
+    {
+      "name": "Acer Nitro XV272U",
+      "brand": "ACER",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-acer-nitro-xv272u",
+      "price": "6990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-011-STD"
+    },
+    {
+      "name": "GIGABYTE M27Q",
+      "brand": "GIGABYTE",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-gigabyte-m27q",
+      "price": "7990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-010-STD"
+    },
+    {
+      "name": "BenQ PD2705U",
+      "brand": "BENQ",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-benq-pd2705u",
+      "price": "11990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-009-STD"
+    },
+    {
+      "name": "ASUS ROG Swift PG32UCDM",
+      "brand": "ASUS",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-asus-rog-swift-pg32ucdm",
+      "price": "32990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-008-STD"
+    },
+    {
+      "name": "ASUS ROG Swift OLED PG27AQDM",
+      "brand": "ASUS",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-asus-rog-swift-oled-pg27aqdm",
+      "price": "21990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-007-STD"
+    },
+    {
+      "name": "LG UltraGear 27GR95QE",
+      "brand": "LG",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-lg-ultragear-27gr95qe",
+      "price": "17990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-006-STD"
+    },
+    {
+      "name": "LG UltraGear 32GS95UE",
+      "brand": "LG",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-lg-ultragear-32gs95ue",
+      "price": "29990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-005-STD"
+    },
+    {
+      "name": "Samsung Odyssey G6 27",
+      "brand": "SAMSUNG",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-samsung-odyssey-g6-27",
+      "price": "11990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-004-STD"
+    },
+    {
+      "name": "Samsung Odyssey G7 32",
+      "brand": "SAMSUNG",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-samsung-odyssey-g7-32",
+      "price": "12990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-003-STD"
+    },
+    {
+      "name": "Dell UltraSharp U2724D",
+      "brand": "DELL",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-dell-ultrasharp-u2724d",
+      "price": "10490000",
+      "image_type": "monitor",
+      "sku": "TNQ26-002-STD"
+    },
+    {
+      "name": "Dell UltraSharp U3223QE",
+      "brand": "DELL",
+      "category": "Màn hình",
+      "slug": "tn-curated-20261102-dell-ultrasharp-u3223qe",
+      "price": "15990000",
+      "image_type": "monitor",
+      "sku": "TNQ26-001-STD"
+    }
+  ],
+  "imageAssets": {
+    "count": 14,
+    "keys": [
+      "adapter",
+      "streaming",
+      "webcam",
+      "storage",
+      "network",
+      "hub",
+      "charger",
+      "microphone",
+      "audio",
+      "earbuds",
+      "speaker",
+      "mouse",
+      "keyboard",
+      "monitor"
+    ],
+    "fileBytes": {
+      "adapter": 803,
+      "streaming": 992,
+      "webcam": 728,
+      "storage": 704,
+      "network": 887,
+      "hub": 788,
+      "charger": 712,
+      "microphone": 745,
+      "audio": 747,
+      "earbuds": 722,
+      "speaker": 731,
+      "mouse": 744,
+      "keyboard": 4557,
+      "monitor": 799
+    }
+  },
+  "backupBytes": 5728178
+}

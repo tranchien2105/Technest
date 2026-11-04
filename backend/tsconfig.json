@@ -18,5 +18,5 @@
     "sourceMap": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "drizzle.config.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/browser-e2e-server.ts", "drizzle.config.ts", "vitest.config.ts"]
 }

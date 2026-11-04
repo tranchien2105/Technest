@@ -1,0 +1,99 @@
+{
+  "mode": "HTTP source HTML verification; no browser automation; development noindex",
+  "base": "http://localhost:3000",
+  "checkedAt": "2026-11-02T14:36:37.470Z",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "durationMs": 1854,
+      "title": "Technest | Công nghệ cho góc làm việc của bạn",
+      "robots": "noindex, follow",
+      "schemaTypes": []
+    },
+    {
+      "path": "/products/tn-curated-20261102-apple-usb-c-digital-av-multiport-adapter",
+      "status": 200,
+      "durationMs": 1252,
+      "title": "Apple USB-C Digital AV Multiport Adapter | Technest",
+      "robots": "noindex, follow",
+      "schemaTypes": [
+        "Product"
+      ]
+    },
+    {
+      "path": "/categories/adapters",
+      "status": 200,
+      "durationMs": 3764,
+      "title": "Cáp chuyển đổi | Technest",
+      "robots": "noindex, follow",
+      "schemaTypes": []
+    },
+    {
+      "path": "/brands/apple",
+      "status": 200,
+      "durationMs": 1811,
+      "title": "APPLE | Technest",
+      "robots": "noindex, follow",
+      "schemaTypes": []
+    },
+    {
+      "path": "/products?page=2",
+      "status": 200,
+      "durationMs": 996,
+      "title": "Sản phẩm — Trang 2 | Technest",
+      "robots": "noindex, follow",
+      "schemaTypes": []
+    },
+    {
+      "path": "/products/seo-product-that-does-not-exist",
+      "status": 404,
+      "durationMs": 65,
+      "title": "Không tìm thấy trang | Technest",
+      "robots": "noindex, follow",
+      "schemaTypes": []
+    },
+    {
+      "path": "/admin",
+      "status": 200,
+      "durationMs": 26,
+      "title": "Technest",
+      "robots": "noindex, follow",
+      "schemaTypes": []
+    },
+    {
+      "path": "/account",
+      "status": 200,
+      "durationMs": 89,
+      "title": "Technest",
+      "robots": "noindex, follow",
+      "schemaTypes": []
+    },
+    {
+      "path": "/checkout",
+      "status": 200,
+      "durationMs": 35,
+      "title": "Technest",
+      "robots": "noindex, follow",
+      "schemaTypes": []
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "durationMs": 19,
+      "robots": "noindex",
+      "schemaTypes": []
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 503,
+      "durationMs": 19,
+      "robots": "noindex",
+      "schemaTypes": []
+    }
+  ],
+  "numericRedirect": {
+    "status": 308,
+    "location": "/products/tn-curated-20261102-apple-usb-c-digital-av-multiport-adapter"
+  }
+}

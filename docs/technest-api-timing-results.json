@@ -1,0 +1,245 @@
+{
+  "checkedAt": "2026-11-03T15:27:27.439Z",
+  "origin": "http://127.0.0.1:4173",
+  "method": "5 serial HTTP samples per route on local WSL; no concurrency/load test; p95 nearest-rank=max for n=5, not a production SLO",
+  "results": [
+    {
+      "path": "/api/v1/products?sort=newest&limit=24",
+      "count": 4411,
+      "samples": [
+        {
+          "status": 200,
+          "ms": 466.24,
+          "bytes": 33144
+        },
+        {
+          "status": 200,
+          "ms": 108.07,
+          "bytes": 33144
+        },
+        {
+          "status": 200,
+          "ms": 146.25,
+          "bytes": 33144
+        },
+        {
+          "status": 200,
+          "ms": 128.52,
+          "bytes": 33144
+        },
+        {
+          "status": 200,
+          "ms": 132.21,
+          "bytes": 33144
+        }
+      ],
+      "medianMs": 132.21,
+      "p95Ms": 466.24,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/products?sort=newest&limit=24&page=2",
+      "count": 4411,
+      "samples": [
+        {
+          "status": 200,
+          "ms": 186.75,
+          "bytes": 31975
+        },
+        {
+          "status": 200,
+          "ms": 211.33,
+          "bytes": 31975
+        },
+        {
+          "status": 200,
+          "ms": 130.11,
+          "bytes": 31975
+        },
+        {
+          "status": 200,
+          "ms": 228.24,
+          "bytes": 31975
+        },
+        {
+          "status": 200,
+          "ms": 287.32,
+          "bytes": 31975
+        }
+      ],
+      "medianMs": 211.33,
+      "p95Ms": 287.32,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/products?category=mice&limit=24",
+      "count": 874,
+      "samples": [
+        {
+          "status": 200,
+          "ms": 211.84,
+          "bytes": 44368
+        },
+        {
+          "status": 200,
+          "ms": 155.15,
+          "bytes": 44368
+        },
+        {
+          "status": 200,
+          "ms": 147.52,
+          "bytes": 44368
+        },
+        {
+          "status": 200,
+          "ms": 279.79,
+          "bytes": 44368
+        },
+        {
+          "status": 200,
+          "ms": 258.5,
+          "bytes": 44368
+        }
+      ],
+      "medianMs": 211.84,
+      "p95Ms": 279.79,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/products/keychron-k2-pro",
+      "count": null,
+      "samples": [
+        {
+          "status": 200,
+          "ms": 84.35,
+          "bytes": 2042
+        },
+        {
+          "status": 200,
+          "ms": 32.92,
+          "bytes": 2042
+        },
+        {
+          "status": 200,
+          "ms": 52.78,
+          "bytes": 2042
+        },
+        {
+          "status": 200,
+          "ms": 51.38,
+          "bytes": 2042
+        },
+        {
+          "status": 200,
+          "ms": 67.39,
+          "bytes": 2042
+        }
+      ],
+      "medianMs": 52.78,
+      "p95Ms": 84.35,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/brands?limit=30&paginated=1",
+      "count": 51,
+      "samples": [
+        {
+          "status": 200,
+          "ms": 32.24,
+          "bytes": 2274
+        },
+        {
+          "status": 200,
+          "ms": 22.21,
+          "bytes": 2274
+        },
+        {
+          "status": 200,
+          "ms": 66.72,
+          "bytes": 2274
+        },
+        {
+          "status": 200,
+          "ms": 27.77,
+          "bytes": 2274
+        },
+        {
+          "status": 200,
+          "ms": 40.71,
+          "bytes": 2274
+        }
+      ],
+      "medianMs": 32.24,
+      "p95Ms": 66.72,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/homepage/config",
+      "count": null,
+      "samples": [
+        {
+          "status": 200,
+          "ms": 22.48,
+          "bytes": 4412
+        },
+        {
+          "status": 200,
+          "ms": 37.63,
+          "bytes": 4412
+        },
+        {
+          "status": 200,
+          "ms": 52.65,
+          "bytes": 4412
+        },
+        {
+          "status": 200,
+          "ms": 83.93,
+          "bytes": 4412
+        },
+        {
+          "status": 200,
+          "ms": 81.83,
+          "bytes": 4412
+        }
+      ],
+      "medianMs": 52.65,
+      "p95Ms": 83.93,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/flash-sales",
+      "count": null,
+      "samples": [
+        {
+          "status": 200,
+          "ms": 34.14,
+          "bytes": 79
+        },
+        {
+          "status": 200,
+          "ms": 28.22,
+          "bytes": 79
+        },
+        {
+          "status": 200,
+          "ms": 32.04,
+          "bytes": 79
+        },
+        {
+          "status": 200,
+          "ms": 24.84,
+          "bytes": 79
+        },
+        {
+          "status": 200,
+          "ms": 23.44,
+          "bytes": 79
+        }
+      ],
+      "medianMs": 28.22,
+      "p95Ms": 34.14,
+      "result": "PASS"
+    }
+  ]
+}

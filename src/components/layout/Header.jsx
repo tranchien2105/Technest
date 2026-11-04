@@ -1,3 +1,4 @@
+import { productUrl as getProductUrl } from "../../routing/productUrl";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Heart, MapPin, Menu, Search, ShoppingCart, UserRound, X } from "lucide-react";
 import { apiGet, normalizeProduct } from "../../api/apiClient";
@@ -38,6 +39,7 @@ export default function Header({
     products: [],
   });
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const searchContainerRef = useRef(null);
   const locationRef = useRef(null);
   const [locationOpen, setLocationOpen] = useState(false);
@@ -140,7 +142,7 @@ export default function Header({
   };
   return (
     <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
-      <a className="brand" href="/" aria-label="Technest home">
+      <a className="brand" href="/" aria-label="Technest. Better Tools. Brighter Days. — Home">
         <span className="brand-mark" aria-hidden="true">
           <span>T</span>
           <i>N</i>
@@ -163,14 +165,29 @@ export default function Header({
             onChange={(event) => {
               setSearch(event.target.value);
               setSuggestionsOpen(true);
+              setActiveSuggestion(-1);
             }}
             onKeyDown={(event) => {
-              if (event.key === "Escape") setSuggestionsOpen(false);
+              if (event.key === "Escape") { setSuggestionsOpen(false); setActiveSuggestion(-1); }
+              if ((event.key === "ArrowDown" || event.key === "ArrowUp") && suggestions.length) {
+                event.preventDefault();
+                setSuggestionsOpen(true);
+                const direction = event.key === "ArrowDown" ? 1 : -1;
+                setActiveSuggestion((current) => current < 0 ? (direction > 0 ? 0 : suggestions.length - 1) : (current + direction + suggestions.length) % suggestions.length);
+              }
+              if (event.key === "Enter" && suggestionsOpen && suggestions[activeSuggestion]) {
+                event.preventDefault();
+                navigate?.(getProductUrl(suggestions[activeSuggestion]));
+                setSuggestionsOpen(false);
+                setActiveSuggestion(-1);
+              }
             }}
             placeholder={t.search}
             aria-label={t.search}
+            role="combobox"
             aria-expanded={suggestionsOpen && normalizedSearch.length >= 2}
-            aria-controls="header-search-suggestions"
+            aria-controls={suggestionsOpen && normalizedSearch.length >= 2 ? "header-search-suggestions" : undefined}
+            aria-activedescendant={suggestionsOpen && suggestions[activeSuggestion] ? `search-suggestion-${suggestions[activeSuggestion].id}` : undefined}
             aria-autocomplete="list"
           />
           {search && (
@@ -190,34 +207,37 @@ export default function Header({
         {suggestionsOpen && normalizedSearch.length >= 2 && (
           <div
             className="header-search-suggestions"
-            id="header-search-suggestions"
             aria-live="polite"
-            role="listbox"
           >
+            <div role="listbox" id="header-search-suggestions" aria-label={language === "vi" ? "Gợi ý sản phẩm" : "Product suggestions"}>
             {suggestionState === "loading" && (
-              <p className="search-suggestion-message">
+              <p className="search-suggestion-message" role="option" aria-disabled="true" aria-selected="false">
                 {language === "vi" ? "Đang tìm sản phẩm…" : "Searching products…"}
               </p>
             )}
             {suggestionState === "empty" && (
-              <p className="search-suggestion-message">
+              <p className="search-suggestion-message" role="option" aria-disabled="true" aria-selected="false">
                 {language === "vi"
                   ? "Không tìm thấy sản phẩm phù hợp."
                   : "No matching products found."}
               </p>
             )}
             {suggestionState === "error" && (
-              <p className="search-suggestion-message">
+              <p className="search-suggestion-message" role="option" aria-disabled="true" aria-selected="false">
                 {language === "vi"
                   ? "Chưa thể tải gợi ý. Nhấn Enter để tìm kiếm."
                   : "Suggestions are unavailable. Press Enter to search."}
               </p>
             )}
-            {suggestions.map((product) => (
+            {suggestions.map((product, index) => (
               <a
                 className="search-suggestion-item"
-                href={`/products/${encodeURIComponent(product.id)}`}
+                href={getProductUrl(product)}
                 key={product.id}
+                id={`search-suggestion-${product.id}`}
+                role="option"
+                aria-selected={activeSuggestion === index}
+                onMouseEnter={() => setActiveSuggestion(index)}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => setSuggestionsOpen(false)}
               >
@@ -231,6 +251,7 @@ export default function Header({
                 </strong>
               </a>
             ))}
+            </div>
             {suggestionState === "results" && (
               <button
                 className="search-suggestion-all"

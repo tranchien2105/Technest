@@ -1,0 +1,52 @@
+/* Keep Technest's visual system; make the existing controls usable by touch. */
+.search-suggestion-item[aria-selected="true"] {
+  background: var(--ui-accent-soft);
+  box-shadow: inset 3px 0 var(--ui-accent);
+}
+
+/* Enlarge each slider dot's invisible hit area, retaining its current shape. */
+.hero-pagination {
+  gap: 16px;
+}
+.hero-pagination button {
+  position: relative;
+}
+.hero-pagination button::after {
+  position: absolute;
+  inset: -8px;
+  content: "";
+}
+
+@media (max-width: 800px) {
+  /* Safari zooms focused text fields below 16px, moving the page unexpectedly. */
+  .technest :is(input, select, textarea):not([type="checkbox"]):not([type="radio"]) {
+    font-size: 16px;
+  }
+
+  .technest .quantity-control button,
+  .technest .checkout-submit,
+  .technest .checkout-voucher button,
+  .technest .catalog-pagination-controls button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .technest .quantity-control {
+    gap: 6px;
+  }
+  .technest .cart-page-info {
+    min-width: 0;
+  }
+  .technest .cart-page-info h3 {
+    overflow-wrap: anywhere;
+  }
+  .technest .catalog-pagination-controls {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  /* Keep floating helpers off the transaction forms and their checkout CTA. */
+  .technest:has(.cart-page-layout) .floating-actions,
+  .technest:has(.checkout-page) .floating-actions {
+    display: none;
+  }
+}

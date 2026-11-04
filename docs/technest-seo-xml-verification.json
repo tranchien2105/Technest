@@ -1,0 +1,13 @@
+{
+  "mode": "Local read-only PostgreSQL verification with reserved .test origin; no public publishing",
+  "counts": {
+    "products": 50,
+    "categories": 5,
+    "brands": 19
+  },
+  "documents": 5,
+  "indexEntries": 4,
+  "publicUrls": 76,
+  "validXml": true,
+  "duplicates": 0
+}

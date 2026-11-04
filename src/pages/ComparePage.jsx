@@ -1,3 +1,4 @@
+import { productUrl as getProductUrl } from "../routing/productUrl";
 import { ArrowRight } from "lucide-react";
 import ProductImage from "../components/common/ProductImage";
 import { formatPrice } from "../utils/formatCurrency";
@@ -69,7 +70,7 @@ export default function ComparePage({
                       {tx("Remove", "Bỏ chọn", lang)} ×
                     </button>
                     <ProductImage src={item.image} alt={item.name} />
-                    <a href={`/products/${item.id}`}>{item.name}</a>
+                    <a href={getProductUrl(item)}>{item.name}</a>
                     <strong>{formatPrice(item.price)}</strong>
                     <button className="primary-button" onClick={() => addToCart(item)}>
                       {tx("Add to cart", "Thêm vào giỏ", lang)}

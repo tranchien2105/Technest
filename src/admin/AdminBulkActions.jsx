@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { opsRequest } from "./operationsApi";
-export default function AdminBulkActions({ ids, references, onComplete, onClear }) {
+import CurrencyInput from "../components/common/CurrencyInput";
+import AdminReferencePicker from "./AdminReferencePicker";
+export default function AdminBulkActions({ ids, onComplete, onClear }) {
   const [action, setAction] = useState("STATUS"),
     [status, setStatus] = useState("INACTIVE"),
     [categoryId, setCategoryId] = useState(""),
@@ -66,31 +68,9 @@ export default function AdminBulkActions({ ids, references, onComplete, onClear 
           <option value="ARCHIVED">Lưu trữ</option>
         </select>
       ) : action === "CATEGORY" ? (
-        <select
-          aria-label="Danh mục hàng loạt"
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-        >
-          <option value="">Chọn danh mục</option>
-          {references.categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <AdminReferencePicker kind="categories" label="Danh mục hàng loạt" value={categoryId} onChange={setCategoryId} disabled={busy}/>
       ) : action === "BRAND" ? (
-        <select
-          aria-label="Thương hiệu hàng loạt"
-          value={brandId}
-          onChange={(e) => setBrandId(e.target.value)}
-        >
-          <option value="">Chọn thương hiệu</option>
-          {references.brands.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <AdminReferencePicker kind="brands" label="Thương hiệu hàng loạt" value={brandId} onChange={setBrandId} disabled={busy}/>
       ) : (
         <>
           <select
@@ -102,13 +82,11 @@ export default function AdminBulkActions({ ids, references, onComplete, onClear 
             <option value="INCREASE_PERCENT">Tăng (%)</option>
             <option value="DECREASE_PERCENT">Giảm (%)</option>
           </select>
-          <input
-            aria-label="Giá trị cập nhật"
-            inputMode="numeric"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder={priceMode === "SET" ? "Giá bán mới" : "0–100%"}
-          />
+          {priceMode === "SET" ? (
+            <CurrencyInput aria-label="Giá trị cập nhật" value={price} onValueChange={setPrice} placeholder="Giá bán mới" />
+          ) : (
+            <input aria-label="Giá trị cập nhật" inputMode="numeric" value={price} onChange={(e) => setPrice(e.target.value.replace(/\D/g, ""))} placeholder="0–100%" />
+          )}
           <label>
             <input
               type="checkbox"

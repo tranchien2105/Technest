@@ -32,6 +32,8 @@ describe("Admin API access and validation", () => {
   it("protects all admin catalog endpoints with ADMIN role", async () => {
     await request(app).get("/api/v1/admin/products").expect(401);
     await request(app).get("/api/v1/admin/products").set("Authorization", "Bearer customer").expect(403);
+    await request(app).get("/api/v1/admin/products/references?type=brands").expect(401);
+    await request(app).get("/api/v1/admin/products/references?type=brands").set("Authorization", "Bearer customer").expect(403);
   });
 
   it("rejects incomplete product and settings writes before changing catalog data", async () => {

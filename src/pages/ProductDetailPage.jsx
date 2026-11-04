@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { ArrowRight, Heart, Minus, Plus, Scale } from "lucide-react";
+import "../components/product/ProductDetail.css";
+import { productUrl as getProductUrl } from "../routing/productUrl";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Flame, Heart, Minus, Plus, Scale, ShoppingCart, Star } from "lucide-react";
 import ProductImage from "../components/common/ProductImage";
 import { formatPrice } from "../utils/formatCurrency";
 import { tx } from "../utils/translate";
@@ -9,8 +11,12 @@ import ProductGrid from "../components/store/ProductGrid";
 import FeatureProductShelf from "../components/home/FeatureProductShelf";
 import { productGallery } from "../domain/catalog";
 import { compareMoney } from "../domain/cart";
+import { flashSalesApi } from "../api/flashSalesClient";
+import { apiEventSource } from "../api/apiClient";
+import { findVariantFlashDeal } from "../domain/flashSale";
 
 export default function ProductDetailPage({
+  route,
   navigate,
   t,
   language,
@@ -39,11 +45,61 @@ export default function ProductDetailPage({
   };
   const lang = language === "vi";
   const [detailImage, setDetailImage] = useState(null);
+  const [flashDeal, setFlashDeal] = useState(null);
+  const [flashClockOffset, setFlashClockOffset] = useState(0);
+  const [flashTick, setFlashTick] = useState(0);
   const [quantityState, setQuantityState] = useState({ key: null, quantity: 1 });
+  const purchaseBarRef = useRef(null);
+  useEffect(() => {
+    if (!product?.id) return undefined;
+    document.body.classList.add("has-detail-purchase-bar");
+    const updateHeight = () => {
+      const height = purchaseBarRef.current?.getBoundingClientRect().height;
+      if (height) document.body.style.setProperty("--detail-purchase-bar-height", `${Math.ceil(height)}px`);
+    };
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    if (purchaseBarRef.current) observer.observe(purchaseBarRef.current);
+    return () => {
+      observer.disconnect();
+      document.body.classList.remove("has-detail-purchase-bar");
+      document.body.style.removeProperty("--detail-purchase-bar-height");
+    };
+  }, [product?.id]);
   const activeVariants = product?.variants?.filter((variant) => variant.status === "ACTIVE") || [];
-  const [selectedVariantId, setSelectedVariantId] = useState(activeVariants[0]?.id || "");
+  const variantUrl = new URL(route || "/", "http://technest.local");
+  const selectedVariantId = variantUrl.searchParams.get("variant") || activeVariants[0]?.id || "";
+  const setSelectedVariantId = (id) => {
+    if (id === activeVariants[0]?.id) variantUrl.searchParams.delete("variant");
+    else variantUrl.searchParams.set("variant",id);
+    navigate(variantUrl.pathname + variantUrl.search + variantUrl.hash, false, {replace:true});
+  };
   const selectedVariant =
     activeVariants.find((variant) => variant.id === selectedVariantId) || activeVariants[0];
+  useEffect(() => {
+    if (!selectedVariant?.id) return;
+    const controller = new AbortController();
+    let active = true;
+    let requestVersion = 0;
+    const load = () => {
+      const version = ++requestVersion;
+      return flashSalesApi.list({ signal: controller.signal }).then(({ campaigns, serverNow }) => {
+        if (!active || version !== requestVersion) return;
+        const receivedAt = Date.now();
+        const serverTime = Date.parse(serverNow);
+        setFlashTick(receivedAt);
+        setFlashClockOffset(serverTime - receivedAt);
+        setFlashDeal(findVariantFlashDeal(campaigns, selectedVariant.id, serverTime, selectedVariant.price ?? product.price));
+      }).catch(() => { if (active && version === requestVersion) setFlashDeal(null); });
+    };
+    void load();
+    const timer = window.setInterval(load, 15_000);
+    const clock = window.setInterval(() => setFlashTick(Date.now()), 1000);
+    const events = apiEventSource("/flash-sales/events");
+    ["flash-sale:campaign-started", "flash-sale:campaign-ended", "flash-sale:item-updated", "flash-sale:campaign-updated"].forEach((name) => events.addEventListener(name, load));
+    events.onopen = load;
+    return () => { active = false; controller.abort(); clearInterval(timer); clearInterval(clock); events.close(); };
+  }, [selectedVariant?.id, selectedVariant?.price, product?.price]);
   const variantKey = `${product?.id || ""}:${selectedVariant?.id || "default"}`;
   const detailQuantity = quantityState.key === variantKey ? quantityState.quantity : 1;
   const setDetailQuantity = (value) =>
@@ -51,7 +107,7 @@ export default function ProductDetailPage({
       key: variantKey,
       quantity: typeof value === "function" ? value(detailQuantity) : value,
     });
-  const displayedProduct =
+  const baseDisplayedProduct =
     product && selectedVariant
       ? {
           ...product,
@@ -75,6 +131,13 @@ export default function ProductDetailPage({
           ],
         }
       : product;
+  const activeFlashDeal = flashDeal?.variantId === String(selectedVariant?.id) && Date.parse(flashDeal.endsAt) > flashTick + flashClockOffset ? flashDeal : null;
+  const flashPurchaseLimit = activeFlashDeal && baseDisplayedProduct
+    ? Math.min(baseDisplayedProduct.availableQuantity ?? activeFlashDeal.stockAvailable, activeFlashDeal.availableQuantity, activeFlashDeal.perCustomerLimit)
+    : 0;
+  const displayedProduct = activeFlashDeal && baseDisplayedProduct ? { ...baseDisplayedProduct, price: activeFlashDeal.flashPrice, oldPrice: activeFlashDeal.originalPrice, flashSalePrice: activeFlashDeal.flashPrice, flashSaleItemId: activeFlashDeal.id, flashSaleAvailableQuantity: flashPurchaseLimit, availableQuantity: flashPurchaseLimit, stockStatus: flashPurchaseLimit > 0 ? "IN_STOCK" : "OUT_OF_STOCK" } : baseDisplayedProduct;
+  const flashRemaining = activeFlashDeal ? Math.max(0, new Date(activeFlashDeal.endsAt).getTime() - (flashTick + flashClockOffset)) : 0;
+  const flashCountdown = `${String(Math.floor(flashRemaining / 3_600_000)).padStart(2,"0")}:${String(Math.floor(flashRemaining % 3_600_000 / 60_000)).padStart(2,"0")}:${String(Math.floor(flashRemaining % 60_000 / 1000)).padStart(2,"0")}`;
   const productAttributes = displayedProduct?.attributes || {};
   const technicalSpecifications = productAttributes.specifications && typeof productAttributes.specifications === "object"
     ? Object.entries(productAttributes.specifications)
@@ -196,24 +259,63 @@ export default function ProductDetailPage({
         <div className="route-detail-info">
           <span className="product-brand">{product.brand}</span>
           <h1>{product.name}</h1>
-          <p className="route-price">
-            {formatPrice(displayedProduct.price)}{" "}
-            {displayedProduct.oldPrice &&
-              compareMoney(displayedProduct.oldPrice, displayedProduct.price) > 0 && (
-                <>
-                  <del>{formatPrice(displayedProduct.oldPrice)}</del>
-                  <span className="detail-discount">
-                    -
-                    {Number(
-                      ((BigInt(displayedProduct.oldPrice) - BigInt(displayedProduct.price)) *
-                        100n) /
-                        BigInt(displayedProduct.oldPrice),
-                    )}
-                    %
+          {Number(product.rating) > 0 && (
+            <div className="detail-rating" aria-label={`Đánh giá ${product.rating} trên 5`}>
+              <Star size={15} fill="currentColor" />
+              <strong>{Number(product.rating).toFixed(1)}</strong>
+              {product.reviews && <span>{product.reviews} đánh giá</span>}
+            </div>
+          )}
+          {activeFlashDeal ? (
+            <>
+              <section className="detail-flash-offer" aria-label="Ưu đãi Flash Sale">
+                <div className="detail-flash-price">
+                  <strong>{formatPrice(activeFlashDeal.flashPrice)}</strong>
+                  <div>
+                    <del>{formatPrice(activeFlashDeal.originalPrice)}</del>
+                    <span>
+                      -{Number(
+                        ((BigInt(activeFlashDeal.originalPrice) - BigInt(activeFlashDeal.flashPrice)) * 100n) /
+                          BigInt(activeFlashDeal.originalPrice),
+                      )}%
+                    </span>
+                  </div>
+                </div>
+                <div className="detail-flash-strip">
+                  <strong><Flame size={17} fill="currentColor"/> Flash Sale</strong>
+                  <span className="detail-flash-countdown" aria-label={`Kết thúc sau ${flashCountdown}`}>
+                    {flashCountdown.split(":").map((part, index) => <span key={`${part}-${index}`}>{part}</span>)}
                   </span>
-                </>
-              )}
-          </p>
+                  <span className="detail-flash-quota"><Flame size={15} fill="currentColor"/> Còn {activeFlashDeal.availableQuantity}/{activeFlashDeal.quota} suất</span>
+                </div>
+                <p>Giới hạn {activeFlashDeal.perCustomerLimit} sản phẩm mỗi khách</p>
+              </section>
+              <ul className="detail-flash-terms">
+                <li>Không áp dụng chung với khuyến mãi khác.</li>
+                <li>Khuyến mãi chưa bao gồm phí giao hàng.</li>
+                <li>Ưu đãi có thể kết thúc sớm khi hết suất.</li>
+              </ul>
+            </>
+          ) : (
+            <p className="route-price">
+              {formatPrice(displayedProduct.price)}{" "}
+              {displayedProduct.oldPrice &&
+                compareMoney(displayedProduct.oldPrice, displayedProduct.price) > 0 && (
+                  <>
+                    <del>{formatPrice(displayedProduct.oldPrice)}</del>
+                    <span className="detail-discount">
+                      -
+                      {Number(
+                        ((BigInt(displayedProduct.oldPrice) - BigInt(displayedProduct.price)) *
+                          100n) /
+                          BigInt(displayedProduct.oldPrice),
+                      )}
+                      %
+                    </span>
+                  </>
+                )}
+            </p>
+          )}
           <p className="detail-lead">{product.description}</p>
           {isIllustration && (
             <p className="catalog-illustration-note" role="note">
@@ -224,7 +326,7 @@ export default function ProductDetailPage({
               )}
             </p>
           )}
-          <p className="stock-note" role="status">
+          {!activeFlashDeal && <p className="stock-note" role="status">
             {displayedProduct.stockStatus === "IN_STOCK"
               ? `${tx("In stock", "Còn hàng", lang)} · ${displayedProduct.availableQuantity} ${tx("available", "có thể mua", lang)}. ${tx("Availability is informational and may change before checkout.", "Tồn kho chỉ mang tính tham khảo và có thể thay đổi trước khi thanh toán.", lang)}`
               : displayedProduct.stockStatus === "OUT_OF_STOCK"
@@ -234,7 +336,7 @@ export default function ProductDetailPage({
                     "Hiện chưa xác nhận được tồn kho.",
                     lang,
                   )}
-          </p>
+          </p>}
           {activeVariants.length > 1 && (
             <label className="detail-variant-select">
               {tx("Variant", "Phiên bản", lang)}
@@ -289,17 +391,7 @@ export default function ProductDetailPage({
               </button>
             </div>
             <button
-              className="primary-button"
-              disabled={
-                displayedProduct.stockStatus !== "IN_STOCK" ||
-                detailQuantity > displayedProduct.availableQuantity
-              }
-              onClick={() => addToCart(displayedProduct, detailQuantity)}
-            >
-              {tx("Add to cart", "Thêm vào giỏ", lang)}
-            </button>
-            <button
-              className="outline-button"
+              className={`outline-button ${favorites.includes(product.id) ? "is-favorite" : ""}`}
               onClick={() => toggleFavorite(product.id)}
               aria-label={tx("Toggle favorite", "Thêm hoặc bỏ yêu thích", lang)}
             >
@@ -313,18 +405,6 @@ export default function ProductDetailPage({
               <Scale size={18} />
             </button>
           </div>
-          <button
-            className="buy-now-button"
-            disabled={
-              displayedProduct.stockStatus !== "IN_STOCK" ||
-              detailQuantity > displayedProduct.availableQuantity
-            }
-            onClick={() => {
-              buyNow(displayedProduct, detailQuantity);
-            }}
-          >
-            {tx("Buy now", "Mua ngay", lang)} <ArrowRight size={16} />
-          </button>
           <div className="delivery-note">
             {tx(
               "Carefully packed · Delivery nationwide · Easy support",
@@ -367,6 +447,7 @@ export default function ProductDetailPage({
       </div>
       <section className="detail-recommendations">
         <PageTitle
+          headingLevel={2}
           title={tx("You may also like", "Có thể bạn cũng thích", lang)}
           desc={tx(
             "More picks selected for your setup",
@@ -379,6 +460,7 @@ export default function ProductDetailPage({
       {compatibleAccessories.length > 0 && (
         <section className="detail-recommendations compatible-accessories">
           <PageTitle
+            headingLevel={2}
             title={tx("Accessories that work well with it", "Phụ kiện hợp với sản phẩm này", lang)}
             desc={tx(
               "A few thoughtful additions for your setup",
@@ -399,8 +481,28 @@ export default function ProductDetailPage({
         addToCart={addToCart}
         compareIds={compareIds}
         toggleCompare={toggleCompare}
-        onViewProduct={(item) => navigate(`/products/${item.id}`)}
+        onViewProduct={(item) => navigate(getProductUrl(item))}
       />
+      <div ref={purchaseBarRef} className="detail-purchase-bar" role="region" aria-label={tx("Product purchase", "Mua sản phẩm", lang)}>
+        <div className="detail-purchase-bar-inner">
+          <div className="detail-purchase-product">
+            <ProductImage src={displayedProduct.image} alt="" />
+            <div><strong>{product.name}</strong><span>{selectedVariant?.name || displayedProduct.sku} · {tx("Quantity", "Số lượng", lang)}: {detailQuantity}</span></div>
+          </div>
+          <div className="detail-purchase-actions">
+          <div className="detail-purchase-total">
+            <span>{tx("Subtotal", "Tạm tính", lang)}</span>
+            <strong>{formatPrice(BigInt(displayedProduct.price) * BigInt(detailQuantity))}</strong>
+          </div>
+          <button type="button" className="detail-purchase-cart" disabled={displayedProduct.stockStatus !== "IN_STOCK" || detailQuantity > displayedProduct.availableQuantity} onClick={() => addToCart(displayedProduct, detailQuantity)}>
+            <ShoppingCart size={20}/><span>{tx("Add to cart", "Thêm vào giỏ", lang)}</span>
+          </button>
+          <button type="button" className="detail-purchase-buy" disabled={displayedProduct.stockStatus !== "IN_STOCK" || detailQuantity > displayedProduct.availableQuantity} onClick={() => buyNow(displayedProduct, detailQuantity)}>
+            {tx("Buy now", "Mua ngay", lang)}<ArrowRight size={17}/>
+          </button>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

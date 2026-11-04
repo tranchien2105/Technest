@@ -37,19 +37,37 @@ export default function AccountNotifications({ language = "vi", navigate }) {
   }, [load, revision]);
 
   const markRead = async (id) => {
+    const previousResult = result;
+    const previousUnreadCount = unreadCount;
+    const markedAt = new Date().toISOString();
+    setResult((current) => ({ ...current, items: current.items.map((item) => item.id === id ? { ...item, readAt: markedAt } : item) }));
+    setUnreadCount((count) => Math.max(0, count - 1));
     setSaving(true);
-    try { await notificationsApi.markRead(id); await Promise.all([load(), refreshUnreadCount()]); }
-    catch (cause) { setError(cause.message || "Không thể cập nhật thông báo."); }
+    try { await notificationsApi.markRead(id); await refreshUnreadCount(); }
+    catch (cause) {
+      setResult(previousResult);
+      setUnreadCount(previousUnreadCount);
+      setError(cause.message || "Không thể cập nhật thông báo.");
+    }
     finally { setSaving(false); }
   };
   const markAllRead = async () => {
+    const previousResult = result;
+    const previousUnreadCount = unreadCount;
+    const markedAt = new Date().toISOString();
+    setResult((current) => ({ ...current, items: current.items.map((item) => item.readAt ? item : { ...item, readAt: markedAt }) }));
+    setUnreadCount(0);
     setSaving(true);
-    try { await notificationsApi.markAllRead(); await Promise.all([load(), refreshUnreadCount()]); }
-    catch (cause) { setError(cause.message || "Không thể cập nhật thông báo."); }
+    try { await notificationsApi.markAllRead(); await refreshUnreadCount(); }
+    catch (cause) {
+      setResult(previousResult);
+      setUnreadCount(previousUnreadCount);
+      setError(cause.message || "Không thể cập nhật thông báo.");
+    }
     finally { setSaving(false); }
   };
   const openNotification = async (notification) => {
-    if (!notification.readAt) await markRead(notification.id);
+    if (!notification.readAt) void markRead(notification.id);
     if (notification.targetUrl?.startsWith("/") && !notification.targetUrl.startsWith("//")) navigate?.(notification.targetUrl, true);
   };
 

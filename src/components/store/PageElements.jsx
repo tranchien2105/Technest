@@ -2,11 +2,12 @@ import { ArrowRight, ShoppingBag } from "lucide-react";
 import { formatPrice } from "../../utils/formatCurrency";
 import { tx } from "../../utils/translate";
 import { compareMoney, moneyRatio, subtractMoney } from "../../domain/cart";
-export function PageTitle({ eyebrow = "TECHNEST", title, desc }) {
+export function PageTitle({ eyebrow = "TECHNEST", title, desc, headingLevel = 1 }) {
+  const Heading = headingLevel === 2 ? "h2" : "h1";
   return (
     <div className="store-title">
       <span className="section-kicker">{eyebrow}</span>
-      <h1>{title}</h1>
+      <Heading>{title}</Heading>
       {desc && <p>{desc}</p>}
     </div>
   );

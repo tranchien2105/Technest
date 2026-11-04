@@ -1,0 +1,282 @@
+{
+  "status": "ACTUALLY MEASURED AFTER FIXES",
+  "checkedAt": "2026-11-04T08:23:21.063Z",
+  "method": "Actual Lighthouse loopback lab navigation; mobile simulated throttling and desktop preset. WSL CPU/network warnings retained. Not field CWV or a controlled production benchmark.",
+  "baseline": {
+    "page": "home",
+    "device": "mobile",
+    "url": "http://127.0.0.1:4173/",
+    "measuredAt": "2026-11-03T15:07:13.110Z",
+    "lighthouse": "13.6.0",
+    "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+    "scores": {
+      "performance": 22,
+      "accessibility": 85,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "metrics": {
+      "LCPms": 22213.58085,
+      "TBTms": 45865.34,
+      "CLS": 0.1181969950012246
+    },
+    "warnings": [
+      "The tested device appears to have a slower CPU than  Lighthouse expects. This can negatively affect your performance score. Learn more about [calibrating an appropriate CPU slowdown multiplier](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md#cpu-throttling)."
+    ],
+    "runtimeError": null,
+    "consoleErrors": [
+      {
+        "source": "network",
+        "description": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "sourceLocation": {
+          "type": "source-location",
+          "url": "http://127.0.0.1:4173/api/v1/products?limit=24&page=2&sort=newest",
+          "urlProvider": "network",
+          "line": 0,
+          "column": 0
+        }
+      }
+    ],
+    "httpErrors": [
+      {
+        "url": "http://127.0.0.1:4173/api/v1/products?limit=24&page=2&sort=newest",
+        "status": 500
+      }
+    ],
+    "gathererErrors": [],
+    "raw": "docs/evidence/performance/before-home-mobile.json",
+    "entryJSBytes": 566609,
+    "entryCSSBytes": 201436,
+    "note": "Baseline had React DEV and one catalog request HTTP500. Compare alongside warnings, not as a clean causal benchmark."
+  },
+  "runs": [
+    {
+      "page": "home",
+      "device": "mobile",
+      "url": "http://127.0.0.1:4173/",
+      "measuredAt": "2026-11-04T08:19:08.971Z",
+      "lighthouse": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+      "scores": {
+        "performance": 35,
+        "accessibility": 97,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "LCPms": 6954.372,
+        "TBTms": 1668.0295,
+        "CLS": 0.1372489860121181
+      },
+      "warnings": [
+        "The tested device appears to have a slower CPU than  Lighthouse expects. This can negatively affect your performance score. Learn more about [calibrating an appropriate CPU slowdown multiplier](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md#cpu-throttling)."
+      ],
+      "runtimeError": null,
+      "consoleErrors": [],
+      "httpErrors": [],
+      "gathererErrors": [],
+      "raw": "docs/evidence/performance/after/home-mobile-final.json"
+    },
+    {
+      "page": "home",
+      "device": "desktop",
+      "url": "http://127.0.0.1:4173/",
+      "measuredAt": "2026-11-04T08:19:42.622Z",
+      "lighthouse": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+      "scores": {
+        "performance": 66,
+        "accessibility": 97,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "LCPms": 1719.2391499999997,
+        "TBTms": 499.84815000000003,
+        "CLS": 0.0575989015195266
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "consoleErrors": [],
+      "httpErrors": [],
+      "gathererErrors": [],
+      "raw": "docs/evidence/performance/after/home-desktop-final.json"
+    },
+    {
+      "page": "product",
+      "device": "mobile",
+      "url": "http://127.0.0.1:4173/products/keychron-k2-pro",
+      "measuredAt": "2026-11-04T08:20:18.413Z",
+      "lighthouse": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+      "scores": {
+        "performance": 52,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "LCPms": 6117.7603500000005,
+        "TBTms": 684.3608499999996,
+        "CLS": 0.0027470448484708363
+      },
+      "warnings": [
+        "The tested device appears to have a slower CPU than  Lighthouse expects. This can negatively affect your performance score. Learn more about [calibrating an appropriate CPU slowdown multiplier](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md#cpu-throttling)."
+      ],
+      "runtimeError": null,
+      "consoleErrors": [],
+      "httpErrors": [],
+      "gathererErrors": [],
+      "raw": "docs/evidence/performance/after/product-mobile-final.json"
+    },
+    {
+      "page": "product",
+      "device": "desktop",
+      "url": "http://127.0.0.1:4173/products/keychron-k2-pro",
+      "measuredAt": "2026-11-04T08:20:43.211Z",
+      "lighthouse": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+      "scores": {
+        "performance": 75,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "LCPms": 1348.8402,
+        "TBTms": 97.13434999999993,
+        "CLS": 0.37190303820184545
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "consoleErrors": [],
+      "httpErrors": [],
+      "gathererErrors": [],
+      "raw": "docs/evidence/performance/after/product-desktop-final.json"
+    },
+    {
+      "page": "category",
+      "device": "mobile",
+      "url": "http://127.0.0.1:4173/categories/keyboards",
+      "measuredAt": "2026-11-04T08:21:05.576Z",
+      "lighthouse": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+      "scores": {
+        "performance": 48,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "LCPms": 6092.465650000001,
+        "TBTms": 724.5000000000009,
+        "CLS": 0.0003905621381928132
+      },
+      "warnings": [
+        "The tested device appears to have a slower CPU than  Lighthouse expects. This can negatively affect your performance score. Learn more about [calibrating an appropriate CPU slowdown multiplier](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md#cpu-throttling)."
+      ],
+      "runtimeError": null,
+      "consoleErrors": [],
+      "httpErrors": [],
+      "gathererErrors": [],
+      "raw": "docs/evidence/performance/after/category-mobile-final.json"
+    },
+    {
+      "page": "category",
+      "device": "desktop",
+      "url": "http://127.0.0.1:4173/categories/keyboards",
+      "measuredAt": "2026-11-04T08:21:28.780Z",
+      "lighthouse": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+      "scores": {
+        "performance": 68,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "LCPms": 1655.5700000000002,
+        "TBTms": 231.00000000000023,
+        "CLS": 0.27589359565372656
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "consoleErrors": [],
+      "httpErrors": [],
+      "gathererErrors": [],
+      "raw": "docs/evidence/performance/after/category-desktop-final.json"
+    },
+    {
+      "page": "brand",
+      "device": "mobile",
+      "url": "http://127.0.0.1:4173/brands/keychron",
+      "measuredAt": "2026-11-04T08:21:54.084Z",
+      "lighthouse": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+      "scores": {
+        "performance": 26,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "LCPms": 8330.695024999999,
+        "TBTms": 2223.55005,
+        "CLS": 0.23086269744835966
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "consoleErrors": [],
+      "httpErrors": [],
+      "gathererErrors": [],
+      "raw": "docs/evidence/performance/after/brand-mobile-final.json"
+    },
+    {
+      "page": "brand",
+      "device": "desktop",
+      "url": "http://127.0.0.1:4173/brands/keychron",
+      "measuredAt": "2026-11-04T08:22:15.442Z",
+      "lighthouse": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/130.0.0.0 Safari/537.36",
+      "scores": {
+        "performance": 59,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "LCPms": 1628.1896499999998,
+        "TBTms": 386.00000000000034,
+        "CLS": 0.27587420486785436
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "consoleErrors": [],
+      "httpErrors": [],
+      "gathererErrors": [],
+      "raw": "docs/evidence/performance/after/brand-desktop-final.json"
+    }
+  ],
+  "assets": [
+    {
+      "asset": "/assets/index-BjXjQ-M0.js",
+      "bytes": 334655,
+      "gzipBytes": 101617
+    },
+    {
+      "asset": "/assets/formatCurrency-BNIM_Zlo.js",
+      "bytes": 13175,
+      "gzipBytes": 5209
+    },
+    {
+      "asset": "/assets/authClient-BA5BwwIT.js",
+      "bytes": 1756,
+      "gzipBytes": 889
+    },
+    {
+      "asset": "/assets/index-Df65e23n.css",
+      "bytes": 196213,
+      "gzipBytes": 34833
+    }
+  ]
+}

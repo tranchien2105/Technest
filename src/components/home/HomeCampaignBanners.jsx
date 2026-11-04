@@ -119,7 +119,7 @@ export default function HomeCampaignBanners({
               {brand}
             </button>
           ))}
-          <a href={`/products?category=${selectedCategory}`}>
+          <a href={`/categories/${selectedCategory}`}>
             {language === "vi" ? "Xem tất cả" : "View all"} <ArrowRight size={14} />
           </a>
         </div>

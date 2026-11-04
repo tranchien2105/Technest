@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, ShieldCheck, Sparkles } from "lucide-react";
 import { getMe, login, register } from "../api/authClient";
 import { tx } from "../utils/translate";
 import { PageTitle } from "../components/store/PageElements";
+import "./AuthPage.css";
+import PasswordInput from "../components/common/PasswordInput";
 
 function authErrorMessage(error, lang) {
   if (!lang) return error.message;
@@ -26,10 +28,27 @@ export default function AuthPage({ route, navigate, language, onAuthenticate }) 
   const [busy, setBusy] = useState(false);
 
   const formPage = (title, action, fields, extra, onSuccess) => (
-    <section className="store-page narrow-page">
-      <PageTitle title={title} />
+    <section className="store-page auth-page">
+      <div className="auth-shell">
+        <aside className="auth-welcome-panel">
+          <div className="auth-brand-mark"><span className="auth-brand-icon">T</span><span>TECHNEST</span></div>
+          <div className="auth-welcome-copy">
+            <span className="auth-panel-kicker"><Sparkles size={14} /> {tx("Your tech, your way", "Công nghệ theo cách của bạn", lang)}</span>
+            <h2>{tx("Everything you love, in one place.", "Mọi điều bạn cần, trong một tài khoản.", lang)}</h2>
+            <p>{tx("Sign in to keep track of your orders, discover member offers and get more from your next upgrade.", "Đăng nhập để theo dõi đơn hàng, khám phá ưu đãi thành viên và chọn món công nghệ tiếp theo.", lang)}</p>
+            <ul>
+              <li><Check size={16} />{tx("Easy order tracking", "Theo dõi đơn hàng dễ dàng", lang)}</li>
+              <li><Check size={16} />{tx("Offers picked for you", "Ưu đãi dành riêng cho bạn", lang)}</li>
+              <li><Check size={16} />{tx("A smoother checkout", "Thanh toán thuận tiện hơn", lang)}</li>
+            </ul>
+          </div>
+          <div className="auth-panel-foot"><ShieldCheck size={17} />{tx("Your account is protected", "Tài khoản của bạn được bảo vệ", lang)}</div>
+        </aside>
+        <div className="auth-form-panel">
+          <div className="auth-mobile-brand"><span className="auth-brand-icon">T</span> TECHNEST</div>
+          <PageTitle title={title} desc={path === "/register" ? tx("Join TechNest and make your next upgrade count.", "Tạo tài khoản TechNest để tận hưởng trải nghiệm mua sắm tốt hơn.", lang) : tx("Sign in to continue to your TechNest account.", "Đăng nhập để tiếp tục với tài khoản TechNest của bạn.", lang)} />
       <form
-        className="store-form"
+        className="store-form auth-form"
         onSubmit={async (event) => {
           event.preventDefault();
           setError("");
@@ -47,7 +66,7 @@ export default function AuthPage({ route, navigate, language, onAuthenticate }) 
       >
         {fields}
         {extra}
-        <button className="primary-button" type="submit" disabled={busy}>
+        <button className="primary-button auth-submit" type="submit" disabled={busy}>
           {busy
             ? tx("Please wait…", "Đang xử lý…", lang)
             : tx("Continue", "Tiếp tục", lang)}{" "}
@@ -60,6 +79,9 @@ export default function AuthPage({ route, navigate, language, onAuthenticate }) 
         )}
         {notice && <p className="form-success" role="status">{notice}</p>}
       </form>
+          <p className="auth-security-note"><ShieldCheck size={15} />{tx("Secure sign-in. Your details stay private.", "Đăng nhập an toàn. Thông tin của bạn luôn được bảo mật.", lang)}</p>
+        </div>
+      </div>
     </section>
   );
 
@@ -80,9 +102,10 @@ export default function AuthPage({ route, navigate, language, onAuthenticate }) 
         </label>
         <label>
           {tx("Password", "Mật khẩu", lang)}
-          <input
+          <PasswordInput
             name="password"
-            type="password"
+            showLabel={tx("Show password", "Hiện mật khẩu", lang)}
+            hideLabel={tx("Hide password", "Ẩn mật khẩu", lang)}
             minLength="1"
             maxLength="128"
             required
@@ -120,9 +143,10 @@ export default function AuthPage({ route, navigate, language, onAuthenticate }) 
         </label>
         <label>
           {tx("Password", "Mật khẩu", lang)}
-          <input
+          <PasswordInput
             name="password"
-            type="password"
+            showLabel={tx("Show password", "Hiện mật khẩu", lang)}
+            hideLabel={tx("Hide password", "Ẩn mật khẩu", lang)}
             minLength="12"
             maxLength="128"
             required
@@ -131,9 +155,10 @@ export default function AuthPage({ route, navigate, language, onAuthenticate }) 
         </label>
         <label>
           {tx("Confirm password", "Xác nhận mật khẩu", lang)}
-          <input
+          <PasswordInput
             name="confirmPassword"
-            type="password"
+            showLabel={tx("Show password", "Hiện mật khẩu", lang)}
+            hideLabel={tx("Hide password", "Ẩn mật khẩu", lang)}
             minLength="12"
             maxLength="128"
             required

@@ -18,7 +18,17 @@ function eventStream(hub: OrderEventHub, admin: boolean) {
     const unsubscribe = hub.subscribe({ ...(admin ? {} : { userId: String(user.id) }), admin, send: (event) => response.write(`event: order:status-updated\ndata: ${JSON.stringify(event)}\n\n`) });
     const heartbeat = setInterval(() => response.write(": keepalive\n\n"), 25_000);
     heartbeat.unref();
-    response.on("close", () => { clearInterval(heartbeat); unsubscribe(); });
+    let cleanedUp = false;
+    const cleanup = () => {
+      if (cleanedUp) return;
+      cleanedUp = true;
+      clearInterval(heartbeat);
+      unsubscribe();
+      response.off("close", cleanup);
+      response.socket?.off("close", cleanup);
+    };
+    response.on("close", cleanup);
+    response.socket?.on("close", cleanup);
   };
 }
 

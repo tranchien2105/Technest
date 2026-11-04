@@ -22,10 +22,10 @@ export default function Footer({ t, language, notify }) {
               : "Keyboards · Mice · Monitors · Audio · Accessories"}
           </p>
           <div className="footer-socials">
-            <a href="/#products" aria-label="Instagram">
+            <a href="/#products" aria-label="ig — Instagram">
               ig
             </a>
-            <a href="/#products" aria-label="Facebook">
+            <a href="/#products" aria-label="f — Facebook">
               f
             </a>
             <a href="/#products" aria-label="Youtube">
@@ -46,9 +46,9 @@ export default function Footer({ t, language, notify }) {
           <a href="/#products">{t.featured}</a>
           <a href="/#home">{t.home}</a>
           <a href="/products?sort=newest">{language === "vi" ? "Sản phẩm mới" : "New arrivals"}</a>
-          <a href="/products?category=keyboards">{language === "vi" ? "Bàn phím" : "Keyboards"}</a>
-          <a href="/products?category=mice">{language === "vi" ? "Chuột" : "Mice"}</a>
-          <a href="/products?category=monitors">{language === "vi" ? "Màn hình" : "Monitors"}</a>
+          <a href="/categories/keyboards">{language === "vi" ? "Bàn phím" : "Keyboards"}</a>
+          <a href="/categories/mice">{language === "vi" ? "Chuột" : "Mice"}</a>
+          <a href="/categories/monitors">{language === "vi" ? "Màn hình" : "Monitors"}</a>
         </div>
         <div className="footer-newsletter">
           <h3>{t.newsletter}</h3>

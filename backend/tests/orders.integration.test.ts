@@ -1,6 +1,7 @@
 import { createTransactionalEmailRuntime } from "../src/modules/email/email.runtime.js";
 import { describe, it, expect } from "vitest";
 import request from "supertest";
+import { eq } from "drizzle-orm";
 import { createDatabase } from "../src/config/database.js";
 import { loadEnv } from "../src/config/env.js";
 import { createOrdersService } from "../src/modules/orders/orders.service.js";
@@ -12,6 +13,7 @@ import { AppError } from "../src/shared/errors.js";
 import type { AuthService } from "../src/modules/auth/auth.service.js";
 import * as schema from "../src/database/schema/index.js";
 import { createNotificationsService } from "../src/modules/notifications/notifications.service.js";
+import { createFlashSalesService } from "../src/modules/flash-sales/flash-sales.service.js";
 
 describe.skipIf(process.env.RUN_ORDER_DB_TESTS !== "1")("Orders PostgreSQL + HTTP", () => {
   it("enforces ownership, retries, concurrent stock, history and outbox", async () => {
@@ -127,6 +129,116 @@ describe.skipIf(process.env.RUN_ORDER_DB_TESTS !== "1")("Orders PostgreSQL + HTT
       }
       if (productId) await pool.query("DELETE FROM products WHERE id = $1", [String(productId)]);
       if (userId) await pool.query("DELETE FROM users WHERE id = $1", [userId]);
+      await pool.end();
+    }
+  }, 60000);
+
+  it("atomically reserves a Flash Sale place against concurrent PostgreSQL checkouts", async () => {
+    const env = loadEnv();
+    if (env.NODE_ENV === "production") throw new Error("Development database required");
+    const { db, pool } = createDatabase(env.DATABASE_URL, { statement_timeout: 10000, query_timeout: 12000 });
+    const suffix = crypto.randomUUID();
+    const userIds: number[] = [];
+    let productId: bigint | undefined;
+    let variantId: bigint | undefined;
+    let campaignId: bigint | undefined;
+    let draftCampaignId: bigint | undefined;
+    let itemId: bigint | undefined;
+    try {
+      const [category] = await db.select().from(schema.categories).limit(1);
+      const [brand] = await db.select().from(schema.brands).limit(1);
+      if (!category || !brand) throw new Error("Seed catalog first");
+      const [admin] = await db.insert(schema.users).values({ email: "flash-admin-" + suffix + "@example.test", passwordHash: "test-only", role: "ADMIN", fullName: "Flash Sale test admin" }).returning();
+      const [firstBuyer] = await db.insert(schema.users).values({ email: "flash-a-" + suffix + "@example.test", passwordHash: "test-only", fullName: "Flash Sale buyer A" }).returning();
+      const [secondBuyer] = await db.insert(schema.users).values({ email: "flash-b-" + suffix + "@example.test", passwordHash: "test-only", fullName: "Flash Sale buyer B" }).returning();
+      userIds.push(admin!.id, firstBuyer!.id, secondBuyer!.id);
+      const [product] = await db.insert(schema.products).values({ name: "Flash Sale fixture", slug: "flash-" + suffix, categoryId: category.id, brandId: brand.id, price: "100000", status: "ACTIVE" }).returning();
+      productId = product!.id;
+      const [variant] = await db.insert(schema.productVariants).values({ productId, sku: "FS-" + suffix, name: "Test variant", price: "100000", status: "ACTIVE" }).returning();
+      variantId = variant!.id;
+      await createInventoryService(db).adjustStock(variantId, 1);
+      const campaign = await createFlashSalesService(db).create({
+        name: "Flash Sale " + suffix,
+        slug: "flash-" + suffix,
+        description: "Temporary integration test campaign",
+        startsAt: new Date(Date.now() - 60_000).toISOString(),
+        endsAt: new Date(Date.now() + 60 * 60_000).toISOString(),
+        status: "ACTIVE",
+        items: [{ variantId: String(variantId), flashPrice: 50_000, quota: 1, perCustomerLimit: 1, sortOrder: 0 }],
+      }, { ...admin!, id: admin!.id, permissions: [] });
+      campaignId = BigInt(campaign.id);
+      itemId = BigInt(campaign.items[0]!.id);
+      const flashSales = createFlashSalesService(db);
+      const draft = await flashSales.create({
+        name: "Private Flash Sale " + suffix,
+        slug: "private-flash-" + suffix,
+        description: "Unpublished test campaign",
+        startsAt: new Date(Date.now() + 60 * 60_000).toISOString(),
+        endsAt: new Date(Date.now() + 2 * 60 * 60_000).toISOString(),
+        status: "DRAFT",
+        items: [{ variantId: String(variantId), flashPrice: 40_000, quota: 1, perCustomerLimit: 1, sortOrder: 0 }],
+      }, { ...admin!, id: admin!.id, permissions: [] });
+      draftCampaignId = BigInt(draft.id);
+      const staff = (await db.insert(schema.users).values({ email: "flash-staff-" + suffix + "@example.test", passwordHash: "test-only", role: "STAFF", permissions: ["flash-sales:read"], fullName: "Flash Sale read-only staff" }).returning())[0]!;
+      userIds.push(staff.id);
+      const auth = { authenticate: async (token?: string) => {
+        if (token === "admin") return { ...admin!, id: admin!.id, role: "ADMIN" as const, permissions: [] };
+        if (token === "staff") return { ...staff, id: staff.id, role: "STAFF" as const, permissions: ["flash-sales:read"] };
+        if (token === "customer") return { ...firstBuyer!, id: firstBuyer!.id, role: "CUSTOMER" as const, permissions: [] };
+        throw new AppError(401, "UNAUTHENTICATED", "Required");
+      } } as unknown as AuthService;
+      const app = createApp({ logger: createLogger("silent"), corsOrigin: env.CORS_ORIGIN, health: { postgres: async () => 1, redis: async () => "PONG" }, admin: { db, auth }, flashSales });
+      await request(app).get("/api/v1/admin/flash-sales").set("Authorization", "Bearer customer").expect(403);
+      await request(app).get("/api/v1/admin/flash-sales").set("Authorization", "Bearer staff").expect(200);
+      await request(app).post("/api/v1/admin/flash-sales").set("Authorization", "Bearer staff").send({}).expect(403);
+      await request(app).get("/api/v1/flash-sales/" + draftCampaignId).expect(404);
+      const service = createOrdersService(db);
+      const body = (flashSaleItemId: string) => ({
+        items: [{ variantId: String(variantId), quantity: 1, flashSaleItemId }],
+        shippingAddress: { fullName: "Flash Sale test", phone: "0901234567", address: "1 Test", city: "Hà Nội" },
+        paymentMethod: "COD" as const,
+      });
+      const attempts = await Promise.allSettled([
+        service.create({ ...body(String(itemId)), idempotencyKey: "flash-a-" + suffix }, firstBuyer!),
+        service.create({ ...body(String(itemId)), idempotencyKey: "flash-b-" + suffix }, secondBuyer!),
+      ]);
+      const winners = attempts.filter((attempt): attempt is PromiseFulfilledResult<Awaited<ReturnType<typeof service.create>>> => attempt.status === "fulfilled");
+      expect(winners).toHaveLength(1);
+      expect(attempts.filter((attempt) => attempt.status === "rejected")).toHaveLength(1);
+      const winner = winners[0]!.value;
+      expect(winner.order!.items[0]).toMatchObject({ unitPrice: "50000", flashSaleOriginalPrice: "100000", flashSaleDiscountAmount: "50000" });
+      const [heldItem] = await db.select().from(schema.flashSaleItems).where(eq(schema.flashSaleItems.id, itemId));
+      expect(heldItem).toMatchObject({ quota: 1, reservedQuantity: 1, soldQuantity: 0 });
+      expect(await createInventoryService(db).getStock(variantId)).toMatchObject({ onHand: 1, reserved: 1, availableQuantity: 0 });
+
+      const buyer = winner.order!.userId === String(firstBuyer!.id) ? firstBuyer! : secondBuyer!;
+      const buyerKey = buyer.id === firstBuyer!.id ? "flash-a-" : "flash-b-";
+      const replay = await service.create({ ...body(String(itemId)), idempotencyKey: buyerKey + suffix }, buyer);
+      expect(replay.replayed).toBe(true);
+      await service.transition(winner.order!.id, "CONFIRMED", buyer.id);
+      await service.transition(winner.order!.id, "PROCESSING", buyer.id);
+      await service.transition(winner.order!.id, "SHIPPED", buyer.id);
+      const [soldItem] = await db.select().from(schema.flashSaleItems).where(eq(schema.flashSaleItems.id, itemId));
+      expect(soldItem).toMatchObject({ reservedQuantity: 0, soldQuantity: 1 });
+      expect(await createInventoryService(db).getStock(variantId)).toMatchObject({ onHand: 0, reserved: 0, availableQuantity: 0 });
+    } finally {
+      if (userIds.length) {
+        await pool.query("DELETE FROM order_email_outbox WHERE order_id IN (SELECT id::text FROM orders WHERE user_id = ANY($1::bigint[]))", [userIds]);
+        await pool.query("DELETE FROM flash_sale_reservations WHERE user_id = ANY($1::bigint[])", [userIds]);
+        for (const table of ["order_status_history", "order_inventory_reservations", "order_items"]) await pool.query("DELETE FROM " + table + " WHERE order_id IN (SELECT id FROM orders WHERE user_id = ANY($1::bigint[]))", [userIds]);
+        await pool.query("DELETE FROM orders WHERE user_id = ANY($1::bigint[])", [userIds]);
+      }
+      if (itemId) await pool.query("DELETE FROM flash_sale_reservations WHERE flash_sale_item_id = $1", [String(itemId)]);
+      if (campaignId) await pool.query("DELETE FROM flash_sale_items WHERE campaign_id = $1", [String(campaignId)]);
+      if (campaignId) await pool.query("DELETE FROM flash_sale_campaigns WHERE id = $1", [String(campaignId)]);
+      if (draftCampaignId) await pool.query("DELETE FROM flash_sale_items WHERE campaign_id = $1", [String(draftCampaignId)]);
+      if (draftCampaignId) await pool.query("DELETE FROM flash_sale_campaigns WHERE id = $1", [String(draftCampaignId)]);
+      if (variantId) {
+        for (const table of ["inventory_movements", "inventory_reservations", "inventories"]) await pool.query("DELETE FROM " + table + " WHERE variant_id = $1", [String(variantId)]);
+        await pool.query("DELETE FROM product_variants WHERE id = $1", [String(variantId)]);
+      }
+      if (productId) await pool.query("DELETE FROM products WHERE id = $1", [String(productId)]);
+      if (userIds.length) await pool.query("DELETE FROM users WHERE id = ANY($1::bigint[])", [userIds]);
       await pool.end();
     }
   }, 60000);

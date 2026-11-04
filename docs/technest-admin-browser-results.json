@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-04T08:09:42.127Z",
+  "base": "http://127.0.0.1:4175",
+  "fixturePolicy": "Admin registered inside a PostgreSQL transaction owned by browser-e2e-server; no real credentials or catalog writes",
+  "results": [
+    {
+      "check": "Real admin login; initial catalog has no brand/category reference preload",
+      "result": "PASS"
+    },
+    {
+      "check": "Four rapid search changes generate one settled listing request",
+      "requests": [
+        {
+          "url": "/api/v1/admin/products?page=1&limit=50&q=Logitech&sort=newest",
+          "method": "GET"
+        }
+      ],
+      "result": "PASS"
+    },
+    {
+      "check": "Distinct pagination and browser Back preserve search/page",
+      "firstPageCount": 50,
+      "secondPageCount": 50,
+      "result": "PASS"
+    },
+    {
+      "check": "Bounded searchable brand picker; selection filters server-side and resets page",
+      "initialOptions": 30,
+      "result": "PASS"
+    },
+    {
+      "check": "Editor warns before discarding draft and preserves it when canceling; audit makes no catalog mutations",
+      "result": "PASS"
+    },
+    {
+      "check": "390px admin catalog has no document overflow or JavaScript exceptions",
+      "width": 390,
+      "scrollWidth": 390,
+      "result": "PASS"
+    }
+  ],
+  "exceptions": []
+}

@@ -1,0 +1,514 @@
+{
+  "createdAt": "2026-11-03T15:16:52.795Z",
+  "source": "technest_dev",
+  "isolatedTarget": "technest_restore_20261103151652_6ee2b7",
+  "backup": {
+    "path": "/tmp/technest-backup-rehearsal-G20Ssq/technest-development.dump",
+    "bytes": 1562372,
+    "sha256": "e8602587b4b0ee5d5c851c78eeda81ba03359f8fa602cb37ab16f3570a7d8ced"
+  },
+  "checks": [
+    {
+      "table": "drizzle.__drizzle_migrations",
+      "count": "21",
+      "match": true
+    },
+    {
+      "table": "public.admin_audit_logs",
+      "count": "83",
+      "match": true
+    },
+    {
+      "table": "public.admin_operations",
+      "count": "0",
+      "match": true
+    },
+    {
+      "table": "public.after_sales_requests",
+      "count": "100",
+      "match": true
+    },
+    {
+      "table": "public.auth_sessions",
+      "count": "1801",
+      "match": true
+    },
+    {
+      "table": "public.brands",
+      "count": "51",
+      "match": true
+    },
+    {
+      "table": "public.catalog_imports",
+      "count": "0",
+      "match": true
+    },
+    {
+      "table": "public.categories",
+      "count": "60",
+      "match": true
+    },
+    {
+      "table": "public.flash_sale_campaigns",
+      "count": "1",
+      "match": true
+    },
+    {
+      "table": "public.flash_sale_items",
+      "count": "16",
+      "match": true
+    },
+    {
+      "table": "public.flash_sale_reservations",
+      "count": "2",
+      "match": true
+    },
+    {
+      "table": "public.homepage_cms",
+      "count": "1",
+      "match": true
+    },
+    {
+      "table": "public.inventories",
+      "count": "10060",
+      "match": true
+    },
+    {
+      "table": "public.inventory_movements",
+      "count": "4208",
+      "match": true
+    },
+    {
+      "table": "public.inventory_reservations",
+      "count": "2524",
+      "match": true
+    },
+    {
+      "table": "public.notifications",
+      "count": "13",
+      "match": true
+    },
+    {
+      "table": "public.order_email_outbox",
+      "count": "39",
+      "match": true
+    },
+    {
+      "table": "public.order_inventory_reservations",
+      "count": "2524",
+      "match": true
+    },
+    {
+      "table": "public.order_items",
+      "count": "5022",
+      "match": true
+    },
+    {
+      "table": "public.order_status_history",
+      "count": "5708",
+      "match": true
+    },
+    {
+      "table": "public.orders",
+      "count": "2015",
+      "match": true
+    },
+    {
+      "table": "public.product_images",
+      "count": "15060",
+      "match": true
+    },
+    {
+      "table": "public.product_variants",
+      "count": "10060",
+      "match": true
+    },
+    {
+      "table": "public.products",
+      "count": "5060",
+      "match": true
+    },
+    {
+      "table": "public.seo_metadata",
+      "count": "0",
+      "match": true
+    },
+    {
+      "table": "public.seo_product_redirects",
+      "count": "0",
+      "match": true
+    },
+    {
+      "table": "public.store_banners",
+      "count": "190",
+      "match": true
+    },
+    {
+      "table": "public.store_settings",
+      "count": "1",
+      "match": true
+    },
+    {
+      "table": "public.user_addresses",
+      "count": "122",
+      "match": true
+    },
+    {
+      "table": "public.users",
+      "count": "122",
+      "match": true
+    },
+    {
+      "table": "public.voucher_redemptions",
+      "count": "6",
+      "match": true
+    },
+    {
+      "table": "public.vouchers",
+      "count": "101",
+      "match": true
+    }
+  ],
+  "outcome": "FAIL",
+  "sourceWrites": false,
+  "targetRetained": true,
+  "postgresVersion": "PostgreSQL 16.15",
+  "sourceSnapshot": {
+    "tables": [
+      {
+        "table": "drizzle.__drizzle_migrations",
+        "count": "21",
+        "checksum": "b37ec727b5142c6adea43c05533a1713"
+      },
+      {
+        "table": "public.admin_audit_logs",
+        "count": "83",
+        "checksum": "c8815399f9e141f62799b5e1ae48c678"
+      },
+      {
+        "table": "public.admin_operations",
+        "count": "0",
+        "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "public.after_sales_requests",
+        "count": "100",
+        "checksum": "8c4b62414dba18203ba2d0df9a8c7154"
+      },
+      {
+        "table": "public.auth_sessions",
+        "count": "1801",
+        "checksum": "dc76ff717527393c0ad9637c20dc01b6"
+      },
+      {
+        "table": "public.brands",
+        "count": "51",
+        "checksum": "031e4c0c8318b69c53fbc32bf1730786"
+      },
+      {
+        "table": "public.catalog_imports",
+        "count": "0",
+        "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "public.categories",
+        "count": "60",
+        "checksum": "311ad4f85e322a23a7d9ab3d725775d3"
+      },
+      {
+        "table": "public.flash_sale_campaigns",
+        "count": "1",
+        "checksum": "1a1a932c7dcff4c23977cbf2fd8c3baf"
+      },
+      {
+        "table": "public.flash_sale_items",
+        "count": "16",
+        "checksum": "7e43d11863722f15b28d98072ca3855d"
+      },
+      {
+        "table": "public.flash_sale_reservations",
+        "count": "2",
+        "checksum": "8593def0664125f0e30251c50cb42185"
+      },
+      {
+        "table": "public.homepage_cms",
+        "count": "1",
+        "checksum": "162c94cf69e33e2e410dabf3b0772930"
+      },
+      {
+        "table": "public.inventories",
+        "count": "10060",
+        "checksum": "093d82d8c4eca24f2fd71b0de3e662d5"
+      },
+      {
+        "table": "public.inventory_movements",
+        "count": "4208",
+        "checksum": "bc25337b00bb4cdd7bec67311309c16c"
+      },
+      {
+        "table": "public.inventory_reservations",
+        "count": "2524",
+        "checksum": "c5bd001144f3318c77cd89854099dfe5"
+      },
+      {
+        "table": "public.notifications",
+        "count": "13",
+        "checksum": "1ce21f34133f86c22c78cc7c2fcade28"
+      },
+      {
+        "table": "public.order_email_outbox",
+        "count": "39",
+        "checksum": "5cf5b931518c395e09a4600248abbf1f"
+      },
+      {
+        "table": "public.order_inventory_reservations",
+        "count": "2524",
+        "checksum": "dcb94fbdb1dd081a04ca1df63c3d2aec"
+      },
+      {
+        "table": "public.order_items",
+        "count": "5022",
+        "checksum": "77d2476e1957d6d4573ebdef5947638b"
+      },
+      {
+        "table": "public.order_status_history",
+        "count": "5708",
+        "checksum": "e1ddfa878825b470096f0a39f8444152"
+      },
+      {
+        "table": "public.orders",
+        "count": "2015",
+        "checksum": "d2e40fd57dbd618e50010f36de6fafd6"
+      },
+      {
+        "table": "public.product_images",
+        "count": "15060",
+        "checksum": "cca356bc4bfbcbf0d646646f723ce12f"
+      },
+      {
+        "table": "public.product_variants",
+        "count": "10060",
+        "checksum": "5bd08250b8e379fd1cf5c63b80e4cce7"
+      },
+      {
+        "table": "public.products",
+        "count": "5060",
+        "checksum": "cae57c242b43d9eb478bc38e4c91f60a"
+      },
+      {
+        "table": "public.seo_metadata",
+        "count": "0",
+        "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "public.seo_product_redirects",
+        "count": "0",
+        "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "public.store_banners",
+        "count": "190",
+        "checksum": "c9b39ba7e59f4bb932095bc567603c43"
+      },
+      {
+        "table": "public.store_settings",
+        "count": "1",
+        "checksum": "fa85cae38747d6d9460b6531cd1c106d"
+      },
+      {
+        "table": "public.user_addresses",
+        "count": "122",
+        "checksum": "3759c0b4c8236af39dae1ccc7734307d"
+      },
+      {
+        "table": "public.users",
+        "count": "122",
+        "checksum": "07eeff4418a06de5bdc9890c7afccef4"
+      },
+      {
+        "table": "public.voucher_redemptions",
+        "count": "6",
+        "checksum": "7c3cce3533525ebfbef681efa8f119da"
+      },
+      {
+        "table": "public.vouchers",
+        "count": "101",
+        "checksum": "bf0fc11be53bfba0169bf230a48a90f1"
+      }
+    ],
+    "constraintCount": 130,
+    "indexCount": 90,
+    "constraintsHash": "c8dab35d7a3d6a2b7096d3481ef04fe1aac48bd95e8a16147b2dcb9c12413e61",
+    "indexesHash": "6b6db5872b15e67637ec934abcc4515968e4e6f3411050d5f5ff8060375efa9c"
+  },
+  "restored": {
+    "tables": [
+      {
+        "table": "drizzle.__drizzle_migrations",
+        "count": "21",
+        "checksum": "b37ec727b5142c6adea43c05533a1713"
+      },
+      {
+        "table": "public.admin_audit_logs",
+        "count": "83",
+        "checksum": "c8815399f9e141f62799b5e1ae48c678"
+      },
+      {
+        "table": "public.admin_operations",
+        "count": "0",
+        "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "public.after_sales_requests",
+        "count": "100",
+        "checksum": "8c4b62414dba18203ba2d0df9a8c7154"
+      },
+      {
+        "table": "public.auth_sessions",
+        "count": "1801",
+        "checksum": "dc76ff717527393c0ad9637c20dc01b6"
+      },
+      {
+        "table": "public.brands",
+        "count": "51",
+        "checksum": "031e4c0c8318b69c53fbc32bf1730786"
+      },
+      {
+        "table": "public.catalog_imports",
+        "count": "0",
+        "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "public.categories",
+        "count": "60",
+        "checksum": "311ad4f85e322a23a7d9ab3d725775d3"
+      },
+      {
+        "table": "public.flash_sale_campaigns",
+        "count": "1",
+        "checksum": "1a1a932c7dcff4c23977cbf2fd8c3baf"
+      },
+      {
+        "table": "public.flash_sale_items",
+        "count": "16",
+        "checksum": "7e43d11863722f15b28d98072ca3855d"
+      },
+      {
+        "table": "public.flash_sale_reservations",
+        "count": "2",
+        "checksum": "8593def0664125f0e30251c50cb42185"
+      },
+      {
+        "table": "public.homepage_cms",
+        "count": "1",
+        "checksum": "162c94cf69e33e2e410dabf3b0772930"
+      },
+      {
+        "table": "public.inventories",
+        "count": "10060",
+        "checksum": "093d82d8c4eca24f2fd71b0de3e662d5"
+      },
+      {
+        "table": "public.inventory_movements",
+        "count": "4208",
+        "checksum": "bc25337b00bb4cdd7bec67311309c16c"
+      },
+      {
+        "table": "public.inventory_reservations",
+        "count": "2524",
+        "checksum": "c5bd001144f3318c77cd89854099dfe5"
+      },
+      {
+        "table": "public.notifications",
+        "count": "13",
+        "checksum": "1ce21f34133f86c22c78cc7c2fcade28"
+      },
+      {
+        "table": "public.order_email_outbox",
+        "count": "39",
+        "checksum": "5cf5b931518c395e09a4600248abbf1f"
+      },
+      {
+        "table": "public.order_inventory_reservations",
+        "count": "2524",
+        "checksum": "dcb94fbdb1dd081a04ca1df63c3d2aec"
+      },
+      {
+        "table": "public.order_items",
+        "count": "5022",
+        "checksum": "77d2476e1957d6d4573ebdef5947638b"
+      },
+      {
+        "table": "public.order_status_history",
+        "count": "5708",
+        "checksum": "e1ddfa878825b470096f0a39f8444152"
+      },
+      {
+        "table": "public.orders",
+        "count": "2015",
+        "checksum": "d2e40fd57dbd618e50010f36de6fafd6"
+      },
+      {
+        "table": "public.product_images",
+        "count": "15060",
+        "checksum": "cca356bc4bfbcbf0d646646f723ce12f"
+      },
+      {
+        "table": "public.product_variants",
+        "count": "10060",
+        "checksum": "5bd08250b8e379fd1cf5c63b80e4cce7"
+      },
+      {
+        "table": "public.products",
+        "count": "5060",
+        "checksum": "cae57c242b43d9eb478bc38e4c91f60a"
+      },
+      {
+        "table": "public.seo_metadata",
+        "count": "0",
+        "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "public.seo_product_redirects",
+        "count": "0",
+        "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "public.store_banners",
+        "count": "190",
+        "checksum": "c9b39ba7e59f4bb932095bc567603c43"
+      },
+      {
+        "table": "public.store_settings",
+        "count": "1",
+        "checksum": "fa85cae38747d6d9460b6531cd1c106d"
+      },
+      {
+        "table": "public.user_addresses",
+        "count": "122",
+        "checksum": "3759c0b4c8236af39dae1ccc7734307d"
+      },
+      {
+        "table": "public.users",
+        "count": "122",
+        "checksum": "07eeff4418a06de5bdc9890c7afccef4"
+      },
+      {
+        "table": "public.voucher_redemptions",
+        "count": "6",
+        "checksum": "7c3cce3533525ebfbef681efa8f119da"
+      },
+      {
+        "table": "public.vouchers",
+        "count": "101",
+        "checksum": "bf0fc11be53bfba0169bf230a48a90f1"
+      }
+    ],
+    "constraintCount": 130,
+    "indexCount": 90,
+    "constraintsHash": "f56c6f0fe00634eb22a3fb30b8c68412e97fdfa102316d02f521685abff19c5c",
+    "indexesHash": "6b6db5872b15e67637ec934abcc4515968e4e6f3411050d5f5ff8060375efa9c"
+  },
+  "schemaMatch": false,
+  "durationMs": 41019
+}

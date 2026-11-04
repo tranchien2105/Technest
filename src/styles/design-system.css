@@ -307,6 +307,21 @@ input[type="radio"] {
 .admin-toast button {
   color: var(--ui-accent-text);
 }
+.toast-message .toast-action {
+  border: 1px solid #e64b00;
+  background: #ff5a00;
+  color: #fff;
+  box-shadow: 0 5px 14px rgba(230, 75, 0, .24);
+}
+.toast-message .toast-action:hover {
+  border-color: #e64b00;
+  background: #e64b00;
+  color: #fff;
+}
+.toast-message .toast-action:focus-visible {
+  outline: 3px solid #fed7aa;
+  outline-offset: 2px;
+}
 .drawer-overlay,
 .admin-overlay {
   background: rgba(17, 17, 17, 0.45);
@@ -1203,7 +1218,7 @@ input[type="radio"] {
   background: var(--ui-paper);
 }
 .catalog-hero h1,
-.store-title h1 {
+.store-title :is(h1, h2) {
   font-size: clamp(24px, 2.3vw, 30px);
   font-weight: 700;
   line-height: 1.3;

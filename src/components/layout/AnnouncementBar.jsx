@@ -34,7 +34,7 @@ export default function AnnouncementBar({ shipping, language, config }) {
         <div className="announcement-left">
           <div className="announcement-track">
             {[0, 1, 2, 3].map((copy) => (
-              <div className="announcement-group" key={copy} aria-hidden={copy > 0}>
+              <div className="announcement-group" key={copy} aria-hidden={copy > 0} inert={copy > 0 ? true : undefined}>
                 {messages}
               </div>
             ))}

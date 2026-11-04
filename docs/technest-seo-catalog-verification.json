@@ -1,0 +1,14 @@
+{
+  "database": "technest_dev",
+  "total": {
+    "products": 5060,
+    "brands": 51
+  },
+  "eligibleSitemapCounts": {
+    "products": 50,
+    "categories": 5,
+    "brands": 19
+  },
+  "excludedProducts": 5010,
+  "policy": "Published, valid price/variant/image, no seed/demo marker, no explicit noindex or canonical override. Read-only audit."
+}

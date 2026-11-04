@@ -7,6 +7,7 @@ import { createLogger } from "../src/config/logger.js";
 import { createOrdersService } from "../src/modules/orders/orders.service.js";
 import { createOrderEventHub } from "../src/modules/orders/order-events.js";
 import { createApp } from "../src/app.js";
+import { AppError } from "../src/shared/errors.js";
 
 describe.skipIf(process.env.RUN_ADMIN_DB_READ_TESTS !== "1")("Admin PostgreSQL read APIs", () => {
   let pool: ReturnType<typeof createDatabase>["pool"] | undefined;
@@ -17,7 +18,10 @@ describe.skipIf(process.env.RUN_ADMIN_DB_READ_TESTS !== "1")("Admin PostgreSQL r
     if (env.NODE_ENV === "production") throw new Error("Development database required");
     const database = createDatabase(env.DATABASE_URL);
     pool = database.pool;
-    const auth = { authenticate: async () => ({ id: 1, email: "admin@example.test", fullName: "Admin", phone: null, role: "ADMIN" as const, status: "ACTIVE" as const }) } as unknown as AuthService;
+    const auth = { authenticate: async (token?: string) => {
+      if (token !== "admin") throw new AppError(401, "UNAUTHENTICATED", "Authentication required");
+      return { id: 1, email: "admin@example.test", fullName: "Admin", phone: null, role: "ADMIN" as const, status: "ACTIVE" as const };
+    } } as unknown as AuthService;
     app = createApp({ logger: createLogger("silent"), corsOrigin: env.CORS_ORIGIN,
       health: { postgres: async () => 1, redis: async () => "PONG" }, admin: { db: database.db, auth }, orders: { service: createOrdersService(database.db), auth, hub: createOrderEventHub(), notify: () => {} } });
   });
@@ -37,6 +41,25 @@ describe.skipIf(process.env.RUN_ADMIN_DB_READ_TESTS !== "1")("Admin PostgreSQL r
     expect(responses[6]!.body.data).toHaveProperty("freeShippingThreshold");
   });
   const get = (path: string) => request(app).get(`/api/v1/admin/${path}`).set("Authorization", "Bearer admin");
+
+  it("bounds reference searches and resolves selected IDs outside the first window", async () => {
+    const first = await get("products/references?type=brands&limit=2").expect(200);
+    expect(first.body.data.items.length).toBeLessThanOrEqual(2);
+    expect(first.body.data).toHaveProperty("hasMore");
+    expect(first.body.data.brands).toBeUndefined();
+    const brand = first.body.data.items[0];
+    if (brand) {
+      const selected = await get(`products/references?type=brands&id=${brand.id}`).expect(200);
+      expect(selected.body.data.items).toEqual([brand]);
+      const search = await get(`products/references?type=brands&q=${encodeURIComponent(brand.name)}&limit=2`).expect(200);
+      expect(search.body.data.items.some((item: { id: string }) => item.id === brand.id)).toBe(true);
+    }
+    const categories = await get("products/references?type=categories&limit=2").expect(200);
+    expect(categories.body.data.items.length).toBeLessThanOrEqual(2);
+    await get("products/references?limit=1000").expect(400);
+    await get("products/references?type=brands&id=not-an-id").expect(400);
+    await request(app).get("/api/v1/admin/products/references").expect(401);
+  });
 
   it("supports all requested page sizes on every admin list, with consistent totals", async () => {
     for (const resource of ["products", "categories", "brands", "customers", "inventory", "orders"]) {

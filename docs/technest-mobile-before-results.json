@@ -1,0 +1,959 @@
+{
+  "checkedAt": "2026-11-03T15:19:37.573Z",
+  "phase": "before",
+  "browser": "Chromium CDP; widths360/390/768; height900; guest+transaction fixture auth",
+  "base": "http://127.0.0.1:4175",
+  "results": [
+    {
+      "page": "home",
+      "path": "/",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Sắp xếp",
+          "fontSize": "12px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "listing",
+      "path": "/products",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "catalog-page-step",
+          "width": 66,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-step",
+          "width": 66,
+          "height": 36
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": "Tìm thương hiệu",
+          "fontSize": "12px"
+        },
+        {
+          "field": "Chọn thương hiệu",
+          "fontSize": "12px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "detail",
+      "path": "/products/browser-e2e-d02ed8c7-a1f3-4cc7-959e-7a9e1922aa4e",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "Giảm số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "Tăng số lượng",
+          "width": 29,
+          "height": 36
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [
+        {
+          "label": "Thêm vào giỏ",
+          "visible": true,
+          "clickable": true
+        },
+        {
+          "label": "Mua ngay",
+          "visible": true,
+          "clickable": true
+        }
+      ],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "Giảm số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "Tăng số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "cart-remove",
+          "width": 29,
+          "height": 36
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "checkout",
+      "path": "/checkout",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "primary-button checkout-submit",
+          "width": 328,
+          "height": 41
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "name",
+          "fontSize": "13px"
+        },
+        {
+          "field": "email",
+          "fontSize": "13px"
+        },
+        {
+          "field": "phone",
+          "fontSize": "13px"
+        },
+        {
+          "field": "address",
+          "fontSize": "13px"
+        },
+        {
+          "field": "city",
+          "fontSize": "13px"
+        },
+        {
+          "field": "district",
+          "fontSize": "13px"
+        },
+        {
+          "field": "ward",
+          "fontSize": "13px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "addresses",
+      "path": "/account/addresses",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "setup",
+      "path": "/setup",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Tìm thiết bị trong danh mục",
+          "fontSize": "11px"
+        },
+        {
+          "field": "Sắp xếp sản phẩm",
+          "fontSize": "11px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "flash-sale",
+      "path": "/flash-sale",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "home",
+      "path": "/",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "listing",
+      "path": "/products",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "catalog-page-step",
+          "width": 66,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 34,
+          "height": 36
+        },
+        {
+          "selector": "catalog-page-step",
+          "width": 66,
+          "height": 36
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": "Tìm thương hiệu",
+          "fontSize": "12px"
+        },
+        {
+          "field": "Chọn thương hiệu",
+          "fontSize": "12px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "detail",
+      "path": "/products/browser-e2e-d02ed8c7-a1f3-4cc7-959e-7a9e1922aa4e",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "Giảm số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "Tăng số lượng",
+          "width": 29,
+          "height": 36
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [
+        {
+          "label": "Thêm vào giỏ",
+          "visible": true,
+          "clickable": true
+        },
+        {
+          "label": "Mua ngay",
+          "visible": true,
+          "clickable": true
+        }
+      ],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "Giảm số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "Tăng số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "cart-remove",
+          "width": 29,
+          "height": 36
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "checkout",
+      "path": "/login",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "primary-button checkout-submit",
+          "width": 358,
+          "height": 41
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "name",
+          "fontSize": "13px"
+        },
+        {
+          "field": "email",
+          "fontSize": "13px"
+        },
+        {
+          "field": "phone",
+          "fontSize": "13px"
+        },
+        {
+          "field": "address",
+          "fontSize": "13px"
+        },
+        {
+          "field": "city",
+          "fontSize": "13px"
+        },
+        {
+          "field": "district",
+          "fontSize": "13px"
+        },
+        {
+          "field": "ward",
+          "fontSize": "13px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "addresses",
+      "path": "/login",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "setup",
+      "path": "/setup",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Tìm thiết bị trong danh mục",
+          "fontSize": "11px"
+        },
+        {
+          "field": "Sắp xếp sản phẩm",
+          "fontSize": "11px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "flash-sale",
+      "path": "/flash-sale",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "home",
+      "path": "/",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "listing",
+      "path": "/products",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "catalog-page-step",
+          "width": 82,
+          "height": 38
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 38,
+          "height": 38
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 38,
+          "height": 38
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 38,
+          "height": 38
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 38,
+          "height": 38
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 38,
+          "height": 38
+        },
+        {
+          "selector": "catalog-page-number",
+          "width": 38,
+          "height": 38
+        },
+        {
+          "selector": "catalog-page-step",
+          "width": 82,
+          "height": 38
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": null,
+          "fontSize": "13px"
+        },
+        {
+          "field": "Tìm thương hiệu",
+          "fontSize": "13px"
+        },
+        {
+          "field": "Chọn thương hiệu",
+          "fontSize": "13px"
+        },
+        {
+          "field": null,
+          "fontSize": "13px"
+        },
+        {
+          "field": null,
+          "fontSize": "13px"
+        },
+        {
+          "field": null,
+          "fontSize": "13px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "detail",
+      "path": "/products/browser-e2e-d02ed8c7-a1f3-4cc7-959e-7a9e1922aa4e",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "Giảm số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "Tăng số lượng",
+          "width": 29,
+          "height": 36
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": null,
+          "fontSize": "12px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [
+        {
+          "label": "Thêm vào giỏ",
+          "visible": true,
+          "clickable": true
+        },
+        {
+          "label": "Mua ngay",
+          "visible": true,
+          "clickable": true
+        }
+      ],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [
+        {
+          "selector": "Giảm số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "Tăng số lượng",
+          "width": 29,
+          "height": 36
+        },
+        {
+          "selector": "cart-remove",
+          "width": 29,
+          "height": 36
+        }
+      ],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "checkout",
+      "path": "/login",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "name",
+          "fontSize": "13px"
+        },
+        {
+          "field": "email",
+          "fontSize": "13px"
+        },
+        {
+          "field": "phone",
+          "fontSize": "13px"
+        },
+        {
+          "field": "address",
+          "fontSize": "13px"
+        },
+        {
+          "field": "city",
+          "fontSize": "13px"
+        },
+        {
+          "field": "district",
+          "fontSize": "13px"
+        },
+        {
+          "field": "ward",
+          "fontSize": "13px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "addresses",
+      "path": "/login",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "setup",
+      "path": "/setup",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Tìm thiết bị trong danh mục",
+          "fontSize": "11px"
+        },
+        {
+          "field": "Sắp xếp sản phẩm",
+          "fontSize": "11px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "flash-sale",
+      "path": "/flash-sale",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [
+        {
+          "field": "Tìm sản phẩm, thương hiệu, danh mục...",
+          "fontSize": "14px"
+        },
+        {
+          "field": "Email của bạn",
+          "fontSize": "12px"
+        }
+      ],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    }
+  ],
+  "exceptions": [],
+  "artifacts": "/tmp/technest-mobile-before"
+}

@@ -9,7 +9,7 @@ export default function HomeSidePromos({ language }) {
         className="home-side-promos home-side-promos-left"
         aria-label={vi ? "Ưu đãi góc làm việc" : "Workspace promotion"}
       >
-        <a className="home-side-promo home-side-promo-work" href="/products?category=keyboards">
+        <a className="home-side-promo home-side-promo-work" href="/categories/keyboards">
           <span className="home-side-promo-kicker">
             <Keyboard size={14} /> TECHNEST WORKSPACE
           </span>
@@ -31,7 +31,7 @@ export default function HomeSidePromos({ language }) {
         className="home-side-promos home-side-promos-right"
         aria-label={vi ? "Ưu đãi âm thanh" : "Audio promotion"}
       >
-        <a className="home-side-promo home-side-promo-audio" href="/products?category=audio">
+        <a className="home-side-promo home-side-promo-audio" href="/categories/audio">
           <span className="home-side-promo-kicker">
             <Headphones size={14} /> TECHNEST AUDIO
           </span>

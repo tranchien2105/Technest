@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useHorizontalWheel } from "../../hooks/useHorizontalWheel";
 
 export default function HomeProductRail({ children, className = "", language, label }) {
   const railRef = useRef(null);
+  useHorizontalWheel(railRef);
   const dragRef = useRef(null);
   const draggedRef = useRef(false);
   const pausedRef = useRef(false);
@@ -41,26 +43,24 @@ export default function HomeProductRail({ children, className = "", language, la
   }, []);
 
   const startDrag = (event) => {
-    if (
-      event.pointerType !== "mouse" ||
-      event.button !== 0 ||
-      event.target.closest("button, a, input, select")
-    )
-      return;
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
     pauseAfterInteraction();
     dragRef.current = {
+      pointerId: event.pointerId,
       x: event.clientX,
       scrollLeft: railRef.current.scrollLeft,
       moved: false,
     };
-    railRef.current.setPointerCapture(event.pointerId);
   };
 
   const moveDrag = (event) => {
     const drag = dragRef.current;
-    if (!drag) return;
+    if (!drag || drag.pointerId !== event.pointerId) return;
     const distance = event.clientX - drag.x;
-    if (!drag.moved && Math.abs(distance) > 5) drag.moved = true;
+    if (!drag.moved && Math.abs(distance) > 5) {
+      drag.moved = true;
+      railRef.current.setPointerCapture(event.pointerId);
+    }
     if (drag.moved) {
       event.preventDefault();
       railRef.current.scrollLeft = drag.scrollLeft - distance;

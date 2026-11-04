@@ -1,3 +1,6 @@
+import {fileURLToPath} from "node:url";
+import {createSeoRepository} from "./modules/seo/seo.repository.js";
+import {createSeoService} from "./modules/seo/seo.service.js";
 import { Server } from "socket.io";
 import { createOrdersService } from "./modules/orders/orders.service.js";
 import { createOrderEventHub } from "./modules/orders/order-events.js";
@@ -14,6 +17,7 @@ import { createInventoryService } from "./modules/inventory/inventory.service.js
 import { createTransactionalEmailRuntime } from "./modules/email/email.runtime.js";
 import { createAccountService } from "./modules/account/account.service.js";
 import { createNotificationsService } from "./modules/notifications/notifications.service.js";
+import { createFlashSalesService } from "./modules/flash-sales/flash-sales.service.js";
 
 const env = loadEnv();
 const logger = createLogger(env.LOG_LEVEL);
@@ -23,6 +27,8 @@ const inventoryService = createInventoryService(db);
 const authService = createAuthService(createAuthRepository(db), env.AUTH_JWT_SECRET);
 const emailRuntime = createTransactionalEmailRuntime(db, env, logger);
 const notificationsService = createNotificationsService(db);
+const flashSales = createFlashSalesService(db, (event, payload) => io?.to("public:flash-sales").emit(event, payload), redis);
+const ordersService = createOrdersService(db, (itemId) => flashSales.notifyItemUpdated(itemId));
 pool.on("error", () => logger.error("Unexpected PostgreSQL pool error"));
 redis.on("error", () => logger.error("Redis connection error"));
 const hub = createOrderEventHub();
@@ -40,26 +46,31 @@ const publishNotification = (userId: string, notification: NonNullable<Awaited<R
     io?.to(`user:${userId}`).emit("notification:unread-count", { unreadCount });
   }).catch(() => logger.warn("Could not publish notification unread count"));
 };
+const catalogService=createCatalogService(db);
+const seoService=createSeoService(createSeoRepository(pool),catalogService,{enforceOrigin:env.SEO_ENFORCE_ORIGIN,proxyHops:env.SEO_TRUST_PROXY_HOPS,environment:env.NODE_ENV,siteUrl:env.SEO_SITE_URL,indexingEnabled:env.SEO_INDEXING_ENABLED,verification:env.SEO_GOOGLE_VERIFICATION});
 const app = createApp({
-  orders: { service: createOrdersService(db), auth: authService, hub, notify },
+  seo:{service:seoService,distDirectory:env.STOREFRONT_DIST||fileURLToPath(new URL("../../dist",import.meta.url))},
+  orders: { service: ordersService, auth: authService, hub, notify },
   logger,
   corsOrigin: env.CORS_ORIGIN,
   health: {
     postgres: () => pool.query("SELECT 1"),
     redis: () => redis.ping(),
+    isReady: () => !stopping,
   },
   auth: {
     service: authService,
     env,
     redis,
   },
-  catalog: createCatalogService(db),
+  catalog: catalogService,
   inventory: {
     service: inventoryService,
     auth: authService,
   },
   account: { service: createAccountService(db), auth: authService, redis, notify: publishNotification },
   notifications: { service: notificationsService, auth: authService },
+  flashSales,
   publishNotification,
   admin: { db, auth: authService, notify: publishNotification },
 });
@@ -68,12 +79,13 @@ const io = new Server(server, { cors: { origin: env.CORS_ORIGIN, credentials: tr
 io.use(async (socket, next) => {
   try {
     const token: unknown = socket.handshake.auth.token;
-    socket.data.user = await authService.authenticate(typeof token === "string" ? token : undefined);
+    socket.data.user = typeof token === "string" ? await authService.authenticate(token) : null;
     next();
   } catch { next(new Error("UNAUTHENTICATED")); }
 });
 io.on("connection", (socket) => {
   const user = socket.data.user;
+  if (!user) { void socket.join("public:flash-sales"); return; }
   void socket.join(`user:${user.id}`);
   if (user.role === "ADMIN" || (user.role === "STAFF" && (user.permissions?.includes("orders:read") || user.permissions?.includes("orders:write")))) void socket.join("admin:orders");
   const expiry = setTimeout(() => socket.disconnect(true), 60_000);
@@ -84,12 +96,14 @@ server.requestTimeout = 30000;
 server.headersTimeout = 15000;
 let stopping = false;
 let reservationExpiryWorker: NodeJS.Timeout | undefined;
+let flashSaleScheduleWorker: NodeJS.Timeout | undefined;
 
 async function shutdown(reason: string, exitCode = 0) {
   if (stopping) return;
   stopping = true;
   logger.info({ reason }, "Shutting down");
   if (reservationExpiryWorker) clearInterval(reservationExpiryWorker);
+  if (flashSaleScheduleWorker) clearInterval(flashSaleScheduleWorker);
   const deadline = setTimeout(() => {
     logger.error("Shutdown timed out");
     process.exit(1);
@@ -150,6 +164,8 @@ try {
         const expiredCount = await inventoryService.expireReservations();
         if (expiredCount > 0)
           logger.info({ expiredCount }, "Expired inventory reservations released");
+        const expiredFlashSaleOrders = await ordersService.expireFlashSaleOrders();
+        for (const event of expiredFlashSaleOrders) notify(event);
       } catch {
         logger.error("Inventory reservation expiry worker failed");
       }
@@ -157,6 +173,9 @@ try {
     await expireReservations();
     reservationExpiryWorker = setInterval(() => void expireReservations(), 60_000);
     reservationExpiryWorker.unref();
+    flashSaleScheduleWorker = setInterval(() => void flashSales.announceTimeTransitions().catch(() => logger.warn("Flash Sale schedule event check failed")), 5_000);
+    flashSaleScheduleWorker.unref();
+    await flashSales.announceTimeTransitions();
     server.listen(env.PORT, env.HOST, () =>
       logger.info({ host: env.HOST, port: env.PORT }, "Technest API listening"),
     );

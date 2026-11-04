@@ -30,3 +30,9 @@ dist-ssr
 
 # Uploaded media is runtime data
 public/images/uploads/
+
+# Local database snapshots and archives
+/docs/*-backup.json
+*.dump
+*.backup
+*.sql.gz

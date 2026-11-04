@@ -1,0 +1,371 @@
+{
+  "checkedAt": "2026-11-04T08:08:59.292Z",
+  "base": "http://127.0.0.1:4173",
+  "canonicalOrigin": "https://seo-validation.example.test",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "Technest | Công nghệ cho góc làm việc của bạn",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "canonical": "https://seo-validation.example.test/",
+      "robots": "index, follow, max-image-preview:large",
+      "headerRobots": "index, follow, max-image-preview:large",
+      "ogTitle": "Technest | Công nghệ cho góc làm việc của bạn",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [
+        "Organization",
+        "WebSite"
+      ],
+      "result": "PASS"
+    },
+    {
+      "path": "/products/keychron-k2-pro",
+      "status": 200,
+      "title": "Keychron K2 Pro | Technest",
+      "description": "Bàn phím cơ không dây, thiết kế gọn cho góc làm việc hiện đại.",
+      "canonical": "https://seo-validation.example.test/products/keychron-k2-pro",
+      "robots": "index, follow, max-image-preview:large",
+      "headerRobots": "index, follow, max-image-preview:large",
+      "ogTitle": "Keychron K2 Pro | Technest",
+      "ogImage": "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=900&q=90",
+      "schemaTypes": [
+        "Product",
+        "BreadcrumbList"
+      ],
+      "result": "PASS"
+    },
+    {
+      "path": "/categories/keyboards",
+      "status": 200,
+      "title": "Bàn phím | Technest",
+      "description": "Khám phá bàn phím tại Technest. Lựa chọn thương hiệu, so sánh giá và tìm sản phẩm phù hợp.",
+      "canonical": "https://seo-validation.example.test/categories/keyboards",
+      "robots": "index, follow, max-image-preview:large",
+      "headerRobots": "index, follow, max-image-preview:large",
+      "ogTitle": "Bàn phím | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "result": "PASS"
+    },
+    {
+      "path": "/brands/keychron",
+      "status": 200,
+      "title": "KEYCHRON | Technest",
+      "description": "Khám phá sản phẩm KEYCHRON tại Technest. Thông tin sản phẩm, phiên bản và giá bán cập nhật.",
+      "canonical": "https://seo-validation.example.test/brands/keychron",
+      "robots": "index, follow, max-image-preview:large",
+      "headerRobots": "index, follow, max-image-preview:large",
+      "ogTitle": "KEYCHRON | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "result": "PASS"
+    },
+    {
+      "path": "/products?page=2",
+      "status": 200,
+      "title": "Sản phẩm — Trang 2 | Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "canonical": "https://seo-validation.example.test/products?page=2",
+      "robots": "index, follow, max-image-preview:large",
+      "headerRobots": "index, follow, max-image-preview:large",
+      "ogTitle": "Sản phẩm — Trang 2 | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "result": "PASS"
+    },
+    {
+      "path": "/products?sort=priceLow",
+      "status": 200,
+      "title": "Sản phẩm | Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "canonical": "https://seo-validation.example.test/products",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Sản phẩm | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "result": "PASS"
+    },
+    {
+      "path": "/products/nonexistent-seo-verification",
+      "status": 404,
+      "title": "Không tìm thấy trang | Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Không tìm thấy trang | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/categories/nonexistent-seo-verification",
+      "status": 404,
+      "title": "Không tìm thấy trang | Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Không tìm thấy trang | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/brands/nonexistent-seo-verification",
+      "status": 404,
+      "title": "Không tìm thấy trang | Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Không tìm thấy trang | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/nonexistent-seo-verification",
+      "status": 404,
+      "title": "Không tìm thấy trang | Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Không tìm thấy trang | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/admin",
+      "status": 200,
+      "title": "Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "canonical": "https://seo-validation.example.test/admin",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/account",
+      "status": 200,
+      "title": "Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "canonical": "https://seo-validation.example.test/account",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/checkout",
+      "status": 200,
+      "title": "Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "canonical": "https://seo-validation.example.test/checkout",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/cart",
+      "status": 200,
+      "title": "Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "canonical": "https://seo-validation.example.test/cart",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "title": "Technest",
+      "description": "Technest — bàn phím, chuột, màn hình, tai nghe và phụ kiện công nghệ cho góc làm việc của bạn.",
+      "canonical": "https://seo-validation.example.test/login",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/flash-sale",
+      "status": 200,
+      "title": "Flash Sale | Technest",
+      "description": "Các chương trình Flash Sale đang diễn ra tại Technest. Giá và số lượng được xác nhận khi thanh toán.",
+      "canonical": "https://seo-validation.example.test/flash-sale",
+      "robots": "noindex, follow",
+      "headerRobots": "noindex, follow",
+      "ogTitle": "Flash Sale | Technest",
+      "ogImage": "https://seo-validation.example.test/seo-social.png",
+      "schemaTypes": [],
+      "result": "PASS"
+    },
+    {
+      "path": "/products/1",
+      "status": 308,
+      "location": "/products/keychron-k2-pro",
+      "result": "PASS"
+    },
+    {
+      "path": "/products/keychron-k2-pro/",
+      "status": 308,
+      "location": "/products/keychron-k2-pro",
+      "result": "PASS"
+    },
+    {
+      "path": "/products?category=keyboards",
+      "status": 308,
+      "location": "/categories/keyboards",
+      "result": "PASS"
+    },
+    {
+      "path": "/index.html",
+      "status": 308,
+      "location": "/",
+      "result": "PASS"
+    }
+  ],
+  "api": [
+    {
+      "path": "/api/v1/products?limit=2",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/products/1",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/categories",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/brands?limit=2",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/homepage/config",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/banners?placement=hero",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/flash-sales",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/admin/products",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "path": "/api/v1/not-existing-seo",
+      "status": 404,
+      "result": "PASS"
+    }
+  ],
+  "sitemaps": [
+    {
+      "url": "https://seo-validation.example.test/sitemaps/pages.xml",
+      "status": 200
+    },
+    {
+      "url": "https://seo-validation.example.test/sitemaps/products-1.xml",
+      "status": 200
+    },
+    {
+      "url": "https://seo-validation.example.test/sitemaps/categories-1.xml",
+      "status": 200
+    },
+    {
+      "url": "https://seo-validation.example.test/sitemaps/brands-1.xml",
+      "status": 200
+    }
+  ],
+  "product": {
+    "id": "1",
+    "slug": "keychron-k2-pro",
+    "name": "Keychron K2 Pro",
+    "category": "keyboards",
+    "brand": "keychron"
+  },
+  "offer": {
+    "schema": {
+      "@type": "Offer",
+      "url": "https://seo-validation.example.test/products/keychron-k2-pro",
+      "priceCurrency": "VND",
+      "price": "2490000",
+      "availability": "https://schema.org/InStock"
+    },
+    "apiVariant": {
+      "id": "1",
+      "price": "2490000",
+      "inStock": true,
+      "availableQuantity": 1013
+    },
+    "activeSale": null
+  },
+  "robots": "User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: https://seo-validation.example.test/sitemap.xml\n",
+  "xml": {
+    "validXml": true,
+    "urls": 76,
+    "duplicates": 0
+  },
+  "assets": [
+    {
+      "path": "/assets/index-BjXjQ-M0.js",
+      "status": 200,
+      "type": "text/javascript; charset=utf-8"
+    },
+    {
+      "path": "/assets/formatCurrency-BNIM_Zlo.js",
+      "status": 200,
+      "type": "text/javascript; charset=utf-8"
+    },
+    {
+      "path": "/assets/authClient-BA5BwwIT.js",
+      "status": 200,
+      "type": "text/javascript; charset=utf-8"
+    },
+    {
+      "path": "/assets/index-Df65e23n.css",
+      "status": 200,
+      "type": "text/css; charset=utf-8"
+    }
+  ],
+  "persistedUnpublishedProducts": 649,
+  "result": "PASS"
+}

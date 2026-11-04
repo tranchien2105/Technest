@@ -70,6 +70,11 @@ export default function HeroSection({ language, t, bannerPreview, onSelectPlacem
         <ProductImage
           key={slide.id}
           className="hero-main-image"
+          width="1440"
+          height="520"
+          sizes="(max-width: 768px) 100vw, (max-width: 1440px) 70vw, 1060px"
+          loading="eager"
+          fetchPriority="high"
           src={slide.imageUrl}
           alt={slide.title}
         />

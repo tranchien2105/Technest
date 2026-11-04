@@ -1,3 +1,4 @@
+import { productUrl } from "../../routing/productUrl";
 import { ArrowRight, Heart, Scale, ShoppingCart } from "lucide-react";
 import { formatPrice } from "../../utils/formatCurrency";
 import ProductImage from "../common/ProductImage";
@@ -26,23 +27,45 @@ export default function ProductCard({
   onViewProduct,
   compareIds = [],
   toggleCompare,
+  priority = false,
 }) {
   const isFavorite = favorites.includes(product.id);
   const isCompared = compareIds.includes(product.id);
   const unavailable = product.stockStatus !== "IN_STOCK";
   const discounted = isDiscounted(product);
 
+  const viewProduct = (event) => {
+    if (
+      !onViewProduct ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    )
+      return;
+    event.preventDefault();
+    onViewProduct(product);
+  };
   return (
     <article className="product-card">
       <div className="product-image-wrap">
-        <button
-          type="button"
+        <a
+          href={productUrl(product)}
+          draggable={false}
           className="product-image-trigger"
-          onClick={() => onViewProduct?.(product)}
+          onClick={viewProduct}
           aria-label={`View ${product.name}`}
         >
-          <ProductImage src={product.image} alt={product.name} loading="lazy" />
-        </button>
+          <ProductImage
+            src={product.image}
+            alt={product.name}
+            width="400"
+            height="300"
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
+          />
+        </a>
 
         {product.badge && (
           <span className={`product-badge badge-${product.badge}`}>
@@ -81,13 +104,9 @@ export default function ProductCard({
         <span className="product-brand">{product.brand}</span>
 
         <h3>
-          <button
-            type="button"
-            className="product-title-button"
-            onClick={() => onViewProduct?.(product)}
-          >
+          <a href={productUrl(product)} className="product-title-button" onClick={viewProduct}>
             {product.name}
-          </button>
+          </a>
         </h3>
 
         <div className="product-price-row">

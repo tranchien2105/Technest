@@ -1,6 +1,11 @@
 const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL;
 const DEFAULT_API_BASE_URL = "http://localhost:3000/api/v1";
 
+export function apiEventSource(path) {
+  const base = (API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/$/, "");
+  return new EventSource(`${base}${path}`);
+}
+
 export class ApiError extends Error {
   constructor(message, code = "API_ERROR", status = 0) {
     super(message);
@@ -48,7 +53,7 @@ export async function apiGet(path, { signal } = {}) {
 export function apiAssetUrl(path) {
   if (!path || !path.startsWith("/images/uploads/")) return path;
   const apiBase = API_BASE_URL || DEFAULT_API_BASE_URL;
-  return new URL(path, new URL(apiBase).origin).href;
+  return new URL(path, new URL(apiBase, typeof location !== "undefined" ? location.origin : "http://localhost:3000").origin).href;
 }
 
 export function safeCatalogInteger(value) {
@@ -75,6 +80,7 @@ export function normalizeProduct(product) {
     ...product,
     id: String(product.id),
     brand: product.brand?.name || product.brand || "",
+    brandSlug: product.brand?.slug || product.brandSlug || "",
     brandId: product.brandId ? String(product.brandId) : product.brand?.id,
     category: product.category?.slug || product.category || "",
     price,

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { homepageConfigSchema } from "../src/modules/homepage-cms/homepage-cms.schemas.js";
 
-const keys = ["categories", "featured", "deals", "campaigns", "promotional-banners", "style", "trending", "new-arrivals", "trusted-brands", "feature-banner", "services", "shopping-guide", "bottom-banners", "popular-searches"] as const;
+const keys = ["categories", "featured", "deals", "flash-sale", "campaigns", "promotional-banners", "style", "trending", "new-arrivals", "trusted-brands", "feature-banner", "services", "shopping-guide", "bottom-banners", "popular-searches"] as const;
 const config = {
   announcement: { visible: true, text: "Thông tin giao hàng", href: "/products" },
   sections: Object.fromEntries(keys.map((key) => [key, { visible: true, title: key, description: "", limit: 8 }])) as Record<(typeof keys)[number], { visible: boolean; title: string; description: string; limit: number }>,
@@ -30,7 +30,10 @@ describe("Homepage CMS config validation", () => {
     const rows = [...sql.matchAll(/'({"announcement".*?})'::jsonb/g)].map((match) => JSON.parse(match[1]!));
     expect(rows).toHaveLength(2);
     expect(rows[0]).toEqual(rows[1]);
-    expect(rows.every((row) => homepageConfigSchema.safeParse(row).success)).toBe(true);
+    const migration = readFileSync(fileURLToPath(new URL("../src/database/migrations/0017_flash_sales.sql", import.meta.url)), "utf8");
+    expect(migration).toContain("{sections,flash-sale}");
+    const upgraded = rows.map((row) => ({ ...row, sections: { ...row.sections, "flash-sale": { visible: true, title: "Flash Sale", description: "", ctaLabel: "Xem tất cả", ctaUrl: "/flash-sale", limit: 4 } }, sectionOrder: [...row.sectionOrder, "flash-sale"] }));
+    expect(upgraded.every((row) => homepageConfigSchema.safeParse(row).success)).toBe(true);
   });
 
   it("accepts only the three editable setup cards and safe image URLs", () => {

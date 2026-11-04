@@ -1,9 +1,23 @@
+import { useEffect, useState } from "react";
+import { apiGet } from "../../api/apiClient";
+import { selectHomepageBrands } from "../../domain/homepageSelection";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
-const brands = ["KEYCHRON", "LOGITECH", "SONY", "TECHNEST SELECT", "JBL", "RAZER"];
 
-export default function TrustedBrandsSection({ t, language, cms }) {
+
+export default function TrustedBrandsSection({ t, language, cms, brands = [] }) {
   const vi = language === "vi";
+  const ids = (cms?.brandSlugs || []).join(",");
+  const [manual, setManual] = useState({ key: "", items: [] });
+  useEffect(() => {
+    if (!ids) return undefined;
+    const controller = new AbortController();
+    apiGet(`/brands?ids=${encodeURIComponent(ids)}&limit=24`, { signal: controller.signal }).then((items) => setManual({ key: ids, items })).catch(() => {});
+    return () => controller.abort();
+  }, [ids]);
+  const source = ids ? (manual.key === ids ? manual.items : []) : brands;
+  const visible = selectHomepageBrands(source, cms);
+  if (!visible.length) return null;
 
   return (
     <section className="trusted-brands unified-section" aria-labelledby="trusted-brands-title">
@@ -13,8 +27,8 @@ export default function TrustedBrandsSection({ t, language, cms }) {
           <h2 id="trusted-brands-title">{cms?.title ?? t.trustedBrands}</h2>
           <p>
             {cms?.description ?? (vi
-              ? "Khám phá những cái tên được yêu thích tại Technest."
-              : "Explore customer-favorite names at Technest.")}
+              ? "Khám phá thương hiệu đang có sản phẩm tại Technest."
+              : "Explore brands available at Technest.")}
           </p>
         </div>
         <a className="trusted-brands-view-all" href={cms?.ctaUrl ?? "/products"}>
@@ -22,13 +36,13 @@ export default function TrustedBrandsSection({ t, language, cms }) {
         </a>
       </div>
       <div className="trusted-brand-list">
-        {brands.map((brand) => (
+        {visible.map((brand) => (
           <a
-            className={`trusted-brand trusted-brand-${brand.toLowerCase().replaceAll(" ", "-")}`}
-            href={`/products?brand=${encodeURIComponent(brand)}`}
-            key={brand}
+            className={`trusted-brand trusted-brand-${brand.id}`}
+            href={`/brands/${encodeURIComponent(brand.id)}`}
+            key={brand.id}
           >
-            <span>{brand}</span>
+            <span>{brand.name}</span>
             <ArrowUpRight size={15} aria-hidden="true" />
           </a>
         ))}

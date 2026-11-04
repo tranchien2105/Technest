@@ -13,6 +13,7 @@ import { useEffect, useRef } from "react";
 
 import ProductCard from "./ProductCard";
 import { discountPercent } from "../../domain/catalog";
+import { useHorizontalWheel } from "../../hooks/useHorizontalWheel";
 
 export default function ProductSection({
   visibleProducts,
@@ -34,6 +35,7 @@ export default function ProductSection({
   cms,
 }) {
   const carouselRef = useRef(null);
+  useHorizontalWheel(carouselRef);
   const dragRef = useRef(null);
   const draggedRef = useRef(false);
   const pausedRef = useRef(false);
@@ -75,25 +77,23 @@ export default function ProductSection({
     };
   }, []);
   const startDrag = (event) => {
-    if (
-      event.pointerType !== "mouse" ||
-      event.button !== 0 ||
-      event.target.closest("button, a, input, select")
-    )
-      return;
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
     pauseAfterInteraction();
     dragRef.current = {
+      pointerId: event.pointerId,
       x: event.clientX,
       scrollLeft: carouselRef.current.scrollLeft,
       moved: false,
     };
-    carouselRef.current.setPointerCapture(event.pointerId);
   };
   const moveDrag = (event) => {
     const drag = dragRef.current;
-    if (!drag) return;
+    if (!drag || drag.pointerId !== event.pointerId) return;
     const distance = event.clientX - drag.x;
-    if (!drag.moved && Math.abs(distance) > 5) drag.moved = true;
+    if (!drag.moved && Math.abs(distance) > 5) {
+      drag.moved = true;
+      carouselRef.current.setPointerCapture(event.pointerId);
+    }
     if (drag.moved) {
       event.preventDefault();
       carouselRef.current.scrollLeft = drag.scrollLeft - distance;

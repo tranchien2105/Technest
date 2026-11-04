@@ -2,9 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { getAccessToken, restoreSession } from "../api/authClient";
 import { notificationsApi } from "../api/notificationsClient";
 import { NotificationsContext } from "./notificationsContext";
+import { resolveApiOrigin } from "../api/apiOrigin";
 
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || "http://localhost:3000/api/v1";
-const SOCKET_SCRIPT = `${new URL(API_BASE).origin}/socket.io/socket.io.js`;
+const API_ORIGIN = resolveApiOrigin(API_BASE);
+const SOCKET_SCRIPT = `${API_ORIGIN}/socket.io/socket.io.js`;
 let scriptPromise;
 
 function loadSocketClient() {
@@ -46,7 +48,7 @@ export function NotificationsProvider({ user, children }) {
     const initialFetch = window.setTimeout(() => { void refreshUnreadCount(); }, 0);
     loadSocketClient().then((io) => {
       if (!active) return;
-      socket = io(new URL(API_BASE).origin, {
+      socket = io(API_ORIGIN, {
         withCredentials: true,
         auth: (callback) => callback({ token: getAccessToken() || "" }),
       });

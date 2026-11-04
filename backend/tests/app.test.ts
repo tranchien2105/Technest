@@ -14,6 +14,26 @@ const makeApp = (
 ) => createApp({ logger, corsOrigin: "http://localhost:5173", health: { postgres, redis } });
 
 describe("HTTP foundation", () => {
+  it("keeps liveness independent from unavailable databases", async () => {
+    const postgres = vi.fn().mockRejectedValue(new Error("offline"));
+    const redis = vi.fn().mockRejectedValue(new Error("offline"));
+    const app = makeApp(postgres, redis);
+    const live = await request(app).get("/api/v1/health/live").expect(200);
+    expect(live.body.data.status).toBe("ok");
+    expect(live.headers["cache-control"]).toBe("no-store");
+    expect(postgres).not.toHaveBeenCalled();
+    expect(redis).not.toHaveBeenCalled();
+    await request(app).get("/api/v1/health/ready").expect(503);
+  });
+  it("stops advertising readiness during shutdown without probing dependencies", async () => {
+    const postgres = vi.fn();
+    const redis = vi.fn();
+    const app = createApp({ logger, corsOrigin: "http://localhost:5173", health: { postgres, redis, isReady: () => false } });
+    const response = await request(app).get("/api/v1/health/ready").expect(503);
+    expect(response.body.data.status).toBe("not_ready");
+    expect(postgres).not.toHaveBeenCalled();
+    expect(redis).not.toHaveBeenCalled();
+  });
   it("checks both dependencies and returns health with a request ID", async () => {
     const postgres = vi.fn().mockResolvedValue(1);
     const redis = vi.fn().mockResolvedValue("PONG");
@@ -27,6 +47,14 @@ describe("HTTP foundation", () => {
     expect(response.headers["x-request-id"]).toEqual(expect.any(String));
     expect(response.headers["cache-control"]).toBe("no-store");
     expect(response.headers["x-powered-by"]).toBeUndefined();
+  });
+  it("generates separate request IDs and does not trust a supplied ID", async () => {
+    const app = makeApp();
+    const first = await request(app).get("/api/v1/missing").set("X-Request-Id", "client-controlled").expect(404);
+    const second = await request(app).get("/api/v1/missing").expect(404);
+    expect(first.headers["x-request-id"]).not.toBe("client-controlled");
+    expect(first.body.requestId).toBe(first.headers["x-request-id"]);
+    expect(second.headers["x-request-id"]).not.toBe(first.headers["x-request-id"]);
   });
   it.each(["postgres", "redis"])(
     "returns 503 when %s is unavailable without leaking error details",
@@ -67,6 +95,7 @@ describe("HTTP foundation", () => {
       .set("Origin", "http://localhost:5173")
       .expect(200);
     expect(allowed.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
+    expect(allowed.headers["access-control-expose-headers"]).toContain("X-Request-Id");
     const other = await request(makeApp())
       .get("/api/v1/health")
       .set("Origin", "https://other.test");

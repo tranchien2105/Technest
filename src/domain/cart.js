@@ -32,7 +32,9 @@ export const canPurchaseStock = (item, quantity, existingQuantity = 0) =>
 export function addCartItem(cart, product, quantity = 1) {
   if (!validQuantity(quantity)) return cart;
   const productId = product.id;
-  const lineId = product.variantId ? String(product.variantId) : product.id;
+  const lineId = product.variantId
+    ? `${String(product.variantId)}${product.flashSaleItemId ? `:flash:${product.flashSaleItemId}` : ""}`
+    : product.id;
   const found = cart.find((item) => String(item.id) === String(lineId));
   if (found && !validQuantity(found.quantity + quantity)) return cart;
   return found

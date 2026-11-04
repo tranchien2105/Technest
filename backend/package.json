@@ -21,7 +21,10 @@
     "db:seed:banners": "node --import tsx src/database/seeds/seed-incremental.ts --banners-only",
     "db:seed:verify": "node --import tsx src/database/seeds/verify-incremental.ts",
     "db:check:images": "tsx src/database/seeds/check-images.ts",
-    "db:check:data": "tsx src/database/seeds/check-data-quality.ts"
+    "db:check:data": "tsx src/database/seeds/check-data-quality.ts",
+    "db:seed:storefront": "node --import tsx src/database/seeds/seed-storefront.ts",
+    "db:cleanup:low-quality-storefront": "node --import tsx src/database/seeds/cleanup-low-quality-storefront.ts",
+    "ops:restore:rehearsal": "node scripts/rehearse-backup-restore.mjs"
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",

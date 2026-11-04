@@ -120,6 +120,34 @@
       "when": 1793520000001,
       "tag": "0016_homepage_banner_display_limits",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793520000002,
+      "tag": "0017_flash_sales",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1793610000000,
+      "tag": "0018_storefront_newest_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1793610000001,
+      "tag": "0019_seo_metadata",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793610000002,
+      "tag": "0020_seo_product_redirects",
+      "breakpoints": true
     }
   ]
 }

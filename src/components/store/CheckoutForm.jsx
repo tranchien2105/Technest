@@ -6,6 +6,7 @@ import { tx } from "../../utils/translate";
 import { shippingFee } from "../../domain/checkout";
 import { addMoney, multiplyMoney } from "../../domain/cart";
 import { accountApi } from "../../api/accountClient";
+import { quotedCheckoutItems } from "../../domain/checkoutQuote";
 const VN_AREAS = {
   "Hồ Chí Minh": {
     "Quận 1": ["Bến Nghé", "Bến Thành", "Đa Kao"],
@@ -36,7 +37,7 @@ const VN_AREAS = {
   },
 };
 
-export default function CheckoutForm({ cart, subtotal, submitOrder, language, authenticated = false, submitting = false, error = "", preview, applyVoucher }) {
+export default function CheckoutForm({ cart, subtotal, submitOrder, language, authenticated = false, submitting = false, error = "", preview, applyVoucher, invalidatePreview }) {
   const [voucher,setVoucher]=useState(""),[voucherBusy,setVoucherBusy]=useState(false);
   const lang = language === "vi";
   const [province, setProvince] = useState("");
@@ -46,9 +47,13 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
   const [profile, setProfile] = useState(null);
   const [addressLoadError, setAddressLoadError] = useState("");
   const formRef = useRef(null);
+  const submissionLock = useRef(false);
+  const [preparingSubmission, setPreparingSubmission] = useState(false);
+  const busy = submitting || preparingSubmission;
   const districts = province ? Object.keys(VN_AREAS[province]) : [];
   const wards = district ? VN_AREAS[province]?.[district] || [] : [];
   const shipping = preview?.shippingFee ?? shippingFee(subtotal);
+  const summaryItems = quotedCheckoutItems(cart, preview);
   useEffect(() => {
     if (!authenticated) return;
     let active = true;
@@ -77,16 +82,30 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // Saving an address is asynchronous too. Lock before that request so a
+    // second submit cannot create duplicate addresses before checkout starts.
+    if (submissionLock.current || submitting) return;
+    submissionLock.current = true;
+    setPreparingSubmission(true);
     const form = event.currentTarget;
-    if (authenticated && form.elements.namedItem("saveAddress")?.checked && !selectedAddress) {
-      const data = Object.fromEntries(new FormData(form));
-      try {
-        await accountApi.createAddress({ recipientName: data.name, phone: data.phone, addressLine: data.address, city: data.city, district: data.district || null, ward: data.ward || null, isDefault: savedAddresses.length === 0 });
-      } catch (error) {
-        event.preventDefault(); setAddressLoadError(error.message); return;
+    try {
+      if (authenticated && form.elements.namedItem("saveAddress")?.checked && !selectedAddress) {
+        const data = Object.fromEntries(new FormData(form));
+        try {
+          const address = await accountApi.createAddress({ recipientName: data.name, phone: data.phone, addressLine: data.address, city: data.city, district: data.district || null, ward: data.ward || null, isDefault: savedAddresses.length === 0 });
+          setSavedAddresses((current) => [...current.filter((entry) => entry.id !== address.id), address]);
+          setSelectedAddress(address.id);
+          setAddressLoadError("");
+        } catch (error) {
+          setAddressLoadError(error.message);
+          return;
+        }
       }
+      await submitOrder(form);
+    } finally {
+      submissionLock.current = false;
+      setPreparingSubmission(false);
     }
-    await submitOrder(form);
   };
   return (
     <form ref={formRef} className="checkout-layout checkout-form-layout" onSubmit={handleSubmit}>
@@ -270,8 +289,8 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
 
           </div>
         </section>
-        <button className="primary-button checkout-submit" type="submit" disabled={submitting}>
-          {tx("Place order", "Đặt hàng", lang)} <ArrowRight size={17} />
+        <button className="primary-button checkout-submit" type="submit" disabled={busy} aria-busy={busy}>
+          {busy ? tx("Placing order…", "Đang tạo đơn hàng…", lang) : tx("Place order", "Đặt hàng", lang)} {!busy && <ArrowRight size={17} />}
         </button>
       </div>
       <aside className="checkout-summary-card">
@@ -285,7 +304,7 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
           </span>
         </div>
         <div className="checkout-summary-items">
-          {cart.map((item) => (
+          {summaryItems.map((item) => (
             <div className="checkout-summary-item" key={item.id}>
               <ProductImage src={item.image} alt="" />
               <div>
@@ -298,7 +317,7 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
             </div>
           ))}
         </div>
-        <div className="checkout-voucher"><label htmlFor="checkout-voucher">Mã giảm giá</label><div><input id="checkout-voucher" name="voucherCode" maxLength="40" value={voucher} onChange={e=>setVoucher(e.target.value.toUpperCase())} placeholder="Nhập mã ưu đãi"/><button type="button" disabled={voucherBusy||submitting} onClick={async()=>{setVoucherBusy(true);try{await applyVoucher(formRef.current,voucher);}finally{setVoucherBusy(false);}}}>{voucherBusy?"Đang kiểm tra…":"Áp dụng"}</button></div>{preview?.voucherCode&&preview.voucherCode===voucher.trim()&&<small>Đã áp dụng {preview.voucherCode}</small>}</div>
+        <div className="checkout-voucher"><label htmlFor="checkout-voucher">Mã giảm giá</label><div><input id="checkout-voucher" name="voucherCode" maxLength="40" value={voucher} onChange={e=>{setVoucher(e.target.value.toUpperCase());invalidatePreview?.();}} placeholder="Nhập mã ưu đãi"/><button type="button" disabled={voucherBusy||busy} onClick={async()=>{setVoucherBusy(true);try{await applyVoucher(formRef.current,voucher);}finally{setVoucherBusy(false);}}}>{voucherBusy?"Đang kiểm tra…":"Áp dụng"}</button></div>{preview?.voucherCode&&preview.voucherCode===voucher.trim()&&<small>Đã áp dụng {preview.voucherCode}</small>}</div>
         <div className="checkout-summary-totals">
           <p>
             <span>{tx("Subtotal", "Tạm tính", lang)}</span>

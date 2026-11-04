@@ -34,7 +34,9 @@ export function errorHandler(logger: Logger): ErrorRequestHandler {
     if (known.statusCode >= 500) {
       // Avoid logging arbitrary exception messages that could contain connection URLs or secrets.
       logger.error(
-        { requestId: request.id, errorType: error instanceof Error ? error.name : "UnknownError" },
+        { requestId: request.id, method: request.method, path: request.path, statusCode: known.statusCode,
+          errorType: error instanceof Error ? error.name : "UnknownError",
+          ...(databaseCode && /^[0-9A-Z]{5}$/.test(databaseCode) ? { databaseCode } : {}) },
         "Request failed",
       );
     }

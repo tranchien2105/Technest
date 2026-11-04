@@ -2,12 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronDown, ChevronUp, Eye, Monitor, Save, Smartphone, Undo2, Upload, X } from "lucide-react";
 import HomePage from "../pages/HomePage";
 import { adminApi } from "../api/adminClient";
+import AdminLoadingSkeleton from "./AdminLoadingSkeleton";
 
 const labels = {
   announcement: "Thanh thông báo",
   categories: "Danh mục sản phẩm",
   featured: "Sản phẩm nổi bật",
   deals: "Ưu đãi",
+  "flash-sale": "Flash Sale",
   campaigns: "Chiến dịch sản phẩm",
   "promotional-banners": "Banner giữa trang",
   style: "Gợi ý phong cách",
@@ -25,6 +27,7 @@ const regionSelectors = {
   categories: ".quick-categories",
   featured: ".product-section",
   deals: ".deal-feature",
+  "flash-sale": ".home-flash-sale",
   campaigns: ".home-campaigns",
   "promotional-banners": ".managed-banners-home_promo",
   style: ".home-style-section",
@@ -83,9 +86,20 @@ export default function AdminHomepageCms({ previewProps, canWrite = true }) {
     const warn = (event) => {
       if (dirty) { event.preventDefault(); event.returnValue = ""; }
     };
+    const guardNavigation = (event) => {
+      if (dirty && !window.confirm("Bạn có thay đổi chưa lưu. Rời trang này?")) event.preventDefault();
+    };
     window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
+    window.addEventListener("technest:before-navigate", guardNavigation);
+    return () => {
+      window.removeEventListener("beforeunload", warn);
+      window.removeEventListener("technest:before-navigate", guardNavigation);
+    };
   }, [dirty]);
+
+  const navigateFromEditor = useCallback((destination) => {
+    previewProps.navigate?.(destination);
+  }, [previewProps]);
 
   const chooseRegion = useCallback((event) => {
     if (mode !== "edit") return;
@@ -93,7 +107,7 @@ export default function AdminHomepageCms({ previewProps, canWrite = true }) {
     if (banner) {
       event.preventDefault();
       event.stopPropagation();
-      previewProps.navigate?.("/admin/banners");
+      navigateFromEditor("/admin/banners");
       window.setTimeout(() => window.dispatchEvent(new CustomEvent("technest:banner-location", { detail: { position: banner.dataset.bannerPlacement } })), 80);
       return;
     }
@@ -102,7 +116,7 @@ export default function AdminHomepageCms({ previewProps, canWrite = true }) {
     event.preventDefault();
     event.stopPropagation();
     setSelected(target.dataset.cmsSection);
-  }, [mode, previewProps]);
+  }, [mode, navigateFromEditor]);
 
   const previewRef = useCallback((node) => {
     if (!node || mode !== "edit") return;
@@ -175,7 +189,7 @@ export default function AdminHomepageCms({ previewProps, canWrite = true }) {
 
   const previewPropsWithDraft = useMemo(() => ({ ...previewProps, homepageConfig: draft, cmsEditable: mode === "edit", onCmsSelect: setSelected }), [previewProps, draft, mode]);
 
-  if (loading) return <div className="admin-state">Đang tải cấu hình trang chủ…</div>;
+  if (loading) return <AdminLoadingSkeleton variant="form" label="Đang tải cấu hình trang chủ…" />;
   if (!draft) return <section className="admin-panel"><p className="admin-error">{error || "Chưa tải được cấu hình."}</p><button onClick={() => { setLoading(true); void load(); }}>Thử lại</button></section>;
 
   return <section className="admin-home-cms">
@@ -203,10 +217,10 @@ export default function AdminHomepageCms({ previewProps, canWrite = true }) {
         </> : <>
           <label className="admin-home-cms-toggle"><input type="checkbox" checked={current.visible} onChange={(event) => updateValue("visible", event.target.checked)}/> Hiển thị section</label>
           {selected !== "categories" && <div className="admin-home-cms-order"><span>Thứ tự hiển thị</span><button type="button" onClick={() => moveSection(-1)} disabled={draft.sectionOrder.indexOf(selected) <= 1} aria-label="Đưa section lên"><ChevronUp size={16}/></button><small>{draft.sectionOrder.indexOf(selected) + 1} / {draft.sectionOrder.length}</small><button type="button" onClick={() => moveSection(1)} disabled={draft.sectionOrder.indexOf(selected) < 0 || draft.sectionOrder.indexOf(selected) === draft.sectionOrder.length - 1} aria-label="Đưa section xuống"><ChevronDown size={16}/></button></div>}
-          {["featured", "deals", "trending", "new-arrivals", "style", "trusted-brands", "feature-banner", "shopping-guide", "popular-searches"].includes(selected) && <>
+          {["featured", "deals", "flash-sale", "trending", "new-arrivals", "style", "trusted-brands", "feature-banner", "shopping-guide", "popular-searches"].includes(selected) && <>
             {current.eyebrow !== undefined && <label className="admin-home-cms-field"><span>Nhãn nhỏ</span><input maxLength={80} value={current.eyebrow} onChange={(event) => updateValue("eyebrow", event.target.value)}/></label>}
             <label className="admin-home-cms-field"><span>Tiêu đề</span><input maxLength={120} value={current.title} onChange={(event) => updateValue("title", event.target.value)}/></label>
-            {["featured", "deals", "trending", "new-arrivals", "style", "trusted-brands", "feature-banner"].includes(selected) && <label className="admin-home-cms-field"><span>Mô tả</span><textarea maxLength={500} rows={3} value={current.description} onChange={(event) => updateValue("description", event.target.value)}/></label>}
+            {["featured", "deals", "flash-sale", "trending", "new-arrivals", "style", "trusted-brands", "feature-banner"].includes(selected) && <label className="admin-home-cms-field"><span>Mô tả</span><textarea maxLength={500} rows={3} value={current.description} onChange={(event) => updateValue("description", event.target.value)}/></label>}
           </>}
           {current.ctaLabel !== undefined && <label className="admin-home-cms-field"><span>Nội dung nút</span><input maxLength={60} value={current.ctaLabel} onChange={(event) => updateValue("ctaLabel", event.target.value)}/></label>}
           {current.ctaUrl !== undefined && <label className="admin-home-cms-field"><span>Đường dẫn nút</span><input value={current.ctaUrl} onChange={(event) => updateValue("ctaUrl", event.target.value)}/></label>}
@@ -214,7 +228,7 @@ export default function AdminHomepageCms({ previewProps, canWrite = true }) {
           {selected === "categories" && <label className="admin-home-cms-field"><span>Danh mục hiển thị (để trống là tất cả)</span><select multiple value={current.categorySlugs || []} onChange={(event) => updateValue("categorySlugs", [...event.target.selectedOptions].map((option) => option.value))}>{(previewProps.categories || []).filter((item) => item.id !== "all").map((item) => <option key={item.id} value={item.slug || item.id}>{item.vi || item.name || item.id}</option>)}</select></label>}
           {selected === "featured" && <label className="admin-home-cms-field"><span>Chọn sản phẩm cụ thể (để trống dùng sản phẩm nổi bật từ API)</span><select multiple value={current.productIds || []} onChange={(event) => updateValue("productIds", [...event.target.selectedOptions].map((option) => option.value))}>{(previewProps.catalog?.products || []).map((item) => <option key={item.id} value={String(item.id)}>{item.name}</option>)}</select></label>}
           {selected === "featured" && <label className="admin-home-cms-field"><span>Lọc thương hiệu (để trống là tất cả)</span><select multiple value={current.brandSlugs || []} onChange={(event) => updateValue("brandSlugs", [...event.target.selectedOptions].map((option) => option.value))}>{(previewProps.brands || []).map((brand) => <option key={brand.id} value={brand.id}>{brand.name}</option>)}</select></label>}
-          {selected === "featured" && <label className="admin-home-cms-field"><span>Sắp xếp sản phẩm</span><select value={current.sort || "recommended"} onChange={(event) => updateValue("sort", event.target.value)}><option value="recommended">Đề xuất</option><option value="newest">Mới nhất</option><option value="priceLow">Giá thấp đến cao</option><option value="priceHigh">Giá cao đến thấp</option></select></label>}
+          {["featured", "new-arrivals"].includes(selected) && <label className="admin-home-cms-field"><span>Sắp xếp sản phẩm</span><select value={current.sort || "newest"} onChange={(event) => updateValue("sort", event.target.value)}><option value="recommended">Đề xuất</option><option value="newest">Mới nhất</option><option value="priceLow">Giá thấp đến cao</option><option value="priceHigh">Giá cao đến thấp</option></select></label>}
           {selected === "style" && (current.cards || defaultStyleCards).map((card, index) => <details className="admin-home-cms-card-editor" key={card.key} open={index === 0}><summary>{card.eyebrow} · {card.title}</summary><div className="admin-home-cms-card-fields">
             <label className="admin-home-cms-field"><span>Nhãn</span><input maxLength={40} value={card.eyebrow} onChange={(event) => updateStyleCard(index, "eyebrow", event.target.value)}/></label>
             <label className="admin-home-cms-field"><span>Tiêu đề (Tiếng Việt)</span><input maxLength={100} value={card.title} onChange={(event) => updateStyleCard(index, "title", event.target.value)}/></label>
@@ -227,7 +241,7 @@ export default function AdminHomepageCms({ previewProps, canWrite = true }) {
           {selected === "feature-banner" && <label className="admin-home-cms-field"><span>URL hình ảnh</span><input type="url" maxLength={500} value={current.imageUrl || ""} onChange={(event) => updateValue("imageUrl", event.target.value)}/></label>}
           {["featured", "trending", "new-arrivals", "deals"].includes(selected) && <p className="admin-home-cms-note">Tên, giá, khuyến mãi và tồn kho vẫn lấy từ dữ liệu Backend. Cấu hình này chỉ đổi cách hiển thị.</p>}
         </>}
-        {selected === "featured" && <button className="admin-home-cms-secondary" onClick={() => window.location.assign("/admin/banners")}>Quản lý vị trí banner</button>}
+        {selected === "featured" && <button className="admin-home-cms-secondary" onClick={() => navigateFromEditor("/admin/banners")}>Quản lý vị trí banner</button>}
         <p className="admin-home-cms-note">Bản nháp chỉ xuất hiện trong preview quản trị. Khách hàng tiếp tục xem bản đã xuất bản cho đến khi nhấn “Xuất bản”.</p>
         {published && <small>Cập nhật public: cấu hình đã xuất bản</small>}
       </aside>}

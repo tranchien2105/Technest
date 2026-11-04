@@ -1,0 +1,59 @@
+.currency-input-wrap,
+.password-input-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.currency-input-wrap > input,
+.password-input-wrap > input {
+  width: 100%;
+}
+
+.currency-input-wrap > input {
+  padding-right: 42px !important;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.currency-input-unit {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  color: #818691;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.password-input-wrap > input {
+  padding-right: 46px !important;
+}
+
+.password-input-toggle {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #737985;
+  transform: translateY(-50%);
+}
+
+.password-input-toggle:hover {
+  background: rgba(110, 116, 127, 0.1);
+  color: #30343b;
+}
+
+.password-input-toggle:focus-visible {
+  outline: 2px solid var(--ui-accent, #ff5a00);
+  outline-offset: 1px;
+}

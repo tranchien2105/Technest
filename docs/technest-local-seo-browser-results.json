@@ -1,0 +1,170 @@
+{
+  "checkedAt": "2026-11-04T08:05:46.753Z",
+  "browser": "Chromium 130 headless; CDP; guest, read-only data",
+  "results": [
+    {
+      "width": 390,
+      "path": "/",
+      "title": "Technest | Công nghệ cho góc làm việc của bạn",
+      "canonical": "https://seo-validation.example.test/",
+      "h1": [
+        "Không gian làm việc gọn gàng hơn · Keychron K2 Pro"
+      ],
+      "rootChildren": 1,
+      "scrollWidth": 390,
+      "schemas": [
+        "Organization",
+        "WebSite"
+      ],
+      "brokenLoadedImages": [],
+      "exceptions": [],
+      "httpErrors": [],
+      "result": "PASS"
+    },
+    {
+      "width": 390,
+      "path": "/products/keychron-k2-pro",
+      "title": "Keychron K2 Pro | Technest",
+      "canonical": "https://seo-validation.example.test/products/keychron-k2-pro",
+      "h1": [
+        "Keychron K2 Pro"
+      ],
+      "rootChildren": 1,
+      "scrollWidth": 390,
+      "schemas": [
+        "Product",
+        "BreadcrumbList"
+      ],
+      "brokenLoadedImages": [],
+      "exceptions": [],
+      "httpErrors": [],
+      "result": "PASS"
+    },
+    {
+      "width": 390,
+      "path": "/categories/keyboards",
+      "title": "Bàn phím | Technest",
+      "canonical": "https://seo-validation.example.test/categories/keyboards",
+      "h1": [
+        "Bàn phím"
+      ],
+      "rootChildren": 1,
+      "scrollWidth": 390,
+      "schemas": [
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "brokenLoadedImages": [],
+      "exceptions": [],
+      "httpErrors": [],
+      "result": "PASS"
+    },
+    {
+      "width": 390,
+      "path": "/brands/keychron",
+      "title": "KEYCHRON | Technest",
+      "canonical": "https://seo-validation.example.test/brands/keychron",
+      "h1": [
+        "Chọn công nghệ phù hợp với bạn"
+      ],
+      "rootChildren": 1,
+      "scrollWidth": 390,
+      "schemas": [
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "brokenLoadedImages": [],
+      "exceptions": [],
+      "httpErrors": [],
+      "result": "PASS"
+    },
+    {
+      "width": 1440,
+      "path": "/",
+      "title": "Technest | Công nghệ cho góc làm việc của bạn",
+      "canonical": "https://seo-validation.example.test/",
+      "h1": [
+        "Không gian làm việc gọn gàng hơn · Keychron K2 Pro"
+      ],
+      "rootChildren": 1,
+      "scrollWidth": 1440,
+      "schemas": [
+        "Organization",
+        "WebSite"
+      ],
+      "brokenLoadedImages": [],
+      "exceptions": [],
+      "httpErrors": [],
+      "result": "PASS"
+    },
+    {
+      "width": 1440,
+      "path": "/products/keychron-k2-pro",
+      "title": "Keychron K2 Pro | Technest",
+      "canonical": "https://seo-validation.example.test/products/keychron-k2-pro",
+      "h1": [
+        "Keychron K2 Pro"
+      ],
+      "rootChildren": 1,
+      "scrollWidth": 1440,
+      "schemas": [
+        "Product",
+        "BreadcrumbList"
+      ],
+      "brokenLoadedImages": [],
+      "exceptions": [],
+      "httpErrors": [],
+      "result": "PASS"
+    },
+    {
+      "width": 1440,
+      "path": "/categories/keyboards",
+      "title": "Bàn phím | Technest",
+      "canonical": "https://seo-validation.example.test/categories/keyboards",
+      "h1": [
+        "Bàn phím"
+      ],
+      "rootChildren": 1,
+      "scrollWidth": 1440,
+      "schemas": [
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "brokenLoadedImages": [],
+      "exceptions": [],
+      "httpErrors": [],
+      "result": "PASS"
+    },
+    {
+      "width": 1440,
+      "path": "/brands/keychron",
+      "title": "KEYCHRON | Technest",
+      "canonical": "https://seo-validation.example.test/brands/keychron",
+      "h1": [
+        "Chọn công nghệ phù hợp với bạn"
+      ],
+      "rootChildren": 1,
+      "scrollWidth": 1440,
+      "schemas": [
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "brokenLoadedImages": [],
+      "exceptions": [],
+      "httpErrors": [],
+      "result": "PASS"
+    },
+    {
+      "interaction": "category → product link → browser Back",
+      "target": "/products/tn-curated-20261102-logitech-g915-x",
+      "canonical": "https://seo-validation.example.test/categories/keyboards",
+      "result": "PASS"
+    },
+    {
+      "interaction": "browser Forward → product",
+      "target": "/products/tn-curated-20261102-logitech-g915-x",
+      "canonical": "https://seo-validation.example.test/products/tn-curated-20261102-logitech-g915-x",
+      "result": "PASS"
+    }
+  ]
+}

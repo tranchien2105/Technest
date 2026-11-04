@@ -1,0 +1,169 @@
+{
+  "checkedAt": "2026-11-04T08:17:31.174Z",
+  "browser": "Chromium headless via CDP",
+  "base": "http://127.0.0.1:4175",
+  "database": "technest_dev; one outer transaction; fixtures rollback",
+  "scaffolding": [
+    "same-origin production frontend build",
+    "isolated in-memory auth rate limiter",
+    "noindex metadata test endpoint",
+    "one dropped HTTP success acknowledgement"
+  ],
+  "cases": [
+    {
+      "name": "Login through rendered form and PostgreSQL auth",
+      "result": "PASS",
+      "evidence": {
+        "path": "/account",
+        "fixtureAccount": true
+      }
+    },
+    {
+      "name": "Autocomplete ArrowDown + Enter selects product with valid ARIA",
+      "result": "PASS",
+      "evidence": {
+        "path": "/products/browser-e2e-430cd7c5-d180-40d8-a085-3477b8310e54"
+      }
+    },
+    {
+      "name": "Header search → Product Listing",
+      "result": "PASS",
+      "evidence": {
+        "query": "?q=Technest%20Browser%20Keyboard"
+      }
+    },
+    {
+      "name": "Sold-out variant disables Add to Cart and Buy Now",
+      "result": "PASS",
+      "evidence": {
+        "cartDisabled": true,
+        "buyDisabled": true
+      }
+    },
+    {
+      "name": "Variant price, quantity and Add to Cart",
+      "result": "PASS",
+      "evidence": [
+        {
+          "variantId": "36514",
+          "quantity": 2,
+          "price": 150000
+        }
+      ]
+    },
+    {
+      "name": "Cart persists through full reload with current stock",
+      "result": "PASS",
+      "evidence": {
+        "quantity": 2
+      }
+    },
+    {
+      "name": "Required form fields prevent empty checkout submission",
+      "result": "PASS",
+      "evidence": {
+        "actualOrders": 0
+      }
+    },
+    {
+      "name": "Server repricing updates checkout line and total together",
+      "result": "PASS",
+      "evidence": {
+        "unitPrice": 160000,
+        "total": 350000
+      }
+    },
+    {
+      "name": "Voucher edit invalidates stale quote rows and totals",
+      "result": "PASS",
+      "evidence": {
+        "restoredFixturePrice": 150000
+      }
+    },
+    {
+      "name": "Lost acknowledgement: form retained and double-submit blocked",
+      "result": "PASS",
+      "evidence": {
+        "actualOrders": 1,
+        "createRequests": 1,
+        "injectedFault": "Gateway 503 substituted after real PostgreSQL order creation"
+      }
+    },
+    {
+      "name": "Retry uses same idempotency key; exactly one COD order",
+      "result": "PASS",
+      "evidence": {
+        "requests": [
+          {
+            "key": "cfc24bd5-0176-4cae-a445-65a6810f31d5",
+            "responseDropped": true
+          },
+          {
+            "key": "cfc24bd5-0176-4cae-a445-65a6810f31d5",
+            "responseDropped": false
+          }
+        ],
+        "droppedResponses": 1,
+        "addresses": 1,
+        "orders": [
+          {
+            "id": "2078",
+            "total": "330000",
+            "paymentMethod": "COD",
+            "status": "PENDING"
+          }
+        ],
+        "stock": [
+          {
+            "id": "36513",
+            "variantId": "36513",
+            "onHand": 2,
+            "reserved": 0,
+            "availableQuantity": 2,
+            "inStock": true,
+            "stockStatus": "IN_STOCK",
+            "updatedAt": "2026-11-04T08:17:00.907Z"
+          },
+          {
+            "id": "36514",
+            "variantId": "36514",
+            "onHand": 3,
+            "reserved": 2,
+            "availableQuantity": 1,
+            "inStock": true,
+            "stockStatus": "IN_STOCK",
+            "updatedAt": "2026-11-04T08:17:39.264Z"
+          },
+          {
+            "id": "36515",
+            "variantId": "36515",
+            "onHand": 0,
+            "reserved": 0,
+            "availableQuantity": 0,
+            "inStock": false,
+            "stockStatus": "OUT_OF_STOCK",
+            "updatedAt": "2026-11-04T08:17:00.686Z"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Order History displays actual COD order",
+      "result": "PASS",
+      "evidence": {
+        "orderId": "2078",
+        "total": "330000"
+      }
+    },
+    {
+      "name": "Stock change before checkout prevents second order",
+      "result": "PASS",
+      "evidence": {
+        "actualOrders": 1,
+        "message": "Một sản phẩm không đủ tồn kho. Vui lòng cập nhật giỏ hàng."
+      }
+    }
+  ],
+  "exceptions": [],
+  "artifacts": "/tmp/technest-purchase-browser"
+}

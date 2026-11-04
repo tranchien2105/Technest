@@ -1,0 +1,331 @@
+{
+  "checkedAt": "2026-11-04T08:10:45.656Z",
+  "phase": "after",
+  "browser": "Chromium CDP; widths360/390/768; height900; guest+transaction fixture auth",
+  "base": "http://127.0.0.1:4175",
+  "results": [
+    {
+      "page": "home",
+      "path": "/",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "listing",
+      "path": "/products",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "detail",
+      "path": "/products/browser-e2e-9465df1d-0c03-438c-bcd6-7edb2b8f339b",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [
+        {
+          "label": "Thêm vào giỏ",
+          "visible": true,
+          "clickable": true
+        },
+        {
+          "label": "Mua ngay",
+          "visible": true,
+          "clickable": true
+        }
+      ],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "checkout",
+      "path": "/checkout",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "addresses",
+      "path": "/account/addresses",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "setup",
+      "path": "/setup",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "flash-sale",
+      "path": "/flash-sale",
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "home",
+      "path": "/",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "listing",
+      "path": "/products",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "detail",
+      "path": "/products/browser-e2e-9465df1d-0c03-438c-bcd6-7edb2b8f339b",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [
+        {
+          "label": "Thêm vào giỏ",
+          "visible": true,
+          "clickable": true
+        },
+        {
+          "label": "Mua ngay",
+          "visible": true,
+          "clickable": true
+        }
+      ],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "checkout",
+      "path": "/login",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "addresses",
+      "path": "/login",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "setup",
+      "path": "/setup",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "flash-sale",
+      "path": "/flash-sale",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "home",
+      "path": "/",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "listing",
+      "path": "/products",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "detail",
+      "path": "/products/browser-e2e-9465df1d-0c03-438c-bcd6-7edb2b8f339b",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [
+        {
+          "label": "Thêm vào giỏ",
+          "visible": true,
+          "clickable": true
+        },
+        {
+          "label": "Mua ngay",
+          "visible": true,
+          "clickable": true
+        }
+      ],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "checkout",
+      "path": "/login",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "addresses",
+      "path": "/login",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "setup",
+      "path": "/setup",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    },
+    {
+      "page": "flash-sale",
+      "path": "/flash-sale",
+      "width": 768,
+      "scrollWidth": 753,
+      "overflow": false,
+      "smallTargets": [],
+      "smallTextInputs": [],
+      "ctas": [],
+      "brokenLoadedImages": [],
+      "result": "PASS"
+    }
+  ],
+  "exceptions": [],
+  "artifacts": "/tmp/technest-mobile-after"
+}

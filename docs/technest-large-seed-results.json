@@ -1,0 +1,780 @@
+[
+  {
+    "batch": "tn-large-20261102",
+    "timestamp": "2026-11-02T11:50:48.638Z",
+    "before": {
+      "products": {
+        "count": 5000,
+        "maxId": "10138",
+        "digest": "d266a302f6ff169581c5fd817466e75c"
+      },
+      "brands": {
+        "count": 50,
+        "maxId": "187",
+        "digest": "c1c6f458f0c24779953c2cd6839a5500"
+      },
+      "product_variants": {
+        "count": 10000,
+        "maxId": "20138",
+        "digest": "80c6e4bc2b41ec33e74a1ebc26e28afc"
+      },
+      "product_images": {
+        "count": 15000,
+        "maxId": "29952",
+        "digest": "16c099dd18bfb0533c44ff36eb4bc18e"
+      },
+      "inventories": {
+        "count": 10000,
+        "maxId": "20195",
+        "digest": "8eb91a98b651fbfff79bccf1d40e08b7"
+      },
+      "orders": {
+        "count": 2014,
+        "maxId": "2065",
+        "digest": "98b705e45db590922868e21a6d558c76"
+      },
+      "order_items": {
+        "count": 5019,
+        "maxId": "5067",
+        "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+      }
+    },
+    "after": {
+      "products": {
+        "count": 7000,
+        "maxId": "12172",
+        "digest": "3d0293542856b8b28bed9825787f77fd"
+      },
+      "brands": {
+        "count": 2050,
+        "maxId": "2237",
+        "digest": "69f0a7d5b4d08afeb0b0983df87154a0"
+      },
+      "product_variants": {
+        "count": 14000,
+        "maxId": "24172",
+        "digest": "a6b00fa7cb5348dcc994da6beb193693"
+      },
+      "product_images": {
+        "count": 19000,
+        "maxId": "33986",
+        "digest": "2f9e3e43427d11b232c06d58a80e5f7a"
+      },
+      "inventories": {
+        "count": 14000,
+        "maxId": "24570",
+        "digest": "4d3033905af2569e29e025d0e5dbcd77"
+      },
+      "orders": {
+        "count": 2014,
+        "maxId": "2065",
+        "digest": "98b705e45db590922868e21a6d558c76"
+      },
+      "order_items": {
+        "count": 5019,
+        "maxId": "5067",
+        "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+      }
+    },
+    "inserted": {
+      "brands": 2000,
+      "products": 2000,
+      "variants": 4000,
+      "images": 4000,
+      "inventory": 4000
+    },
+    "skipped": {
+      "brands": 0,
+      "products": 0
+    },
+    "errors": 0,
+    "durationMs": 9555,
+    "oldDataUnchanged": true,
+    "checks": {
+      "batch_products": 2000,
+      "batch_brands": 2000,
+      "linked_brands": 2000,
+      "duplicate_skus": 0,
+      "duplicate_product_slugs": 0,
+      "duplicate_brand_slugs": 0,
+      "orphan_products": 0,
+      "invalid_batch_products": 0
+    },
+    "newest": [
+      {
+        "id": "12172",
+        "slug": "tn-large-20261102-1999-accessories",
+        "name": "Hub USB-C du lịch Willow Works Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12171",
+        "slug": "tn-large-20261102-1998-audio",
+        "name": "Tai nghe làm việc Willow Wave Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12170",
+        "slug": "tn-large-20261102-1997-mice",
+        "name": "Chuột du lịch Willow Track Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12169",
+        "slug": "tn-large-20261102-1996-keyboards",
+        "name": "Bàn phím cơ TKL Willow Sync Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12168",
+        "slug": "tn-large-20261102-1995-monitors",
+        "name": "Màn hình đồ họa 27 inch Willow Studio Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12167",
+        "slug": "tn-large-20261102-1994-accessories",
+        "name": "Dock kết nối màn hình Willow Spark Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12166",
+        "slug": "tn-large-20261102-1993-audio",
+        "name": "Tai nghe có mic Willow Space Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12165",
+        "slug": "tn-large-20261102-1992-mice",
+        "name": "Chuột gaming có dây Willow Signal Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12164",
+        "slug": "tn-large-20261102-1991-keyboards",
+        "name": "Bàn phím công thái học Willow Range Focus · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12163",
+        "slug": "tn-large-20261102-1990-monitors",
+        "name": "Màn hình văn phòng 24 inch Willow Pulse Focus · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      }
+    ],
+    "distribution": [
+      {
+        "slug": "accessories",
+        "products": 400,
+        "brands": 400
+      },
+      {
+        "slug": "audio",
+        "products": 400,
+        "brands": 400
+      },
+      {
+        "slug": "keyboards",
+        "products": 400,
+        "brands": 400
+      },
+      {
+        "slug": "mice",
+        "products": 400,
+        "brands": 400
+      },
+      {
+        "slug": "monitors",
+        "products": 400,
+        "brands": 400
+      }
+    ]
+  },
+  {
+    "batch": "tn-large-20261102",
+    "timestamp": "2026-11-02T11:52:10.447Z",
+    "before": {
+      "products": {
+        "count": 7000,
+        "maxId": "12172",
+        "digest": "3d0293542856b8b28bed9825787f77fd"
+      },
+      "brands": {
+        "count": 2050,
+        "maxId": "2237",
+        "digest": "69f0a7d5b4d08afeb0b0983df87154a0"
+      },
+      "product_variants": {
+        "count": 14000,
+        "maxId": "24172",
+        "digest": "a6b00fa7cb5348dcc994da6beb193693"
+      },
+      "product_images": {
+        "count": 19000,
+        "maxId": "33986",
+        "digest": "2f9e3e43427d11b232c06d58a80e5f7a"
+      },
+      "inventories": {
+        "count": 14000,
+        "maxId": "24570",
+        "digest": "4d3033905af2569e29e025d0e5dbcd77"
+      },
+      "orders": {
+        "count": 2014,
+        "maxId": "2065",
+        "digest": "98b705e45db590922868e21a6d558c76"
+      },
+      "order_items": {
+        "count": 5019,
+        "maxId": "5067",
+        "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+      }
+    },
+    "after": {
+      "products": {
+        "count": 7000,
+        "maxId": "12172",
+        "digest": "3d0293542856b8b28bed9825787f77fd"
+      },
+      "brands": {
+        "count": 2050,
+        "maxId": "2237",
+        "digest": "69f0a7d5b4d08afeb0b0983df87154a0"
+      },
+      "product_variants": {
+        "count": 14000,
+        "maxId": "24172",
+        "digest": "a6b00fa7cb5348dcc994da6beb193693"
+      },
+      "product_images": {
+        "count": 19000,
+        "maxId": "33986",
+        "digest": "2f9e3e43427d11b232c06d58a80e5f7a"
+      },
+      "inventories": {
+        "count": 14000,
+        "maxId": "24570",
+        "digest": "4d3033905af2569e29e025d0e5dbcd77"
+      },
+      "orders": {
+        "count": 2014,
+        "maxId": "2065",
+        "digest": "98b705e45db590922868e21a6d558c76"
+      },
+      "order_items": {
+        "count": 5019,
+        "maxId": "5067",
+        "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+      }
+    },
+    "inserted": {
+      "brands": 0,
+      "products": 0,
+      "variants": 0,
+      "images": 0,
+      "inventory": 0
+    },
+    "skipped": {
+      "brands": 2000,
+      "products": 2000
+    },
+    "errors": 0,
+    "durationMs": 30417,
+    "oldDataUnchanged": true,
+    "checks": {
+      "batch_products": 2000,
+      "batch_brands": 2000,
+      "linked_brands": 2000,
+      "duplicate_skus": 0,
+      "duplicate_product_slugs": 0,
+      "duplicate_brand_slugs": 0,
+      "orphan_products": 0,
+      "invalid_batch_products": 0
+    },
+    "newest": [
+      {
+        "id": "12172",
+        "slug": "tn-large-20261102-1999-accessories",
+        "name": "Hub USB-C du lịch Willow Works Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12171",
+        "slug": "tn-large-20261102-1998-audio",
+        "name": "Tai nghe làm việc Willow Wave Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12170",
+        "slug": "tn-large-20261102-1997-mice",
+        "name": "Chuột du lịch Willow Track Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12169",
+        "slug": "tn-large-20261102-1996-keyboards",
+        "name": "Bàn phím cơ TKL Willow Sync Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12168",
+        "slug": "tn-large-20261102-1995-monitors",
+        "name": "Màn hình đồ họa 27 inch Willow Studio Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12167",
+        "slug": "tn-large-20261102-1994-accessories",
+        "name": "Dock kết nối màn hình Willow Spark Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12166",
+        "slug": "tn-large-20261102-1993-audio",
+        "name": "Tai nghe có mic Willow Space Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12165",
+        "slug": "tn-large-20261102-1992-mice",
+        "name": "Chuột gaming có dây Willow Signal Balance · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12164",
+        "slug": "tn-large-20261102-1991-keyboards",
+        "name": "Bàn phím công thái học Willow Range Focus · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12163",
+        "slug": "tn-large-20261102-1990-monitors",
+        "name": "Màn hình văn phòng 24 inch Willow Pulse Focus · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      }
+    ],
+    "distribution": [
+      {
+        "slug": "accessories",
+        "products": 400,
+        "brands": 400
+      },
+      {
+        "slug": "audio",
+        "products": 400,
+        "brands": 400
+      },
+      {
+        "slug": "keyboards",
+        "products": 400,
+        "brands": 400
+      },
+      {
+        "slug": "mice",
+        "products": 400,
+        "brands": 400
+      },
+      {
+        "slug": "monitors",
+        "products": 400,
+        "brands": 400
+      }
+    ]
+  },
+  {
+    "batch": "tn-large-20261102",
+    "timestamp": "2026-11-02T12:30:29.780Z",
+    "before": {
+      "products": {
+        "count": 7000,
+        "maxId": "12172",
+        "digest": "3d0293542856b8b28bed9825787f77fd"
+      },
+      "brands": {
+        "count": 2050,
+        "maxId": "2237",
+        "digest": "69f0a7d5b4d08afeb0b0983df87154a0"
+      },
+      "product_variants": {
+        "count": 14000,
+        "maxId": "24172",
+        "digest": "a6b00fa7cb5348dcc994da6beb193693"
+      },
+      "product_images": {
+        "count": 19000,
+        "maxId": "33986",
+        "digest": "2f9e3e43427d11b232c06d58a80e5f7a"
+      },
+      "inventories": {
+        "count": 14000,
+        "maxId": "24570",
+        "digest": "4d3033905af2569e29e025d0e5dbcd77"
+      },
+      "orders": {
+        "count": 2014,
+        "maxId": "2065",
+        "digest": "98b705e45db590922868e21a6d558c76"
+      },
+      "order_items": {
+        "count": 5019,
+        "maxId": "5067",
+        "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+      }
+    },
+    "after": {
+      "products": {
+        "count": 7000,
+        "maxId": "12172",
+        "digest": "a3d8861a7f4a7141c30c1d1ab58b0cf4"
+      },
+      "brands": {
+        "count": 2050,
+        "maxId": "2237",
+        "digest": "307c76fc6016b5865264848ad8f58aee"
+      },
+      "product_variants": {
+        "count": 14000,
+        "maxId": "24172",
+        "digest": "f70288e8172128dc00b005792f244a87"
+      },
+      "product_images": {
+        "count": 19000,
+        "maxId": "33986",
+        "digest": "9ece3649a33aad5c83ac05e7013e045b"
+      },
+      "inventories": {
+        "count": 14000,
+        "maxId": "24570",
+        "digest": "4d3033905af2569e29e025d0e5dbcd77"
+      },
+      "orders": {
+        "count": 2014,
+        "maxId": "2065",
+        "digest": "98b705e45db590922868e21a6d558c76"
+      },
+      "order_items": {
+        "count": 5019,
+        "maxId": "5067",
+        "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+      }
+    },
+    "inserted": {
+      "brands": 0,
+      "products": 0,
+      "variants": 0,
+      "images": 0,
+      "inventory": 0
+    },
+    "skipped": {
+      "brands": 0,
+      "products": 2000
+    },
+    "repaired": {
+      "archivedPlaceholderBrands": 2000
+    },
+    "errors": 0,
+    "durationMs": 10903,
+    "oldDataUnchanged": true,
+    "checks": {
+      "batch_products": 2000,
+      "batch_brands": 2000,
+      "archived_brands": 2000,
+      "linked_brands": 44,
+      "duplicate_skus": 0,
+      "duplicate_product_slugs": 0,
+      "duplicate_brand_slugs": 0,
+      "orphan_products": 0,
+      "invalid_batch_products": 0,
+      "contaminated_products": 0,
+      "contaminated_variants": 0,
+      "contaminated_image_alt": 0
+    },
+    "newest": [
+      {
+        "id": "12172",
+        "slug": "tn-large-20261102-1999-accessories",
+        "name": "TP-LINK Hub USB-C du lịch · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12171",
+        "slug": "tn-large-20261102-1998-audio",
+        "name": "MARSHALL Tai nghe làm việc · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12170",
+        "slug": "tn-large-20261102-1997-mice",
+        "name": "MICROSOFT Chuột du lịch · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12169",
+        "slug": "tn-large-20261102-1996-keyboards",
+        "name": "CORSAIR Bàn phím cơ TKL · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12168",
+        "slug": "tn-large-20261102-1995-monitors",
+        "name": "DELL Màn hình đồ họa 27 inch · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12167",
+        "slug": "tn-large-20261102-1994-accessories",
+        "name": "ORICO Dock kết nối màn hình · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12166",
+        "slug": "tn-large-20261102-1993-audio",
+        "name": "JABRA Tai nghe có mic · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12165",
+        "slug": "tn-large-20261102-1992-mice",
+        "name": "STEELSERIES Chuột gaming có dây · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12164",
+        "slug": "tn-large-20261102-1991-keyboards",
+        "name": "RAZER Bàn phím công thái học · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12163",
+        "slug": "tn-large-20261102-1990-monitors",
+        "name": "BENQ Màn hình văn phòng 24 inch · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      }
+    ],
+    "distribution": [
+      {
+        "slug": "accessories",
+        "products": 400,
+        "brands": 12
+      },
+      {
+        "slug": "audio",
+        "products": 400,
+        "brands": 14
+      },
+      {
+        "slug": "keyboards",
+        "products": 400,
+        "brands": 12
+      },
+      {
+        "slug": "mice",
+        "products": 400,
+        "brands": 12
+      },
+      {
+        "slug": "monitors",
+        "products": 400,
+        "brands": 12
+      }
+    ]
+  },
+  {
+    "batch": "tn-large-20261102",
+    "timestamp": "2026-11-02T12:36:53.287Z",
+    "before": {
+      "products": {
+        "count": 7000,
+        "maxId": "12172",
+        "digest": "a3d8861a7f4a7141c30c1d1ab58b0cf4"
+      },
+      "brands": {
+        "count": 2050,
+        "maxId": "2237",
+        "digest": "307c76fc6016b5865264848ad8f58aee"
+      },
+      "product_variants": {
+        "count": 14000,
+        "maxId": "24172",
+        "digest": "f70288e8172128dc00b005792f244a87"
+      },
+      "product_images": {
+        "count": 19000,
+        "maxId": "33986",
+        "digest": "9ece3649a33aad5c83ac05e7013e045b"
+      },
+      "inventories": {
+        "count": 14000,
+        "maxId": "24570",
+        "digest": "4d3033905af2569e29e025d0e5dbcd77"
+      },
+      "orders": {
+        "count": 2014,
+        "maxId": "2065",
+        "digest": "98b705e45db590922868e21a6d558c76"
+      },
+      "order_items": {
+        "count": 5019,
+        "maxId": "5067",
+        "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+      }
+    },
+    "after": {
+      "products": {
+        "count": 7000,
+        "maxId": "12172",
+        "digest": "07d18dfb9edacaac8372fd2ece3aee12"
+      },
+      "brands": {
+        "count": 2050,
+        "maxId": "2237",
+        "digest": "307c76fc6016b5865264848ad8f58aee"
+      },
+      "product_variants": {
+        "count": 14000,
+        "maxId": "24172",
+        "digest": "f70288e8172128dc00b005792f244a87"
+      },
+      "product_images": {
+        "count": 19000,
+        "maxId": "33986",
+        "digest": "9ece3649a33aad5c83ac05e7013e045b"
+      },
+      "inventories": {
+        "count": 14000,
+        "maxId": "24570",
+        "digest": "4d3033905af2569e29e025d0e5dbcd77"
+      },
+      "orders": {
+        "count": 2014,
+        "maxId": "2065",
+        "digest": "98b705e45db590922868e21a6d558c76"
+      },
+      "order_items": {
+        "count": 5019,
+        "maxId": "5067",
+        "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+      }
+    },
+    "inserted": {
+      "brands": 0,
+      "products": 0,
+      "variants": 0,
+      "images": 0,
+      "inventory": 0
+    },
+    "skipped": {
+      "brands": 0,
+      "products": 2000
+    },
+    "repaired": {
+      "archivedPlaceholderBrands": 0
+    },
+    "errors": 0,
+    "durationMs": 7683,
+    "oldDataUnchanged": true,
+    "checks": {
+      "batch_products": 2000,
+      "batch_brands": 2000,
+      "archived_brands": 2000,
+      "linked_brands": 44,
+      "duplicate_skus": 0,
+      "duplicate_product_slugs": 0,
+      "duplicate_brand_slugs": 0,
+      "orphan_products": 0,
+      "invalid_batch_products": 0,
+      "contaminated_products": 0,
+      "contaminated_variants": 0,
+      "contaminated_image_alt": 0
+    },
+    "newest": [
+      {
+        "id": "12172",
+        "slug": "tn-large-20261102-1999-accessories",
+        "name": "TP-LINK Hub USB-C du lịch · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12171",
+        "slug": "tn-large-20261102-1998-audio",
+        "name": "MARSHALL Tai nghe làm việc · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12170",
+        "slug": "tn-large-20261102-1997-mice",
+        "name": "MICROSOFT Chuột du lịch · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12169",
+        "slug": "tn-large-20261102-1996-keyboards",
+        "name": "CORSAIR Bàn phím cơ TKL · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12168",
+        "slug": "tn-large-20261102-1995-monitors",
+        "name": "DELL Màn hình đồ họa 27 inch · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12167",
+        "slug": "tn-large-20261102-1994-accessories",
+        "name": "ORICO Dock kết nối màn hình · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12166",
+        "slug": "tn-large-20261102-1993-audio",
+        "name": "JABRA Tai nghe có mic · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12165",
+        "slug": "tn-large-20261102-1992-mice",
+        "name": "STEELSERIES Chuột gaming có dây · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12164",
+        "slug": "tn-large-20261102-1991-keyboards",
+        "name": "RAZER Bàn phím công thái học · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      },
+      {
+        "id": "12163",
+        "slug": "tn-large-20261102-1990-monitors",
+        "name": "BENQ Màn hình văn phòng 24 inch · Đen nhám",
+        "created_at": "2026-11-02T11:50:46.208Z"
+      }
+    ],
+    "distribution": [
+      {
+        "slug": "accessories",
+        "products": 400,
+        "brands": 12
+      },
+      {
+        "slug": "audio",
+        "products": 400,
+        "brands": 14
+      },
+      {
+        "slug": "keyboards",
+        "products": 400,
+        "brands": 12
+      },
+      {
+        "slug": "mice",
+        "products": 400,
+        "brands": 12
+      },
+      {
+        "slug": "monitors",
+        "products": 400,
+        "brands": 12
+      }
+    ]
+  }
+]

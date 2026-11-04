@@ -1,0 +1,81 @@
+{
+  "status": "MEASURED IN PREVIOUS SESSION; CURRENT RERUN NOT TESTED",
+  "measurementDate": "2026-11-02",
+  "lighthouseVersion": "13.6.0",
+  "chromiumVersion": "130.0.6723.31",
+  "method": "Actual Lighthouse loopback navigation, before the H1 fix; scores retained from prior execution record. Original raw /tmp reports were lost after WSL restart. Do not treat these scores as a fresh post-fix benchmark.",
+  "rerunBlocked": "Automatic execution approval review timed out twice on 2026-11-03. No Lighthouse process was started by those rejected calls.",
+  "runs": [
+    {
+      "page": "home",
+      "device": "mobile",
+      "performance": 22,
+      "accessibility": 86,
+      "bestPractices": null,
+      "seo": 100
+    },
+    {
+      "page": "home",
+      "device": "desktop",
+      "performance": 28,
+      "accessibility": 86,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    {
+      "page": "product",
+      "device": "mobile",
+      "performance": 25,
+      "accessibility": 86,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    {
+      "page": "product",
+      "device": "desktop",
+      "performance": 44,
+      "accessibility": 86,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    {
+      "page": "category",
+      "device": "mobile",
+      "performance": 19,
+      "accessibility": 87,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    {
+      "page": "category",
+      "device": "desktop",
+      "performance": 15,
+      "accessibility": 87,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    {
+      "page": "brand",
+      "device": "mobile",
+      "performance": 16,
+      "accessibility": 87,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    {
+      "page": "brand",
+      "device": "desktop",
+      "performance": 21,
+      "accessibility": 87,
+      "bestPractices": 100,
+      "seo": 100
+    }
+  ],
+  "warnings": [
+    "Home mobile Best Practices N/A: Lighthouse ImageElements/CSS.getMatchedStylesForNode gatherer error.",
+    "CPU calibration and product mobile page-load timeout warnings in previous measurements.",
+    "Earlier concurrent-load home run recorded API timeouts; isolated HTTP checks later returned 200.",
+    "Relative API bootstrap crash was fixed before the listed measurements; H1 fix came afterwards."
+  ],
+  "coreWebVitals": "NOT VERIFIED; poor lab performance; not field INP data"
+}

@@ -99,8 +99,9 @@ export function createAdminCatalogService(db: Database) {
       const [category] = await tx.select({ id: categories.id }).from(categories).where(eq(categories.id, input.categoryId)).limit(1);
       if (!brand || !category) throw new AppError(400, "INVALID_CATALOG_REFERENCE", "Select an existing brand and category");
       if (id) {
-        const [existing] = await tx.select({ id: products.id }).from(products).where(eq(products.id, id)).limit(1);
+        const [existing] = await tx.select({ id: products.id, slug: products.slug }).from(products).where(eq(products.id, id)).limit(1).for("update");
         if (!existing) throw new AppError(404, "PRODUCT_NOT_FOUND", "Product not found");
+        if(existing.slug !== input.slug) await tx.execute(sql`INSERT INTO seo_product_redirects(old_slug,product_id) VALUES(${existing.slug},${id}) ON CONFLICT(old_slug) DO UPDATE SET product_id=excluded.product_id`);
       }
       const values = {
         slug: input.slug, name: input.name, description: input.description, categoryId: input.categoryId,
@@ -178,7 +179,7 @@ export function createAdminCatalogService(db: Database) {
       input.usage === "used" ? hasProducts : input.usage === "unused" ? sql`not ${hasProducts}` : undefined);
     const [items, totalRows] = await Promise.all([
       db.select({ id: brands.id, name: brands.name, slug: brands.slug, createdAt: brands.createdAt, productCount: sql<number>`count(${products.id})` })
-        .from(brands).leftJoin(products, eq(products.brandId, brands.id)).where(where).groupBy(brands.id).orderBy(asc(brands.name)).limit(input.limit).offset((input.page - 1) * input.limit),
+        .from(brands).leftJoin(products, eq(products.brandId, brands.id)).where(where).groupBy(brands.id).orderBy(desc(brands.createdAt), desc(brands.id)).limit(input.limit).offset((input.page - 1) * input.limit),
       db.select({ value: count() }).from(brands).where(where),
     ]);
     const total = Number(totalRows[0]?.value ?? 0);

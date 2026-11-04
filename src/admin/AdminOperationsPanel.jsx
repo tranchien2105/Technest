@@ -5,6 +5,8 @@ import AdminPagination from "./AdminPagination";
 import { useAdminPageSize, useDebouncedValue } from "./useAdminList";
 import { formatPrice } from "../utils/formatCurrency";
 import ProductImage from "../components/common/ProductImage";
+import CurrencyInput from "../components/common/CurrencyInput";
+import PasswordInput from "../components/common/PasswordInput";
 const names = {
   banners: "Banner quảng cáo",
   vouchers: "Mã giảm giá",
@@ -42,6 +44,7 @@ const scopes = {
   catalog: "Danh mục / thương hiệu",
   inventory: "Tồn kho",
   orders: "Đơn hàng",
+  "flash-sales": "Flash Sale",
   customers: "Khách hàng",
   settings: "Cài đặt",
   banners: "Banner",
@@ -204,18 +207,28 @@ export default function AdminOperationsPanel({ kind, canWrite = true }) {
             ? ["ACTIVE", "BLOCKED"]
             : ["ACTIVE", "INACTIVE"];
   const Icon = icons[kind];
-  const field = (key, label, opts = {}) => (
-    <label>
-      {label}
-      <input
-        {...opts}
-        value={editor[key] ?? ""}
-        onChange={(e) =>
-          change(key, opts.type === "number" ? Number(e.target.value) : e.target.value)
-        }
-      />
-    </label>
-  );
+  const field = (key, label, opts = {}) => {
+    const inputProps = { ...opts };
+    const currency = Boolean(inputProps.currency);
+    delete inputProps.currency;
+    if (currency) delete inputProps.pattern;
+    const value = editor[key] ?? "";
+    const onValueChange = (nextValue) =>
+      change(key, inputProps.type === "number" ? Number(nextValue) : nextValue);
+    const Input = inputProps.type === "password" ? PasswordInput : null;
+    return (
+      <label key={key}>
+        {label}
+        {currency ? (
+          <CurrencyInput {...inputProps} value={value} onValueChange={onValueChange} />
+        ) : Input ? (
+          <Input {...inputProps} value={value} onChange={(event) => onValueChange(event.target.value)} />
+        ) : (
+          <input {...inputProps} value={value} onChange={(event) => onValueChange(event.target.value)} />
+        )}
+      </label>
+    );
+  };
   return (
     <section className="admin-panel admin-operations">
       <div className="admin-panel-heading">
@@ -625,15 +638,18 @@ export default function AdminOperationsPanel({ kind, canWrite = true }) {
                   </label>
                   {field("value", "Mức giảm", {
                     required: true,
+                    currency: editor.type === "FIXED",
                     inputMode: "numeric",
                     pattern: "[0-9]+",
                   })}
                   {field("minSubtotal", "Đơn tối thiểu (₫)", {
                     required: true,
+                    currency: true,
                     inputMode: "numeric",
                     pattern: "[0-9]+",
                   })}
                   {field("maxDiscount", "Giảm tối đa (₫, có thể bỏ trống)", {
+                    currency: true,
                     inputMode: "numeric",
                     pattern: "[0-9]*",
                   })}
@@ -767,7 +783,7 @@ export default function AdminOperationsPanel({ kind, canWrite = true }) {
                       {editor.resolution === "REFUND" &&
                         field("refundAmount", "Tiền đã hoàn (₫)", {
                           required: true,
-                          pattern: "[0-9]+",
+                          currency: true,
                         })}
                       {editor._type === "RETURN" && (
                         <label>

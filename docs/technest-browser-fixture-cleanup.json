@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-04T08:18:20.133Z",
+  "runId": "browser-e2e-430cd7c5-d180-40d8-a085-3477b8310e54",
+  "fixtureIds": {
+    "userId": 440,
+    "productId": "18388"
+  },
+  "remaining": {
+    "users": 0,
+    "products": 0,
+    "orders": 0
+  },
+  "rolledBack": true,
+  "requests": [
+    {
+      "key": "cfc24bd5-0176-4cae-a445-65a6810f31d5",
+      "responseDropped": true
+    },
+    {
+      "key": "cfc24bd5-0176-4cae-a445-65a6810f31d5",
+      "responseDropped": false
+    }
+  ],
+  "droppedResponses": 1
+}

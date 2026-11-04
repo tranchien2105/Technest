@@ -1,4 +1,4 @@
-import { brands, categories } from "../../database/schema/index.js";
+import { catalogReferences, referenceQuery } from "./catalog-references.js";
 import { Router } from "express";
 import { z } from "zod";
 import { sendData } from "../../shared/response.js";
@@ -32,11 +32,8 @@ export function createOperationsRouter(db: Database) {
   router.post("/uploads", imageUpload, async (req, res) =>
     sendData(res, await saveImages((req.files || []) as Express.Multer.File[]), 201),
   );
-  router.get("/products/references", async (_req, res) =>
-    sendData(res, {
-      categories: await db.select().from(categories),
-      brands: (await db.select().from(brands)).map((b) => ({ ...b, id: b.id.toString() })),
-    }),
+  router.get("/products/references", validateRequest({ query: referenceQuery }), async (_req, res) =>
+    sendData(res, await catalogReferences(db, res.locals.validated.query)),
   );
   router.post("/products/bulk", validateRequest({ body: bulkInput }), async (_req, res) =>
     sendData(res, await s.bulk(res.locals.validated.body, res.locals.user.id)),

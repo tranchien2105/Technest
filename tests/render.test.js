@@ -115,6 +115,8 @@ test("all store routes render with populated, empty and malformed persisted data
     const detail = renderToStaticMarkup(
       createElement(StoreRoutes, { ...props, route: "/products/1" }),
     );
+    assert.equal((detail.match(/<h1\b/g) || []).length, 1);
+    assert.match(detail, /<h2>Có thể bạn cũng thích<\/h2>/);
     // A fresh detail instance starts at one, and only its own photo is used in thumbnails.
     assert.match(detail, /<span>1<\/span>/);
     const thumbnails = detail
@@ -134,7 +136,7 @@ test("all store routes render with populated, empty and malformed persisted data
       createElement(StoreRoutes, { ...props, route: "/account/orders/TN-test" }),
     );
     // Server-owned orders must not appear merely because browser data was passed in.
-    assert.match(orderDetail, /Không tìm thấy đơn hàng/);
+    assert.match(orderDetail, /account-order-skeleton/);
     const { default: OrderProgress } = await server.ssrLoadModule("/src/components/account/OrderProgress.jsx");
     const progress = renderToStaticMarkup(createElement(OrderProgress, { order: { ...order, status: "PENDING" }, language: "vi" }));
     assert.match(progress, /order-timeline/);

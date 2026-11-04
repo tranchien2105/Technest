@@ -1,0 +1,515 @@
+{
+  "auth": "ADMIN identity fixture; actual PostgreSQL; not an auth test",
+  "requests": [
+    {
+      "path": "products?limit=10",
+      "durationMs": 2490.93,
+      "status": 200
+    },
+    {
+      "path": "products?limit=10&page=2",
+      "durationMs": 582.6,
+      "status": 200
+    },
+    {
+      "path": "products?category=mice&sort=priceLow&limit=20",
+      "durationMs": 1005.22,
+      "status": 200
+    },
+    {
+      "path": "products?brand=anker&limit=10",
+      "durationMs": 263.87,
+      "status": 200
+    },
+    {
+      "path": "products/tn-curated-20261102-anker-737-power-bank",
+      "durationMs": 145.03,
+      "status": 200
+    },
+    {
+      "path": "brands?paginated=1&limit=10",
+      "durationMs": 86.43,
+      "status": 200
+    },
+    {
+      "path": "brands?paginated=1&limit=10&page=2",
+      "durationMs": 118.83,
+      "status": 200
+    },
+    {
+      "path": "brands?q=Sony",
+      "durationMs": 84.2,
+      "status": 200
+    },
+    {
+      "path": "brands?q=Demo%20Willow%20Works",
+      "durationMs": 85.49,
+      "status": 200
+    },
+    {
+      "path": "brands?limit=2000",
+      "durationMs": 106.64,
+      "status": 400
+    },
+    {
+      "path": "products?sort=newest&limit=24",
+      "durationMs": 307.72,
+      "status": 200
+    },
+    {
+      "path": "products?sort=newest&limit=24&page=2",
+      "durationMs": 284.59,
+      "status": 200
+    },
+    {
+      "path": "products?sale=1&sort=newest&limit=100",
+      "durationMs": 580.39,
+      "status": 200
+    },
+    {
+      "path": "products?trending=1&limit=24&sort=recommended",
+      "durationMs": 508.04,
+      "status": 200
+    },
+    {
+      "path": "homepage/config",
+      "durationMs": 309.87,
+      "status": 200
+    },
+    {
+      "path": "admin/products?limit=10",
+      "durationMs": 148.01,
+      "status": 200
+    },
+    {
+      "path": "admin/brands?limit=10",
+      "durationMs": 129.83,
+      "status": 200
+    }
+  ],
+  "newestTenSQL": [
+    {
+      "id": "18232",
+      "slug": "tn-curated-20261102-apple-usb-c-digital-av-multiport-adapter"
+    },
+    {
+      "id": "18231",
+      "slug": "tn-curated-20261102-elgato-stream-deck-mk-2"
+    },
+    {
+      "id": "18230",
+      "slug": "tn-curated-20261102-logitech-mx-brio"
+    },
+    {
+      "id": "18229",
+      "slug": "tn-curated-20261102-kingston-xs1000-external-ssd"
+    },
+    {
+      "id": "18228",
+      "slug": "tn-curated-20261102-sandisk-extreme-portable-ssd"
+    },
+    {
+      "id": "18227",
+      "slug": "tn-curated-20261102-samsung-t7-shield-portable-ssd"
+    },
+    {
+      "id": "18226",
+      "slug": "tn-curated-20261102-tp-link-deco-x50"
+    },
+    {
+      "id": "18225",
+      "slug": "tn-curated-20261102-tp-link-archer-ax55"
+    },
+    {
+      "id": "18224",
+      "slug": "tn-curated-20261102-baseus-metal-gleam-series-hub"
+    },
+    {
+      "id": "18223",
+      "slug": "tn-curated-20261102-ugreen-revodok-pro-109"
+    }
+  ],
+  "newestTenAPI": [
+    {
+      "id": "18232",
+      "name": "Apple USB-C Digital AV Multiport Adapter"
+    },
+    {
+      "id": "18231",
+      "name": "Elgato Stream Deck MK.2"
+    },
+    {
+      "id": "18230",
+      "name": "Logitech MX Brio"
+    },
+    {
+      "id": "18229",
+      "name": "Kingston XS1000 External SSD"
+    },
+    {
+      "id": "18228",
+      "name": "SanDisk Extreme Portable SSD"
+    },
+    {
+      "id": "18227",
+      "name": "Samsung T7 Shield Portable SSD"
+    },
+    {
+      "id": "18226",
+      "name": "TP-Link Deco X50"
+    },
+    {
+      "id": "18225",
+      "name": "TP-Link Archer AX55"
+    },
+    {
+      "id": "18224",
+      "name": "Baseus Metal Gleam Series Hub"
+    },
+    {
+      "id": "18223",
+      "name": "UGREEN Revodok Pro 109"
+    }
+  ],
+  "homepageBrands": [
+    {
+      "id": "elgato",
+      "name": "ELGATO",
+      "createdAt": "2026-11-02T13:04:03.161Z"
+    },
+    {
+      "id": "zowie",
+      "name": "ZOWIE",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    },
+    {
+      "id": "xiaomi",
+      "name": "XIAOMI",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    },
+    {
+      "id": "ugreen",
+      "name": "UGREEN",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    },
+    {
+      "id": "tp-link",
+      "name": "TP-LINK",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    },
+    {
+      "id": "tascam",
+      "name": "TASCAM",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    },
+    {
+      "id": "shure",
+      "name": "SHURE",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    },
+    {
+      "id": "sandisk",
+      "name": "SANDISK",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    },
+    {
+      "id": "pioneer",
+      "name": "PIONEER",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    },
+    {
+      "id": "philips",
+      "name": "PHILIPS",
+      "createdAt": "2026-10-31T13:17:33.833Z"
+    }
+  ],
+  "cmsSections": {
+    "categories": {
+      "visible": true,
+      "title": "Danh mục sản phẩm",
+      "description": "",
+      "limit": 8,
+      "categorySlugs": []
+    },
+    "featured": {
+      "visible": true,
+      "eyebrow": "ĐƯỢC CHỌN LỌC CHO BẠN",
+      "title": "Sản phẩm nổi bật ✨",
+      "description": "Những món đồ được yêu thích nhất tại Technest",
+      "ctaLabel": "Xem tất cả",
+      "ctaUrl": "/products",
+      "limit": 8,
+      "categorySlugs": [],
+      "productIds": []
+    },
+    "deals": {
+      "visible": true,
+      "eyebrow": "TECHNEST DEALS",
+      "title": "Deal công nghệ đáng chú ý",
+      "description": "Nâng cấp góc làm việc với mức giá tốt hơn trong hôm nay.",
+      "ctaLabel": "Khám phá ngay",
+      "ctaUrl": "/products?sale=1&sort=priceLow",
+      "limit": 6
+    },
+    "flash-sale": {
+      "visible": true,
+      "title": "Flash Sale",
+      "description": "",
+      "ctaLabel": "Xem tất cả",
+      "ctaUrl": "/flash-sale",
+      "limit": 4
+    },
+    "campaigns": {
+      "visible": true,
+      "title": "",
+      "description": "",
+      "limit": 10
+    },
+    "promotional-banners": {
+      "visible": true,
+      "title": "",
+      "description": "",
+      "limit": 3
+    },
+    "style": {
+      "visible": true,
+      "eyebrow": "CHỌN THEO PHONG CÁCH",
+      "title": "Chọn theo phong cách của bạn",
+      "description": "Bắt đầu từ cảm hứng, rồi tìm đúng món đồ phù hợp.",
+      "ctaLabel": "Khám phá ngay",
+      "ctaUrl": "/products",
+      "limit": 3,
+      "cards": [
+        {
+          "key": "work",
+          "eyebrow": "01 / WORK",
+          "title": "Góc làm việc tối giản",
+          "titleEn": "A calmer workspace",
+          "description": "Sắp xếp góc bàn gọn gàng, tập trung cho công việc mỗi ngày.",
+          "descriptionEn": "Create a tidy desk that helps you focus through the workday.",
+          "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85",
+          "categorySlug": "accessories"
+        },
+        {
+          "key": "gaming",
+          "eyebrow": "02 / PLAY",
+          "title": "Góc gaming nổi bật",
+          "titleEn": "A standout gaming setup",
+          "description": "Chọn thiết bị phù hợp cho những giờ giải trí của bạn.",
+          "descriptionEn": "Find the right gear for your time away from work.",
+          "imageUrl": "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=900&q=85",
+          "categorySlug": "keyboards"
+        },
+        {
+          "key": "audio",
+          "eyebrow": "03 / LISTEN",
+          "title": "Không gian âm thanh",
+          "titleEn": "A personal sound space",
+          "description": "Khám phá tai nghe và loa cho không gian nghe riêng.",
+          "descriptionEn": "Explore headphones and speakers for your own listening space.",
+          "imageUrl": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85",
+          "categorySlug": "audio"
+        }
+      ]
+    },
+    "trending": {
+      "visible": true,
+      "eyebrow": "",
+      "title": "Được săn đón nhiều nhất",
+      "description": "Những lựa chọn đang được cộng đồng setup yêu thích.",
+      "ctaLabel": "Xem tất cả",
+      "ctaUrl": "/products",
+      "limit": 8
+    },
+    "new-arrivals": {
+      "visible": true,
+      "eyebrow": "",
+      "title": "Vừa cập bến Technest",
+      "description": "Những món đồ mới cho góc setup tiếp theo của bạn.",
+      "ctaLabel": "Xem tất cả",
+      "ctaUrl": "/products?sort=newest",
+      "limit": 8
+    },
+    "trusted-brands": {
+      "visible": true,
+      "eyebrow": "THƯƠNG HIỆU CÔNG NGHỆ",
+      "title": "Thương hiệu được yêu thích",
+      "description": "Khám phá những cái tên được yêu thích tại Technest.",
+      "ctaLabel": "Xem tất cả",
+      "ctaUrl": "/products",
+      "limit": 12
+    },
+    "feature-banner": {
+      "visible": true,
+      "eyebrow": "Sản phẩm công nghệ",
+      "title": "Một góc làm việc tốt bắt đầu từ công cụ phù hợp.",
+      "description": "Khám phá những phụ kiện giúp không gian của bạn gọn gàng và hiệu quả hơn.",
+      "ctaLabel": "Khám phá ngay",
+      "ctaUrl": "#products",
+      "limit": 4,
+      "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1100&q=85"
+    },
+    "services": {
+      "visible": true,
+      "title": "",
+      "description": "",
+      "limit": 4
+    },
+    "shopping-guide": {
+      "visible": true,
+      "eyebrow": "MUA SẮM DỄ DÀNG HƠN",
+      "title": "Chọn thiết bị phù hợp, không mất thời gian",
+      "description": "",
+      "ctaLabel": "Khám phá sản phẩm",
+      "ctaUrl": "/products",
+      "limit": 4
+    },
+    "bottom-banners": {
+      "visible": true,
+      "title": "",
+      "description": "",
+      "limit": 6
+    },
+    "popular-searches": {
+      "visible": true,
+      "title": "Mọi người cũng tìm kiếm",
+      "description": "",
+      "limit": 8
+    }
+  },
+  "homeSections": {
+    "arrivals": [
+      "18232",
+      "18231",
+      "18230",
+      "18229",
+      "18228",
+      "18227",
+      "18226",
+      "18225"
+    ],
+    "featured": [
+      "18208",
+      "18207",
+      "18206",
+      "18205",
+      "18204",
+      "18203",
+      "18202",
+      "18201"
+    ],
+    "deals": [
+      "77",
+      "74",
+      "72",
+      "70",
+      "67",
+      "65",
+      "62",
+      "60"
+    ]
+  },
+  "admin": {
+    "products": [
+      "18232",
+      "18231",
+      "18230",
+      "18229",
+      "18228",
+      "18227",
+      "18226",
+      "18225",
+      "18224",
+      "18223"
+    ],
+    "brands": [
+      "elgato",
+      "zowie",
+      "xiaomi",
+      "ugreen",
+      "tp-link",
+      "tascam",
+      "shure",
+      "sandisk",
+      "pioneer",
+      "philips"
+    ]
+  },
+  "queryPlan": {
+    "QUERY PLAN": [
+      {
+        "Plan": {
+          "Node Type": "Limit",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 0.28,
+          "Total Cost": 1.6,
+          "Plan Rows": 24,
+          "Plan Width": 16,
+          "Actual Startup Time": 0.091,
+          "Actual Total Time": 0.134,
+          "Actual Rows": 24,
+          "Actual Loops": 1,
+          "Shared Hit Blocks": 23,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Index Only Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Scan Direction": "Forward",
+              "Index Name": "products_status_created_id_idx",
+              "Relation Name": "products",
+              "Alias": "products",
+              "Startup Cost": 0.28,
+              "Total Cost": 275.78,
+              "Plan Rows": 5000,
+              "Plan Width": 16,
+              "Actual Startup Time": 0.089,
+              "Actual Total Time": 0.125,
+              "Actual Rows": 24,
+              "Actual Loops": 1,
+              "Index Cond": "(status = 'ACTIVE'::catalog_status)",
+              "Rows Removed by Index Recheck": 0,
+              "Heap Fetches": 24,
+              "Shared Hit Blocks": 23,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        },
+        "Planning": {
+          "Shared Hit Blocks": 0,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning Time": 0.252,
+        "Triggers": [],
+        "Execution Time": 0.205
+      }
+    ]
+  }
+}

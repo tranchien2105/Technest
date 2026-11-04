@@ -19,12 +19,12 @@ export function useProductLists(products, favoritesState, compareState) {
   const recordVisit = useCallback(
     (url) => {
       const path = new URL(url, "http://technest.local").pathname;
-      const match = path.match(/^\/products\/(\d+)$/);
-      const productId = match?.[1];
-      const product = productId && products.find((item) => String(item.id) === productId);
+      const match = path.match(/^\/products\/([^/]+)$/);
+      const identifier = match?.[1];
+      const product = identifier && products.find((item) => String(item.id) === identifier || item.slug === identifier);
       if (product)
         setViewedIds((current) =>
-          [String(product.id), ...current.filter((id) => String(id) !== String(product.id))].slice(
+          current[0] === String(product.id) ? current : [String(product.id), ...current.filter((id) => String(id) !== String(product.id))].slice(
             0,
             8,
           ),

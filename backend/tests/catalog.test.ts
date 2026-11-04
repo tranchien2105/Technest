@@ -9,7 +9,7 @@ const catalog = {
     items: [{ id: "9007199254740993", price: "90071992547409930", query }],
     pagination: { page: 2, limit: 24, total: 25, totalPages: 2 },
   })),
-  productById: vi.fn(async (id: string) => (id === "1" ? { id, variants: [], images: [] } : null)),
+  productById: vi.fn(async (id: string) => (id === "1" || id === "wireless-keyboard" ? { id: "1", variants: [], images: [] } : null)),
   categoriesList: vi.fn(async () => [{ id: "keyboards", name: "Bàn phím", nameEn: "Keyboards" }]),
   brandsList: vi.fn(async () => [{ id: "logitech", name: "LOGITECH" }]),
 } as unknown as ReturnType<typeof createCatalogService>;
@@ -52,7 +52,7 @@ describe("catalog HTTP API", () => {
       .get("/api/v1/products?minPrice=100&maxPrice=10")
       .expect(400);
     expect(invalidFilter.body.error.code).toBe("VALIDATION_ERROR");
-    await request(app).get("/api/v1/products/not-an-id").expect(400);
+    await request(app).get("/api/v1/products/invalid_slug!").expect(400);
   });
 
   it("returns product details and a consistent not-found response", async () => {
@@ -60,5 +60,11 @@ describe("catalog HTTP API", () => {
     expect(found.body.data).toEqual({ id: "1", variants: [], images: [] });
     const missing = await request(app).get("/api/v1/products/2").expect(404);
     expect(missing.body.error.code).toBe("PRODUCT_NOT_FOUND");
+  });
+  it("accepts product slugs and returns 404 for an unknown slug", async () => {
+    const found = await request(app).get("/api/v1/products/wireless-keyboard").expect(200);
+    expect(found.body.data.id).toBe("1");
+    expect(catalog.productById).toHaveBeenLastCalledWith("wireless-keyboard");
+    await request(app).get("/api/v1/products/missing-keyboard").expect(404);
   });
 });

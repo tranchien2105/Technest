@@ -1,0 +1,223 @@
+{
+  "generatedAt": "2026-11-03T15:26:03.485Z",
+  "base": "http://127.0.0.1:3000/api/v1",
+  "checks": [
+    {
+      "path": "products?limit=10&sort=newest",
+      "status": 200,
+      "pagination": {
+        "page": 1,
+        "limit": 10,
+        "total": 4411,
+        "totalPages": 442
+      },
+      "items": [
+        {
+          "id": "18232",
+          "name": "Apple USB-C Digital AV Multiport Adapter",
+          "slug": "tn-curated-20261102-apple-usb-c-digital-av-multiport-adapter",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18231",
+          "name": "Elgato Stream Deck MK.2",
+          "slug": "tn-curated-20261102-elgato-stream-deck-mk-2",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18230",
+          "name": "Logitech MX Brio",
+          "slug": "tn-curated-20261102-logitech-mx-brio",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18229",
+          "name": "Kingston XS1000 External SSD",
+          "slug": "tn-curated-20261102-kingston-xs1000-external-ssd",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18228",
+          "name": "SanDisk Extreme Portable SSD",
+          "slug": "tn-curated-20261102-sandisk-extreme-portable-ssd",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18227",
+          "name": "Samsung T7 Shield Portable SSD",
+          "slug": "tn-curated-20261102-samsung-t7-shield-portable-ssd",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18226",
+          "name": "TP-Link Deco X50",
+          "slug": "tn-curated-20261102-tp-link-deco-x50",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18225",
+          "name": "TP-Link Archer AX55",
+          "slug": "tn-curated-20261102-tp-link-archer-ax55",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18224",
+          "name": "Baseus Metal Gleam Series Hub",
+          "slug": "tn-curated-20261102-baseus-metal-gleam-series-hub",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18223",
+          "name": "UGREEN Revodok Pro 109",
+          "slug": "tn-curated-20261102-ugreen-revodok-pro-109",
+          "status": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "path": "products?category=mice&limit=12",
+      "status": 200,
+      "pagination": {
+        "page": 1,
+        "limit": 12,
+        "total": 874,
+        "totalPages": 73
+      },
+      "items": [
+        {
+          "id": "18208",
+          "name": "ZOWIE EC2-CW",
+          "slug": "tn-curated-20261102-zowie-ec2-cw",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18207",
+          "name": "HyperX Pulsefire Haste 2 Wireless",
+          "slug": "tn-curated-20261102-hyperx-pulsefire-haste-2-wireless",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18206",
+          "name": "Microsoft Surface Precision Mouse",
+          "slug": "tn-curated-20261102-microsoft-surface-precision-mouse",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18205",
+          "name": "Corsair M75 Air Wireless",
+          "slug": "tn-curated-20261102-corsair-m75-air-wireless",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18204",
+          "name": "ASUS ROG Harpe Ace Aim Lab Edition",
+          "slug": "tn-curated-20261102-asus-rog-harpe-ace-aim-lab-edition",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18203",
+          "name": "SteelSeries Rival 5",
+          "slug": "tn-curated-20261102-steelseries-rival-5",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18202",
+          "name": "Razer Basilisk V3 Pro",
+          "slug": "tn-curated-20261102-razer-basilisk-v3-pro",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18201",
+          "name": "Razer Viper V3 Pro",
+          "slug": "tn-curated-20261102-razer-viper-v3-pro",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18200",
+          "name": "Logitech G Pro X Superlight 2",
+          "slug": "tn-curated-20261102-logitech-g-pro-x-superlight-2",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "18199",
+          "name": "Logitech G502 X Lightspeed",
+          "slug": "tn-curated-20261102-logitech-g502-x-lightspeed",
+          "status": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "path": "brands?paginated=1&limit=10",
+      "status": 200,
+      "pagination": {
+        "page": 1,
+        "limit": 10,
+        "total": 51,
+        "totalPages": 6
+      },
+      "items": [
+        {
+          "id": "elgato",
+          "name": "ELGATO"
+        },
+        {
+          "id": "zowie",
+          "name": "ZOWIE"
+        },
+        {
+          "id": "xiaomi",
+          "name": "XIAOMI"
+        },
+        {
+          "id": "ugreen",
+          "name": "UGREEN"
+        },
+        {
+          "id": "tp-link",
+          "name": "TP-LINK"
+        },
+        {
+          "id": "tascam",
+          "name": "TASCAM"
+        },
+        {
+          "id": "shure",
+          "name": "SHURE"
+        },
+        {
+          "id": "sandisk",
+          "name": "SANDISK"
+        },
+        {
+          "id": "pioneer",
+          "name": "PIONEER"
+        },
+        {
+          "id": "philips",
+          "name": "PHILIPS"
+        }
+      ]
+    },
+    {
+      "path": "products/catalog-epson-creator-compact-111-sandstone-mechanical",
+      "status": 404,
+      "error": "PRODUCT_NOT_FOUND"
+    },
+    {
+      "path": "homepage/config",
+      "status": 200
+    },
+    {
+      "path": "flash-sales",
+      "status": 200
+    }
+  ],
+  "result": "PASS",
+  "assertions": [
+    "Newest10 are curated; active catalog total4411",
+    "Category=mice pagination remains functional",
+    "All51brands remain visible",
+    "Quarantined generated product returns404",
+    "Homepage CMS and FlashSale endpoints200"
+  ]
+}

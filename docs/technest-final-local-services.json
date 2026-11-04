@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-11-04T08:27:39.668Z",
+  "checks": [
+    {
+      "url": "http://localhost:5173/",
+      "status": 200,
+      "expected": 200,
+      "result": "PASS",
+      "requestId": null,
+      "noindex": true
+    },
+    {
+      "url": "http://127.0.0.1:3000/api/v1/health/live",
+      "status": 200,
+      "expected": 200,
+      "result": "PASS",
+      "requestId": "d6e3ecf1-4d2a-4487-8bb7-b3adf9519607"
+    },
+    {
+      "url": "http://127.0.0.1:3000/api/v1/health/ready",
+      "status": 200,
+      "expected": 200,
+      "result": "PASS",
+      "requestId": "cf60886e-cac2-431c-8439-5b43657dc315"
+    },
+    {
+      "url": "http://127.0.0.1:3000/api/v1/admin/products/references?type=brands",
+      "status": 401,
+      "expected": 401,
+      "result": "PASS",
+      "requestId": "a075d361-f8c5-4016-b1f8-22bee03e26e5"
+    },
+    {
+      "url": "http://127.0.0.1:3000/api/v1/not-existing-final-check",
+      "status": 404,
+      "expected": 404,
+      "result": "PASS",
+      "requestId": "c2be083c-f65b-44fc-b33f-db827cfd9ad1"
+    }
+  ]
+}

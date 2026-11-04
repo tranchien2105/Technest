@@ -9,13 +9,18 @@ import {
   productVariants,
   inventories,
 } from "../../database/schema/index.js";
-import type { ListProductsQuery } from "./catalog.schemas.js";
+import type { ListProductsQuery, ListBrandsQuery } from "./catalog.schemas.js";
 import { toPublicStock } from "../inventory/inventory.service.js";
 
 type Database = NodePgDatabase<typeof schema>;
 
 function filters(query: ListProductsQuery) {
-  const conditions = [eq(products.status, "ACTIVE")];
+  const conditions = [
+    eq(products.status, "ACTIVE"),
+    sql`${products.price} > 0`,
+    sql`exists(select 1 from product_images pi where pi.product_id = ${products.id} and pi.url <> '')`,
+    sql`exists(select 1 from product_variants pv where pv.product_id = ${products.id} and pv.status = 'ACTIVE')`,
+  ];
   if (query.q) {
     const term = `%${query.q}%`;
     conditions.push(
@@ -30,9 +35,9 @@ function filters(query: ListProductsQuery) {
   }
   if (query.category)
     conditions.push(
-      sql`${categories.slug} = ${query.category} OR ${categories.parentCategoryId} = (
+      sql`(${categories.slug} = ${query.category} OR ${categories.parentCategoryId} = (
         SELECT parent.id FROM categories AS parent WHERE parent.slug = ${query.category}
-      )`,
+      ))`,
     );
   if (query.brand) conditions.push(eq(brands.slug, query.brand.toLowerCase().replaceAll(" ", "-")));
   if (query.minPrice) conditions.push(gte(products.price, query.minPrice));
@@ -53,7 +58,7 @@ function orderBy(sort: ListProductsQuery["sort"]) {
   if (sort === "newest") return [desc(products.createdAt), desc(products.id)];
   if (sort === "recommended")
     return [asc(products.featuredRank), desc(products.createdAt), asc(products.id)];
-  return [desc(products.createdAt), asc(products.id)];
+  return [desc(products.createdAt), desc(products.id)];
 }
 
 function serializeProduct(row: {
@@ -233,15 +238,16 @@ export function createCatalogService(db: Database) {
     };
   }
 
-  async function productById(id: string) {
+  async function productById(idOrSlug: string) {
     const [row] = await db
       .select(productSelect)
       .from(products)
       .innerJoin(brands, eq(products.brandId, brands.id))
       .innerJoin(categories, eq(products.categoryId, categories.id))
-      .where(and(eq(products.id, BigInt(id)), eq(products.status, "ACTIVE")))
+      .where(and(/^\d+$/.test(idOrSlug) ? eq(products.id, BigInt(idOrSlug)) : eq(products.slug, idOrSlug), eq(products.status, "ACTIVE")))
       .limit(1);
     if (!row) return null;
+    const id = row.id;
     const [images, variants] = await Promise.all([
       db
         .select({
@@ -252,7 +258,7 @@ export function createCatalogService(db: Database) {
           sortOrder: productImages.sortOrder,
         })
         .from(productImages)
-        .where(eq(productImages.productId, BigInt(id)))
+        .where(eq(productImages.productId, id))
         .orderBy(asc(productImages.sortOrder), asc(productImages.id)),
       db
         .select({
@@ -265,7 +271,7 @@ export function createCatalogService(db: Database) {
           status: productVariants.status,
         })
         .from(productVariants)
-        .where(and(eq(productVariants.productId, BigInt(id)), eq(productVariants.status, "ACTIVE")))
+        .where(and(eq(productVariants.productId, id), eq(productVariants.status, "ACTIVE")))
         .orderBy(asc(productVariants.id)),
     ]);
     const inventoryRows = variants.length
@@ -325,14 +331,19 @@ export function createCatalogService(db: Database) {
       }));
   }
 
-  async function brandsList() {
-    return db
-      .select({ id: brands.slug, name: brands.name })
-      .from(brands)
-      .innerJoin(products, eq(products.brandId, brands.id))
-      .where(eq(products.status, "ACTIVE"))
-      .groupBy(brands.id, brands.slug, brands.name)
-      .orderBy(asc(brands.name));
+  async function brandsList(input: Partial<ListBrandsQuery> = {}) {
+    const page = input.page || 1, limit = input.limit || 24;
+    const where = and(
+      sql`exists(select 1 from products p where p.brand_id = ${brands.id} and p.status = 'ACTIVE')`,
+      input.q ? ilike(brands.name, `%${input.q}%`) : undefined,
+      input.ids ? inArray(brands.slug, input.ids.split(",")) : undefined,
+    );
+    const [items, totals] = await Promise.all([
+      db.select({ id: brands.slug, name: brands.name, createdAt: brands.createdAt }).from(brands).where(where).orderBy(desc(brands.createdAt), desc(brands.id)).limit(limit).offset((page - 1) * limit),
+      db.select({ value: count() }).from(brands).where(where),
+    ]);
+    const total = Number(totals[0]?.value || 0);
+    return { items, pagination: { page, limit, total, totalPages: Math.ceil(total / limit) } };
   }
 
   return { productsList, productById, categoriesList, brandsList };

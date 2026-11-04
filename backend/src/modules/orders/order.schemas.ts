@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const positiveId = z.string().regex(/^[1-9]\d{0,18}$/).refine((value) => BigInt(value) <= 9223372036854775807n, "ID exceeds BIGINT range");
-const orderItemsSchema = z.array(z.object({ variantId: positiveId, quantity: z.number().int().min(1).max(100) })).min(1).max(50);
+const orderItemsSchema = z.array(z.object({ variantId: positiveId, quantity: z.number().int().min(1).max(100), flashSaleItemId: positiveId.optional() })).min(1).max(50);
 const addressSchema = z.object({
   fullName: z.string().trim().min(1).max(200),
   phone: z.string().trim().regex(/^\+?[0-9 ()-]{7,30}$/),

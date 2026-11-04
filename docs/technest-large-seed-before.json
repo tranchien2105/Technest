@@ -1,0 +1,37 @@
+{
+  "products": {
+    "count": 5000,
+    "maxId": "10138",
+    "digest": "d266a302f6ff169581c5fd817466e75c"
+  },
+  "brands": {
+    "count": 50,
+    "maxId": "187",
+    "digest": "c1c6f458f0c24779953c2cd6839a5500"
+  },
+  "product_variants": {
+    "count": 10000,
+    "maxId": "20138",
+    "digest": "80c6e4bc2b41ec33e74a1ebc26e28afc"
+  },
+  "product_images": {
+    "count": 15000,
+    "maxId": "29952",
+    "digest": "16c099dd18bfb0533c44ff36eb4bc18e"
+  },
+  "inventories": {
+    "count": 10000,
+    "maxId": "20195",
+    "digest": "8eb91a98b651fbfff79bccf1d40e08b7"
+  },
+  "orders": {
+    "count": 2014,
+    "maxId": "2065",
+    "digest": "98b705e45db590922868e21a6d558c76"
+  },
+  "order_items": {
+    "count": 5019,
+    "maxId": "5067",
+    "digest": "26c4c8bc727715bb3e12512dff6e20ca"
+  }
+}

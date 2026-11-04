@@ -28,6 +28,11 @@ const database = new URL(env.DATABASE_URL);
 if (env.NODE_ENV !== "development" || database.pathname !== "/technest_dev") {
   throw new Error("Large demo seed is restricted to NODE_ENV=development and technest_dev");
 }
+// This legacy load fixture invents real-brand model names/specifications. Keep it
+// opt-in so a routine seed cannot reactivate quarantined storefront merchandise.
+if (!process.argv.includes("--allow-synthetic-fixtures")) {
+  throw new Error("Legacy synthetic catalog is disabled by default. Use db:seed:storefront for curated model fixtures. --allow-synthetic-fixtures is only for an isolated development load-test database.");
+}
 const { db, pool } = createDatabase(env.DATABASE_URL, {
   connectionTimeoutMillis: 10000,
   statement_timeout: 30000,
