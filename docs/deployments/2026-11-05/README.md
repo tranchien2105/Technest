@@ -1,5 +1,7 @@
 # Technest staging UI deployment — 2026-11-05
 
+> **Correction:** The initial checks below covered featured products and missed the separate category/brand campaign shelf. The subsequent user screenshot identified that shelf collapsing when its optional poster was absent. The desktop canvas widening below was also reverted to centered 78% content at desktop widths, following the user’s design clarification. See [the correction report](inset-correction/README.md) for the current implementation and deployed evidence.
+
 Verified website: https://technest-dev.duckdns.org
 
 Application source deployed: `a64c577973509db37917bafeedeb32f164f4f872`.
