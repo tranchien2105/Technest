@@ -1,0 +1,437 @@
+{
+  "site": "https://technest-dev.duckdns.org",
+  "checkedAt": "2026-11-05T08:56:22.010Z",
+  "deployedSourceCommit": "a64c577973509db37917bafeedeb32f164f4f872",
+  "productionAssets": {
+    "css": {
+      "file": "index-IHfQCwCX.css",
+      "sha256": "c81eda3207a8cbc2fcc70571f7da4992b032ab0a4cd42f9e3dc9464b661c9fa3"
+    },
+    "javascript": {
+      "file": "index-WSl-U40w.js",
+      "sha256": "e6932e608cc2a59769eaf949c672694eabaa651656cd4bd2cedef1502d6cb5b3"
+    }
+  },
+  "viewports": [
+    {
+      "viewport": 375,
+      "result": "PASS",
+      "pageWidth": 375,
+      "scrollWidth": 375,
+      "canvasWidth": 343,
+      "productCardWidth": 164.5,
+      "colors": {
+        "accent": "#ff5a00",
+        "font": "\"DM Sans\", Arial, sans-serif"
+      },
+      "checks": [
+        "canvas",
+        "card dimensions",
+        "images/prices/buttons",
+        "carousel controls",
+        "category navigation",
+        "lazy CSS isolation",
+        "assets",
+        "no overflow"
+      ],
+      "consoleErrors": [],
+      "assets": [
+        {
+          "url": "https://technest-dev.duckdns.org/assets/index-IHfQCwCX.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/authClient-BA5BwwIT.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/formatCurrency-BNIM_Zlo.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/index-WSl-U40w.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/formatted-inputs-BpgvgC5v.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductsPage-BMfQosiG.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductsPage-C5K1dz44.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/PageElements-SrkOdSVA.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/tag-DGH7ztw2.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductGrid-4IBMvGk5.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/shopping-bag-Bs3eudh-.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/CurrencyInput-CzzWeAFc.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/circle-check-CeSkxR1_.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/AdminApp-D1sFkdci.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/PasswordInput-Bwscpc5c.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/clock-3-Cyrub2I7.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/rotate-ccw-Cjrx4CB7.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/orderEvents-DU_59Pwy.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ordersClient-CpcMXXiT.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/AdminApp-8r-4TJaz.js",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "viewport": 768,
+      "result": "PASS",
+      "pageWidth": 753,
+      "scrollWidth": 753,
+      "canvasWidth": 713,
+      "productCardWidth": 227.65625,
+      "colors": {
+        "accent": "#ff5a00",
+        "font": "\"DM Sans\", Arial, sans-serif"
+      },
+      "checks": [
+        "canvas",
+        "card dimensions",
+        "images/prices/buttons",
+        "carousel controls",
+        "category navigation",
+        "lazy CSS isolation",
+        "assets",
+        "no overflow"
+      ],
+      "consoleErrors": [],
+      "assets": [
+        {
+          "url": "https://technest-dev.duckdns.org/assets/formatCurrency-BNIM_Zlo.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/authClient-BA5BwwIT.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/index-IHfQCwCX.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/index-WSl-U40w.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductsPage-C5K1dz44.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/formatted-inputs-BpgvgC5v.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/tag-DGH7ztw2.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/PageElements-SrkOdSVA.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductsPage-BMfQosiG.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/CurrencyInput-CzzWeAFc.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductGrid-4IBMvGk5.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/shopping-bag-Bs3eudh-.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/orderEvents-DU_59Pwy.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/clock-3-Cyrub2I7.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/circle-check-CeSkxR1_.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/rotate-ccw-Cjrx4CB7.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/AdminApp-D1sFkdci.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/PasswordInput-Bwscpc5c.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ordersClient-CpcMXXiT.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/AdminApp-8r-4TJaz.js",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "viewport": 1024,
+      "result": "PASS",
+      "pageWidth": 1009,
+      "scrollWidth": 1009,
+      "canvasWidth": 969,
+      "productCardWidth": 231.75,
+      "colors": {
+        "accent": "#ff5a00",
+        "font": "\"DM Sans\", Arial, sans-serif"
+      },
+      "checks": [
+        "canvas",
+        "card dimensions",
+        "images/prices/buttons",
+        "carousel controls",
+        "category navigation",
+        "lazy CSS isolation",
+        "assets",
+        "no overflow"
+      ],
+      "consoleErrors": [],
+      "assets": [
+        {
+          "url": "https://technest-dev.duckdns.org/assets/authClient-BA5BwwIT.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/index-IHfQCwCX.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/formatCurrency-BNIM_Zlo.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/index-WSl-U40w.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductsPage-C5K1dz44.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/tag-DGH7ztw2.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/CurrencyInput-CzzWeAFc.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductsPage-BMfQosiG.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/formatted-inputs-BpgvgC5v.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductGrid-4IBMvGk5.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/PageElements-SrkOdSVA.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/shopping-bag-Bs3eudh-.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/rotate-ccw-Cjrx4CB7.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/clock-3-Cyrub2I7.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/circle-check-CeSkxR1_.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/PasswordInput-Bwscpc5c.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/AdminApp-D1sFkdci.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/orderEvents-DU_59Pwy.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ordersClient-CpcMXXiT.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/AdminApp-8r-4TJaz.js",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "viewport": 1440,
+      "result": "PASS",
+      "pageWidth": 1425,
+      "scrollWidth": 1425,
+      "canvasWidth": 1385,
+      "productCardWidth": 266.1875,
+      "colors": {
+        "accent": "#ff5a00",
+        "font": "\"DM Sans\", Arial, sans-serif"
+      },
+      "checks": [
+        "canvas",
+        "card dimensions",
+        "images/prices/buttons",
+        "carousel controls",
+        "category navigation",
+        "lazy CSS isolation",
+        "assets",
+        "no overflow"
+      ],
+      "consoleErrors": [],
+      "assets": [
+        {
+          "url": "https://technest-dev.duckdns.org/assets/authClient-BA5BwwIT.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/formatCurrency-BNIM_Zlo.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/index-IHfQCwCX.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/index-WSl-U40w.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/formatted-inputs-BpgvgC5v.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/tag-DGH7ztw2.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductsPage-BMfQosiG.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductsPage-C5K1dz44.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/PageElements-SrkOdSVA.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/CurrencyInput-CzzWeAFc.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/shopping-bag-Bs3eudh-.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ProductGrid-4IBMvGk5.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/clock-3-Cyrub2I7.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/orderEvents-DU_59Pwy.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/circle-check-CeSkxR1_.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/ordersClient-CpcMXXiT.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/AdminApp-D1sFkdci.css",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/rotate-ccw-Cjrx4CB7.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/PasswordInput-Bwscpc5c.js",
+          "status": 200
+        },
+        {
+          "url": "https://technest-dev.duckdns.org/assets/AdminApp-8r-4TJaz.js",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}
