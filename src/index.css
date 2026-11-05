@@ -3076,7 +3076,7 @@ img {
 }
 
 .home-content .product-section .home-product-carousel > .product-card {
-  height: 494px;
+  height: auto;
   align-self: stretch;
 }
 

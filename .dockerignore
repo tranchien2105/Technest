@@ -6,3 +6,6 @@
 !/.env.example
 public/images/uploads
 docs
+backups
+.secrets*
+mailpit-auth*.txt
