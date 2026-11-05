@@ -265,6 +265,7 @@ function App() {
     toggleFavorite,
     addToCart,
     authUser: authState.user,
+    onLogout,
     onViewProduct: (product) => navigate(getProductUrl(product)),
     navigate,
     homepageConfig: homepage.config,

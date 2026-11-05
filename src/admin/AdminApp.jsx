@@ -12,7 +12,6 @@ import { useAdminPageSize, useDebouncedValue } from "./useAdminList";
 import { useEffect, useMemo, useState } from "react";
 import { Activity, Boxes, ChevronRight, CircleDollarSign, ClipboardList, LayoutDashboard, Menu, Package, Search, Settings, ShieldAlert, ShoppingBag, Users, Warehouse, X } from "lucide-react";
 import { adminApi } from "../api/adminClient";
-import { logout, clearAuth } from "../api/authClient";
 import AdminLogin from "./AdminLogin";
 import AdminCatalogPanel from "./AdminCatalogPanel";
 import AdminCustomersPanel from "./AdminCustomersPanel";
@@ -95,7 +94,6 @@ export default function AdminApp({ path, authUser, authReady, navigate, onLogout
   if (!["ADMIN", "STAFF"].includes(authUser.role)) return <div className="admin-gate"><ShieldAlert size={30}/><h1>Tài khoản chưa có quyền quản trị</h1><p>Bạn đang đăng nhập bằng {authUser.email}. Phiên này vẫn dùng chung với khu vực tài khoản khách hàng; cần cấp quyền ADMIN cho tài khoản này để mở trang quản trị.</p><button onClick={() => navigate("/")}>Về cửa hàng</button></div>;
 
   const title = sections.find(([href]) => href === path)?.[1] || "Quản trị";
-  const logoutAdmin = async () => { try { await logout(); } finally { clearAuth(); onLogout(); } };
   const runStockAction = async (row, mode) => {
     const input = window.prompt(mode === "inbound" ? "Số lượng nhập thêm:" : "Tồn kho mới (on-hand):");
     if (input === null) return;
@@ -123,7 +121,7 @@ export default function AdminApp({ path, authUser, authReady, navigate, onLogout
       <div className="admin-brand"><span className="admin-brand-mark"><span>T</span><span>N</span></span><strong>Technest</strong><small>ADMIN</small><button className="admin-icon-button admin-sidebar-close" aria-label="Đóng menu" onClick={() => setMobileOpen(false)}><X size={19}/></button></div>
       <span className="admin-nav-label">QUẢN LÝ CỬA HÀNG</span>
       <nav>{sections.filter(([href]) => canAdmin(authUser, scopes[href] || href.split("/")[2])).map(([href, label, Icon]) => <a key={href} href={href} className={path === href ? "is-active" : ""} onClick={() => setMobileOpen(false)}><Icon size={18}/><span>{label}</span>{path === href && <ChevronRight size={15}/>}</a>)}</nav>
-      <div className="admin-sidebar-bottom"><span>Đang đăng nhập</span><strong>{authUser.fullName || authUser.email}</strong><button onClick={logoutAdmin}>Đăng xuất</button><a href="/">← Quay lại cửa hàng</a></div>
+      <div className="admin-sidebar-bottom"><span>Đang đăng nhập</span><strong>{authUser.fullName || authUser.email}</strong><button onClick={onLogout}>Đăng xuất</button><a href="/">← Quay lại cửa hàng</a></div>
     </aside>
     {mobileOpen && <button className="admin-overlay" aria-label="Đóng menu" onClick={() => setMobileOpen(false)}/>}
     <main className="admin-main">
