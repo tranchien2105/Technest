@@ -6600,9 +6600,12 @@ img {
 }
 .home-campaigns {
   display: grid;
-  grid-template-columns: minmax(190px, 0.22fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
   gap: 16px;
+}
+.home-campaigns:has(> .home-campaign-poster:not(.home-campaign-poster-empty)) {
+  grid-template-columns: minmax(190px, 0.22fr) minmax(0, 1fr);
 }
 .home-campaign-poster {
   position: relative;
@@ -6765,7 +6768,8 @@ img {
 }
 .home-campaign-products > .product-card {
   flex: 0 0 calc((100% - 30px) / 4);
-  height: 452px;
+  min-width: min(100%, 180px);
+  height: auto;
 }
 .home-campaign-products:has(> .product-card:only-child) > .product-card {
   flex-basis: calc((100% - 20px) / 3);
@@ -7250,7 +7254,6 @@ img {
 
 @media (max-width: 1100px) {
   .home-campaigns {
-    grid-template-columns: minmax(170px, 0.25fr) minmax(0, 1fr);
     gap: 12px;
   }
   .home-campaign-poster {
@@ -7264,9 +7267,14 @@ img {
     font-size: 11px;
   }
 }
+@media (min-width: 761px) and (max-width: 1100px) {
+  .home-campaigns:has(> .home-campaign-poster:not(.home-campaign-poster-empty)) {
+    grid-template-columns: minmax(170px, 0.25fr) minmax(0, 1fr);
+  }
+}
 @media (max-width: 760px) {
-  .home-campaigns {
-    grid-template-columns: 1fr;
+  .home-campaigns:has(> .home-campaign-poster:not(.home-campaign-poster-empty)) {
+    grid-template-columns: minmax(0, 1fr);
   }
   .home-campaign-poster {
     min-height: 220px;

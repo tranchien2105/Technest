@@ -2367,7 +2367,7 @@ input[type="radio"] {
   }
 }
 
-/* Keep the storefront header full bleed while aligning page content to one canvas. */
+/* Align the header and content; retain generous desktop margins and fluid small screens. */
 .home-content {
   width: min(1500px, calc(100% - 40px));
   min-width: 0;
@@ -2385,6 +2385,16 @@ input[type="radio"] {
 .category-nav {
   width: min(1500px, calc(100% - 40px));
   max-width: 1500px;
+}
+@media (min-width: 1200px) {
+  .home-content,
+  .category-nav {
+    width: min(1500px, 78%);
+  }
+  .site-header,
+  .site-header.is-scrolled {
+    padding-inline: max(11%, calc((100% - 1500px) / 2));
+  }
 }
 @media (max-width: 1000px) {
   .home-promo-stack {

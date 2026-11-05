@@ -15,10 +15,15 @@ const metrics = () =>
   const frame = document.querySelector('.home-content');
   const rail = document.querySelector('#products .home-product-carousel');
   const cards = [...rail.querySelectorAll('.product-card')];
+  const campaign = document.querySelector('.home-campaigns');
+  const shop = campaign.querySelector('.home-campaign-shop');
+  const campaignRail = shop.querySelector('.home-campaign-products');
   return {
     viewport: innerWidth, pageWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth,
     frame: rect(frame), rail: { ...rect(rail), clientWidth:rail.clientWidth, scrollWidth:rail.scrollWidth, display:getComputedStyle(rail).display },
     sections:[...frame.querySelectorAll(':scope > section')].map(el => ({className:el.className,...rect(el)})),
+    campaign:{...rect(campaign),shop:rect(shop),poster:!!campaign.querySelector('.home-campaign-poster'),columns:getComputedStyle(campaign).gridTemplateColumns,cards:[...campaignRail.querySelectorAll('.product-card')].map(el=>({...rect(el),title:rect(el.querySelector('h3')),image:rect(el.querySelector('.product-image-wrap')),price:rect(el.querySelector('.product-price-row strong')),button:rect(el.querySelector('.add-cart-button')),buttonClipped:el.querySelector('.add-cart-button').scrollHeight>el.querySelector('.add-cart-button').clientHeight+1}))},
+    allRails:[...document.querySelectorAll('.home-rail-track,.home-product-carousel')].map(el=>({className:el.className,...rect(el),cards:[...el.querySelectorAll(':scope>.product-card')].map(rect)})),
     headerActions:rect(document.querySelector('.header-actions')),
     cards:cards.map(el => ({...rect(el),title:rect(el.querySelector('h3')),price:rect(el.querySelector('.product-price-row strong')),image:rect(el.querySelector('.product-image-wrap')),button:rect(el.querySelector('.add-cart-button')),buttonClipped:el.querySelector('.add-cart-button').scrollHeight>el.querySelector('.add-cart-button').clientHeight+1})),
     images:[...document.images].filter(el=>el.getBoundingClientRect().width>0 && el.complete && el.currentSrc).map(el=>({src:el.currentSrc,loaded:el.naturalWidth>0})),
@@ -30,15 +35,22 @@ const metrics = () =>
 function verifyLayout(data, width) {
   assert.equal(data.viewport, width);
   assert.ok(data.scrollWidth <= data.pageWidth + 1, `Page overflow at ${width}px`);
-  const expected = Math.min(1500, data.pageWidth - (width <= 760 ? 32 : 40));
+  const expected = width >= 1200 ? Math.min(1500, data.pageWidth * 0.78) : data.pageWidth - (width <= 760 ? 32 : 40);
   assert.ok(
     Math.abs(data.frame.width - expected) < 2,
-    `Canvas must fill available width: ${data.frame.width}/${expected}`,
+    `Centered canvas has unexpected width: ${data.frame.width}/${expected}`,
   );
   assert.ok(data.rail.width <= data.frame.width + 1, "Carousel must stay inside its section");
   assert.equal(data.rail.display, "flex");
   assert.ok(data.cards.length > 0, "Real catalog cards required");
-  for (const card of data.cards) {
+  assert.ok(Math.abs(data.frame.x - (data.pageWidth - data.frame.width) / 2) < 2, "Canvas must be centered");
+  if (!data.campaign.poster)
+    assert.ok(Math.abs(data.campaign.shop.width - data.campaign.width) < 2, "Campaign without a poster must use the whole section");
+  for (const rail of data.allRails) {
+    assert.ok(rail.width <= data.frame.width + 1, `Rail overflow: ${rail.className}`);
+    for (const card of rail.cards) assert.ok(card.width >= 150, `Collapsed card in ${rail.className}: ${card.width}`);
+  }
+  for (const card of [...data.cards, ...data.campaign.cards]) {
     assert.ok(card.width >= 150, `Collapsed product card: ${card.width}px`);
     assert.ok(
       card.title.width >= 110 && card.title.height <= 65,
@@ -75,7 +87,7 @@ try {
   await browser.send("Emulation.setEmulatedMedia", {
     features: [{ name: "prefers-reduced-motion", value: "reduce" }],
   });
-  for (const width of [375, 768, 1024, 1440]) {
+  for (const width of [375, 768, 1024, 1440, 1920]) {
     browser.errors.length = 0;
     browser.consoleErrors.length = 0;
     browser.responses.length = 0;
@@ -101,6 +113,44 @@ try {
     );
     await pause(150);
     await browser.screenshot(`${directory}/${width}-products.png`);
+
+    await browser.evaluate("window.scrollTo({top:scrollY+document.querySelector('.home-campaigns').getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().height-16,behavior:'instant'})");
+    await pause(200);
+    await browser.screenshot(`${directory}/${width}-campaigns.png`);
+    await browser.evaluate("window.scrollTo({top:scrollY+document.querySelector('.home-campaign-products').getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().height-16,behavior:'instant'})");
+    await pause(150);
+    await browser.screenshot(`${directory}/${width}-campaign-products.png`);
+
+    for (const tab of ["mice", "monitors", "accessories", "audio", "keyboards"]) {
+      const index = ["keyboards", "mice", "monitors", "accessories", "audio"].indexOf(tab);
+      await browser.click(`.home-campaign-tabs button:nth-child(${index + 1})`);
+      await browser.wait(`document.querySelector('.home-campaign-tabs button:nth-child(${index + 1})').getAttribute('aria-selected')==='true'`, "campaign category tab");
+      if (await browser.evaluate("!!document.querySelector('.home-campaign-products .product-card')")) verifyLayout(await metrics(), width);
+    }
+    if (await browser.evaluate("document.querySelectorAll('.home-campaign-brands button').length>1")) {
+      await browser.click(".home-campaign-brands button:nth-child(2)");
+      await browser.wait("document.querySelector('.home-campaign-brands button:nth-child(2)').classList.contains('is-active')", "campaign brand filter");
+      verifyLayout(await metrics(), width);
+      await browser.click(".home-campaign-brands button:first-child");
+    }
+    // Exercise banner presence/absence without changing CMS records or the database.
+    await browser.evaluate("(()=>{window.technestLayoutPosters=[...document.querySelectorAll('.home-campaigns>.home-campaign-poster')];window.technestLayoutPosters.forEach(el=>el.remove())})()");
+    verifyLayout(await metrics(), width);
+    await browser.evaluate("(()=>{const poster=document.createElement('div');poster.className='home-campaign-poster';poster.dataset.layoutFixture='true';document.querySelector('.home-campaigns').prepend(poster)})()");
+    const withPoster = await metrics();
+    verifyLayout(withPoster, width);
+    if (width > 760) assert.ok(withPoster.campaign.shop.width < withPoster.campaign.width - 150, "Poster must occupy its own column");
+    await browser.evaluate("document.querySelector('[data-layout-fixture]').classList.add('home-campaign-poster-empty')");
+    const placeholder = await metrics();
+    verifyLayout(placeholder, width);
+    assert.ok(Math.abs(placeholder.campaign.shop.width - placeholder.campaign.width) < 2, "Empty banner placeholder must keep products full width");
+    await browser.evaluate("(()=>{document.querySelector('[data-layout-fixture]').remove();window.technestLayoutPosters.forEach(el=>document.querySelector('.home-campaigns').prepend(el));delete window.technestLayoutPosters})()");
+
+    await browser.click(".home-campaign-shop .home-carousel-controls button:last-child");
+    await browser.wait("document.querySelector('.home-campaign-products').scrollLeft>20", "campaign next control");
+    await pause(400);
+    await browser.click(".home-campaign-shop .home-carousel-controls button:first-child");
+    await browser.wait("document.querySelector('.home-campaign-products').scrollLeft<5", "campaign previous control");
 
     await browser.click("#products .home-carousel-controls button:last-child");
     await browser.wait(
@@ -167,7 +217,11 @@ try {
       assets,
       consoleErrors: [...browser.consoleErrors],
       checks: [
-        "canvas",
+        "centered inset canvas",
+        "all homepage rail widths",
+        "campaign category tabs and brand filter",
+        "campaign carousel controls",
+        "banner present/absent/placeholder layouts",
         "card dimensions",
         "images/prices/buttons",
         "carousel controls",
@@ -182,7 +236,7 @@ try {
       JSON.stringify({ base, checkedAt: new Date().toISOString(), results }, null, 2),
     );
     console.log(
-      `PASS ${base} ${width}px: canvas=${data.frame.width.toFixed(1)} card=${data.cards[0].width.toFixed(1)}; carousel/categories/assets/console OK`,
+      `PASS ${base} ${width}px: canvas=${data.frame.width.toFixed(1)} card=${data.cards[0].width.toFixed(1)} campaign=${data.campaign.cards[0].width.toFixed(1)}; carousel/categories/assets/console OK`,
     );
   }
 } finally {
