@@ -1,5 +1,7 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @import "./styles/tokens.css";
+/* Scan UI source only; Docker excludes docs and deployment backups. */
+@source "./";
 
 :root {
   font-family: "DM Sans", sans-serif;
