@@ -8,6 +8,7 @@ import * as schema from "../../database/schema/index.js";
 import { orderEmailOutbox } from "../../database/schema/email.js";
 import { orderEmailPayloadSchema, type OrderEmailEvent } from "./order-email.types.js";
 import { OrderEmail, orderEmailSubject } from "./templates/order-email.js";
+import { embedOrderEmailImages } from "./order-email.images.js";
 
 type Database = NodePgDatabase<typeof schema>;
 export type OrderEmailRow = typeof orderEmailOutbox.$inferSelect;
@@ -32,7 +33,7 @@ export function createOrderEmailService(env: Env) {
   async function send(row: OrderEmailRow) {
     const event = row.eventType as OrderEmailEvent;
     const parsed = orderEmailPayloadSchema.parse(row.payload);
-    const payload = { ...parsed, items: parsed.items.map(item => ({ ...item, ...(item.imageUrl ? { imageUrl: new URL(item.imageUrl, env.FRONTEND_URL).href } : {}) })) };
+    const { payload, attachments } = await embedOrderEmailImages(parsed, env);
     const html = await render(
       createElement(OrderEmail, {
         event,
@@ -48,6 +49,7 @@ export function createOrderEmailService(env: Env) {
       to: row.recipientEmail,
       subject: orderEmailSubject(event, payload.orderNumber),
       html,
+      attachments,
       messageId: `<${row.eventKey.replaceAll(":", ".")}@technest>`,
       disableFileAccess: true,
       disableUrlAccess: true,
