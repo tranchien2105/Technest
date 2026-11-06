@@ -22,7 +22,8 @@ RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
 COPY --from=backend /build/dist ./dist
 COPY --from=backend /build/src/database/migrations ./dist/database/migrations
 COPY --from=frontend /build/dist ./storefront
-RUN mkdir -p /public/images/uploads && chown -R node:node /public
+RUN apk add --no-cache fontconfig font-dejavu \
+    && mkdir -p /public/images/uploads && chown -R node:node /public
 VOLUME ["/public/images/uploads"]
 USER node
 EXPOSE 3000
