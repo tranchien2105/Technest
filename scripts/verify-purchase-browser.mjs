@@ -69,10 +69,9 @@ try {
   await browser.fill("input[name=email]", fixture.credentials.email);
   await browser.fill("input[name=phone]", "0901234567");
   await browser.fill("input[name=address]", "1 Transaction Fixture Street");
+  await browser.wait("document.querySelector('select[name=city]').options.length===35");
   await browser.fill("select[name=city]", "Hồ Chí Minh");
-  await browser.wait("document.querySelector('select[name=district]').options.length>1");
-  const district = await browser.evaluate("document.querySelector('select[name=district]').options[1].value");
-  await browser.fill("select[name=district]", district);
+  assert.equal(await browser.evaluate("!!document.querySelector('select[name=district]')"), false, "Current addresses do not require a district");
   await browser.wait("document.querySelector('select[name=ward]').options.length>1");
   const ward = await browser.evaluate("document.querySelector('select[name=ward]').options[1].value");
   await browser.fill("select[name=ward]", ward);
@@ -130,8 +129,9 @@ try {
   const stockResponse = await fetch(`${base}/__e2e/stock`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ variantId: fixture.variants[0].id, onHand: 0 }) });
   assert.equal(stockResponse.ok, true, "Stock fault must be successfully injected before testing checkout");
   assert.equal((await state()).stock.find((item) => item.id === fixture.variants[0].id).onHand, 0);
+  await browser.wait("document.querySelector('select[name=city]').options.length===35");
   for (const [selector, value] of [["input[name=name]", "Browser E2E Customer"], ["input[name=email]", fixture.credentials.email], ["input[name=phone]", "0901234567"], ["input[name=address]", "1 Transaction Fixture Street"], ["select[name=city]", "Hồ Chí Minh"]]) await browser.fill(selector, value);
-  await browser.fill("select[name=district]", district); await browser.fill("select[name=ward]", ward);
+  await browser.fill("select[name=ward]", ward);
   await browser.click(".checkout-submit");
   await browser.wait("!!document.querySelector('.checkout-form-layout [role=alert]')", "Stock changed: checkout shows error");
   assert.equal((await state()).orders.length, 1);

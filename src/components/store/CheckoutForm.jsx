@@ -7,41 +7,11 @@ import { shippingFee } from "../../domain/checkout";
 import { addMoney, multiplyMoney } from "../../domain/cart";
 import { accountApi } from "../../api/accountClient";
 import { quotedCheckoutItems } from "../../domain/checkoutQuote";
-const VN_AREAS = {
-  "Hồ Chí Minh": {
-    "Quận 1": ["Bến Nghé", "Bến Thành", "Đa Kao"],
-    "Quận 3": ["Phường 1", "Phường 2", "Phường 3"],
-    "Bình Thạnh": ["Phường 1", "Phường 2", "Phường 25"],
-    "TP. Thủ Đức": ["Thảo Điền", "An Phú", "Hiệp Bình Chánh"],
-  },
-  "Hà Nội": {
-    "Ba Đình": ["Phúc Xá", "Trúc Bạch", "Vĩnh Phúc"],
-    "Hoàn Kiếm": ["Hàng Bạc", "Hàng Bông", "Tràng Tiền"],
-    "Cầu Giấy": ["Dịch Vọng", "Mai Dịch", "Nghĩa Tân"],
-    "Đống Đa": ["Cát Linh", "Láng Hạ", "Ô Chợ Dừa"],
-  },
-  "Đà Nẵng": {
-    "Hải Châu": ["Hải Châu I", "Hải Châu II", "Thạch Thang"],
-    "Thanh Khê": ["An Khê", "Chính Gián", "Vĩnh Trung"],
-    "Sơn Trà": ["An Hải Bắc", "An Hải Đông", "Mân Thái"],
-  },
-  "Cần Thơ": {
-    "Ninh Kiều": ["An Hòa", "An Khánh", "Tân An"],
-    "Bình Thủy": ["An Thới", "Bình Thủy", "Long Hòa"],
-    "Cái Răng": ["Ba Láng", "Hưng Phú", "Lê Bình"],
-  },
-  "Hải Phòng": {
-    "Hồng Bàng": ["Hoàng Văn Thụ", "Minh Khai", "Phan Bội Châu"],
-    "Lê Chân": ["An Biên", "Cát Dài", "Trại Cau"],
-    "Ngô Quyền": ["Cầu Đất", "Đằng Giang", "Lạch Tray"],
-  },
-};
+import VietnamAddressFields from "./VietnamAddressFields";
 
 export default function CheckoutForm({ cart, subtotal, submitOrder, language, authenticated = false, submitting = false, error = "", preview, applyVoucher, invalidatePreview }) {
   const [voucher,setVoucher]=useState(""),[voucherBusy,setVoucherBusy]=useState(false);
   const lang = language === "vi";
-  const [province, setProvince] = useState("");
-  const [district, setDistrict] = useState("");
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [profile, setProfile] = useState(null);
@@ -50,8 +20,6 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
   const submissionLock = useRef(false);
   const [preparingSubmission, setPreparingSubmission] = useState(false);
   const busy = submitting || preparingSubmission;
-  const districts = province ? Object.keys(VN_AREAS[province]) : [];
-  const wards = district ? VN_AREAS[province]?.[district] || [] : [];
   const shipping = preview?.shippingFee ?? shippingFee(subtotal);
   const summaryItems = quotedCheckoutItems(cart, preview);
   useEffect(() => {
@@ -71,10 +39,9 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
     const address = savedAddresses.find((item) => item.id === selectedAddress);
     const form = formRef.current;
     if (!address || !form) return;
-    for (const [field, value] of Object.entries({ name: address.recipientName, phone: address.phone, address: address.addressLine, city: address.city, district: address.district || "", ward: address.ward || "" })) {
+    for (const [field, value] of Object.entries({ name: address.recipientName, phone: address.phone, address: address.addressLine })) {
       const control = form.elements.namedItem(field);
       if (!control) continue;
-      if (control instanceof HTMLSelectElement && value && !Array.from(control.options).some((option) => option.value === value)) control.add(new Option(value, value));
       control.value = value;
       control.dispatchEvent(new Event("change", { bubbles: true }));
     }
@@ -171,8 +138,8 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
               <h2>{tx("Delivery address", "Địa chỉ giao hàng", lang)}</h2>
               <p>
                 {tx(
-                  "Choose your province, district and ward.",
-                  "Chọn tỉnh/thành, quận/huyện và phường/xã.",
+                  "Choose your delivery location anywhere in Vietnam.",
+                  "Chọn địa chỉ giao hàng trên toàn quốc.",
                   lang,
                 )}
               </p>
@@ -193,55 +160,11 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
               />
             </label>
             {authenticated && <label className="checkout-field checkout-field-full"><input type="checkbox" name="saveAddress" /> {tx("Save this address to my account", "Lưu địa chỉ này vào tài khoản", lang)}</label>}
-            <label className="checkout-field">
-              {tx("Province / city", "Tỉnh / thành phố", lang)}
-              <select
-                name="city"
-                value={province}
-                required
-                onChange={(event) => {
-                  setProvince(event.target.value);
-                  setDistrict("");
-                }}
-              >
-                <option value="">
-                  {tx("Select province / city", "Chọn tỉnh / thành phố", lang)}
-                </option>
-                {Object.keys(VN_AREAS).map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="checkout-field">
-              {tx("District", "Quận / huyện", lang)}
-              <select
-                name="district"
-                value={district}
-                required
-                disabled={!province}
-                onChange={(event) => setDistrict(event.target.value)}
-              >
-                <option value="">{tx("Select district", "Chọn quận / huyện", lang)}</option>
-                {districts.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="checkout-field checkout-field-full">
-              {tx("Ward", "Phường / xã", lang)}
-              <select name="ward" required disabled={!district}>
-                <option value="">{tx("Select ward", "Chọn phường / xã", lang)}</option>
-                {wards.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <VietnamAddressFields
+              key={selectedAddress || "new"}
+              address={savedAddresses.find((address) => address.id === selectedAddress)}
+              language={language}
+            />
           </div>
         </section>
         <section className="checkout-panel">

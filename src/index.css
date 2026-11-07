@@ -2034,6 +2034,12 @@ img {
 .checkout-field-full {
   grid-column: 1 / -1;
 }
+.checkout-address-help {
+  margin: -3px 0 0;
+  color: var(--ui-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
 .checkout-field input,
 .checkout-field select {
   width: 100%;
