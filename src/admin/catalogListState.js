@@ -1,5 +1,19 @@
-export const catalogFilters = () => ({ categoryId: "", brandId: "", stock: "", minPrice: "", maxPrice: "", sort: "newest", usage: "", level: "" });
-export const emptyCatalogListState = () => ({ query: "", status: "", page: 1, filters: catalogFilters() });
+export const catalogFilters = () => ({
+  categoryId: "",
+  brandId: "",
+  stock: "",
+  minPrice: "",
+  maxPrice: "",
+  sort: "newest",
+  usage: "",
+  level: "",
+});
+export const emptyCatalogListState = () => ({
+  query: "",
+  status: "",
+  page: 1,
+  filters: catalogFilters(),
+});
 
 export function parseCatalogListState(value) {
   const fallback = emptyCatalogListState();
@@ -8,7 +22,8 @@ export function parseCatalogListState(value) {
   for (const key of Object.keys(filters)) {
     if (typeof value.filters?.[key] === "string") filters[key] = value.filters[key].slice(0, 200);
   }
-  if (!["newest", "oldest", "name", "priceAsc", "priceDesc"].includes(filters.sort)) filters.sort = "newest";
+  if (!["newest", "oldest", "name", "priceAsc", "priceDesc"].includes(filters.sort))
+    filters.sort = "newest";
   if (!["", "in", "low", "out"].includes(filters.stock)) filters.stock = "";
   if (!["", "used", "unused"].includes(filters.usage)) filters.usage = "";
   if (!["", "root", "child"].includes(filters.level)) filters.level = "";
@@ -21,6 +36,9 @@ export function parseCatalogListState(value) {
 }
 
 export function readCatalogListState(kind, storage = globalThis.sessionStorage) {
-  try { return parseCatalogListState(JSON.parse(storage?.getItem(`technest.admin.catalog.${kind}`))); }
-  catch { return emptyCatalogListState(); }
+  try {
+    return parseCatalogListState(JSON.parse(storage?.getItem(`technest.admin.catalog.${kind}`)));
+  } catch {
+    return emptyCatalogListState();
+  }
 }

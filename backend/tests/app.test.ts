@@ -28,7 +28,11 @@ describe("HTTP foundation", () => {
   it("stops advertising readiness during shutdown without probing dependencies", async () => {
     const postgres = vi.fn();
     const redis = vi.fn();
-    const app = createApp({ logger, corsOrigin: "http://localhost:5173", health: { postgres, redis, isReady: () => false } });
+    const app = createApp({
+      logger,
+      corsOrigin: "http://localhost:5173",
+      health: { postgres, redis, isReady: () => false },
+    });
     const response = await request(app).get("/api/v1/health/ready").expect(503);
     expect(response.body.data.status).toBe("not_ready");
     expect(postgres).not.toHaveBeenCalled();
@@ -50,7 +54,10 @@ describe("HTTP foundation", () => {
   });
   it("generates separate request IDs and does not trust a supplied ID", async () => {
     const app = makeApp();
-    const first = await request(app).get("/api/v1/missing").set("X-Request-Id", "client-controlled").expect(404);
+    const first = await request(app)
+      .get("/api/v1/missing")
+      .set("X-Request-Id", "client-controlled")
+      .expect(404);
     const second = await request(app).get("/api/v1/missing").expect(404);
     expect(first.headers["x-request-id"]).not.toBe("client-controlled");
     expect(first.body.requestId).toBe(first.headers["x-request-id"]);

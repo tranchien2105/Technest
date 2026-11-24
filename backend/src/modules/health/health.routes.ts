@@ -8,7 +8,11 @@ export function createHealthRouter(dependencies: HealthDependencies) {
   const readiness = createHealthController(createHealthService(dependencies));
   router.get("/live", (_request, response) => {
     response.setHeader("Cache-Control", "no-store");
-    sendData(response, { status: "ok", timestamp: new Date().toISOString(), uptime: Math.floor(process.uptime()) });
+    sendData(response, {
+      status: "ok",
+      timestamp: new Date().toISOString(),
+      uptime: Math.floor(process.uptime()),
+    });
   });
   router.get("/ready", readiness);
   router.get("/", readiness);

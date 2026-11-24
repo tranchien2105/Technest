@@ -32,13 +32,23 @@ export const listProductsSchema = z
     }
   });
 
-export const productIdSchema = z.object({ id: z.string().min(1).max(220).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/) });
+export const productIdSchema = z.object({
+  id: z
+    .string()
+    .min(1)
+    .max(220)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+});
 
 export type ListProductsQuery = z.infer<typeof listProductsSchema>;
 
 export const listBrandsSchema = z.object({
   q: z.string().trim().max(120).optional(),
-  ids: z.string().max(4000).regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/).optional(),
+  ids: z
+    .string()
+    .max(4000)
+    .regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/)
+    .optional(),
   page,
   limit,
   paginated: z.enum(["0", "1"]).default("0"),

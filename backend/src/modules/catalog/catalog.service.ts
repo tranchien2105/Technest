@@ -244,7 +244,12 @@ export function createCatalogService(db: Database) {
       .from(products)
       .innerJoin(brands, eq(products.brandId, brands.id))
       .innerJoin(categories, eq(products.categoryId, categories.id))
-      .where(and(/^\d+$/.test(idOrSlug) ? eq(products.id, BigInt(idOrSlug)) : eq(products.slug, idOrSlug), eq(products.status, "ACTIVE")))
+      .where(
+        and(
+          /^\d+$/.test(idOrSlug) ? eq(products.id, BigInt(idOrSlug)) : eq(products.slug, idOrSlug),
+          eq(products.status, "ACTIVE"),
+        ),
+      )
       .limit(1);
     if (!row) return null;
     const id = row.id;
@@ -332,14 +337,21 @@ export function createCatalogService(db: Database) {
   }
 
   async function brandsList(input: Partial<ListBrandsQuery> = {}) {
-    const page = input.page || 1, limit = input.limit || 24;
+    const page = input.page || 1,
+      limit = input.limit || 24;
     const where = and(
       sql`exists(select 1 from products p where p.brand_id = ${brands.id} and p.status = 'ACTIVE')`,
       input.q ? ilike(brands.name, `%${input.q}%`) : undefined,
       input.ids ? inArray(brands.slug, input.ids.split(",")) : undefined,
     );
     const [items, totals] = await Promise.all([
-      db.select({ id: brands.slug, name: brands.name, createdAt: brands.createdAt }).from(brands).where(where).orderBy(desc(brands.createdAt), desc(brands.id)).limit(limit).offset((page - 1) * limit),
+      db
+        .select({ id: brands.slug, name: brands.name, createdAt: brands.createdAt })
+        .from(brands)
+        .where(where)
+        .orderBy(desc(brands.createdAt), desc(brands.id))
+        .limit(limit)
+        .offset((page - 1) * limit),
       db.select({ value: count() }).from(brands).where(where),
     ]);
     const total = Number(totals[0]?.value || 0);

@@ -61,7 +61,14 @@ const dateInput = (v) =>
         .slice(0, 16)
     : "";
 const dateText = (v) => (v ? new Date(v).toLocaleString("vi-VN") : "—");
-const placementNames = { HOME_HERO: "Hero Slider chính", HOME_HERO_RIGHT_TOP: "Hero bên phải · Trên", HOME_HERO_RIGHT_BOTTOM: "Hero bên phải · Dưới", HOME_PROMO: "Ưu đãi giữa trang", HOME_BOTTOM: "Banner cuối trang", HOME_SETUP_STUDIO: "Setup Studio · Banner dọc" };
+const placementNames = {
+  HOME_HERO: "Hero Slider chính",
+  HOME_HERO_RIGHT_TOP: "Hero bên phải · Trên",
+  HOME_HERO_RIGHT_BOTTOM: "Hero bên phải · Dưới",
+  HOME_PROMO: "Ưu đãi giữa trang",
+  HOME_BOTTOM: "Banner cuối trang",
+  HOME_SETUP_STUDIO: "Setup Studio · Banner dọc",
+};
 const fresh = (kind) =>
   kind === "banners"
     ? {
@@ -133,17 +140,31 @@ export default function AdminOperationsPanel({ kind, canWrite = true }) {
   }, [kind, page, limit, search, status, type, version]);
   useEffect(() => {
     if (kind !== "banners") return undefined;
-    const locate = (event) => { setType(event.detail?.position || "UNASSIGNED"); setPage(1); };
-    const createBanner = () => { setError(""); setEditor(fresh(kind)); };
+    const locate = (event) => {
+      setType(event.detail?.position || "UNASSIGNED");
+      setPage(1);
+    };
+    const createBanner = () => {
+      setError("");
+      setEditor(fresh(kind));
+    };
     window.addEventListener("technest:banner-location", locate);
     window.addEventListener("technest:banner-create", createBanner);
-    const editBanner = (event) => { if (event.detail?.id) setEditor(event.detail); };
+    const editBanner = (event) => {
+      if (event.detail?.id) setEditor(event.detail);
+    };
     window.addEventListener("technest:banner-edit", editBanner);
-    return () => { window.removeEventListener("technest:banner-location", locate); window.removeEventListener("technest:banner-create", createBanner); window.removeEventListener("technest:banner-edit", editBanner); };
+    return () => {
+      window.removeEventListener("technest:banner-location", locate);
+      window.removeEventListener("technest:banner-create", createBanner);
+      window.removeEventListener("technest:banner-edit", editBanner);
+    };
   }, [kind]);
   useEffect(() => {
     if (!editor) return;
-    const close = (event) => { if (event.key === "Escape" && !busy) setEditor(null); };
+    const close = (event) => {
+      if (event.key === "Escape" && !busy) setEditor(null);
+    };
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
   }, [editor, busy]);
@@ -222,9 +243,17 @@ export default function AdminOperationsPanel({ kind, canWrite = true }) {
         {currency ? (
           <CurrencyInput {...inputProps} value={value} onValueChange={onValueChange} />
         ) : Input ? (
-          <Input {...inputProps} value={value} onChange={(event) => onValueChange(event.target.value)} />
+          <Input
+            {...inputProps}
+            value={value}
+            onChange={(event) => onValueChange(event.target.value)}
+          />
         ) : (
-          <input {...inputProps} value={value} onChange={(event) => onValueChange(event.target.value)} />
+          <input
+            {...inputProps}
+            value={value}
+            onChange={(event) => onValueChange(event.target.value)}
+          />
         )}
       </label>
     );
@@ -342,8 +371,8 @@ export default function AdminOperationsPanel({ kind, canWrite = true }) {
                   <strong>{row.title}</strong>
                   <p>{row.subtitle}</p>
                   <small>
-                    {placementNames[row.position] || "Chưa sử dụng"}{" "}
-                    · Thứ tự {row.sortOrder} · {row.link}
+                    {placementNames[row.position] || "Chưa sử dụng"} · Thứ tự {row.sortOrder} ·{" "}
+                    {row.link}
                   </small>
                   <small>
                     {dateText(row.startsAt)} → {dateText(row.endsAt)} ·{" "}
@@ -351,25 +380,37 @@ export default function AdminOperationsPanel({ kind, canWrite = true }) {
                   </small>
                 </div>
                 <div className="admin-row-actions">
-                  <button onClick={() => window.dispatchEvent(new CustomEvent("technest:banner-location", { detail: { id: row.id, position: row.position } }))}>Xem vị trí</button>
-                  {canWrite && <>
-                    <button onClick={() => edit(row)}>Chỉnh sửa</button>
-                    <button
-                      disabled={busy}
-                      onClick={async () => {
-                        if (!confirm("Xóa banner này?")) return;
-                        try {
-                          await opsRequest(`banners/${row.id}`, { method: "DELETE" });
-                          setVersion((v) => v + 1);
-                          window.dispatchEvent(new Event("technest:banners-changed"));
-                        } catch (e) {
-                          setError(e.message);
-                        }
-                      }}
-                    >
-                      Xóa
-                    </button>
-                  </>}
+                  <button
+                    onClick={() =>
+                      window.dispatchEvent(
+                        new CustomEvent("technest:banner-location", {
+                          detail: { id: row.id, position: row.position },
+                        }),
+                      )
+                    }
+                  >
+                    Xem vị trí
+                  </button>
+                  {canWrite && (
+                    <>
+                      <button onClick={() => edit(row)}>Chỉnh sửa</button>
+                      <button
+                        disabled={busy}
+                        onClick={async () => {
+                          if (!confirm("Xóa banner này?")) return;
+                          try {
+                            await opsRequest(`banners/${row.id}`, { method: "DELETE" });
+                            setVersion((v) => v + 1);
+                            window.dispatchEvent(new Event("technest:banners-changed"));
+                          } catch (e) {
+                            setError(e.message);
+                          }
+                        }}
+                      >
+                        Xóa
+                      </button>
+                    </>
+                  )}
                 </div>
               </>
             ) : kind === "vouchers" ? (
@@ -426,8 +467,16 @@ export default function AdminOperationsPanel({ kind, canWrite = true }) {
                     {row.orderNumber || `Đơn #${row.orderId}`} · {row.recipientEmail}
                   </strong>
                   <p>
-                    {({ORDER_PLACED:"Tạo đơn",ORDER_CONFIRMED:"Xác nhận đơn",ORDER_PROCESSING:"Chuẩn bị hàng",ORDER_SHIPPED:"Giao hàng",ORDER_DELIVERED:"Đã giao",ORDER_CANCELLED:"Hủy đơn"}[row.eventType] || row.eventType)} · {statusNames[row.status]} ·{" "}
-                    {row.attempts} lần thử{row.retryOfId ? ` · Gửi lại từ #${row.retryOfId}` : ""}
+                    {{
+                      ORDER_PLACED: "Tạo đơn",
+                      ORDER_CONFIRMED: "Xác nhận đơn",
+                      ORDER_PROCESSING: "Chuẩn bị hàng",
+                      ORDER_SHIPPED: "Giao hàng",
+                      ORDER_DELIVERED: "Đã giao",
+                      ORDER_CANCELLED: "Hủy đơn",
+                    }[row.eventType] || row.eventType}{" "}
+                    · {statusNames[row.status]} · {row.attempts} lần thử
+                    {row.retryOfId ? ` · Gửi lại từ #${row.retryOfId}` : ""}
                   </p>
                   <small>
                     {dateText(row.createdAt)}

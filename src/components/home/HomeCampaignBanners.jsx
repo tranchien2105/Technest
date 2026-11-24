@@ -46,8 +46,12 @@ export default function HomeCampaignBanners({
   const poster = posters[posterIndex];
 
   useEffect(() => {
-    if (posters.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-    const timer = window.setInterval(() => setActivePoster((index) => (index + 1) % posters.length), 6000);
+    if (posters.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+      return undefined;
+    const timer = window.setInterval(
+      () => setActivePoster((index) => (index + 1) % posters.length),
+      6000,
+    );
     return () => window.clearInterval(timer);
   }, [posters.length]);
 
@@ -63,26 +67,60 @@ export default function HomeCampaignBanners({
           className={`home-campaign-poster ${onSelectPlacement ? "banner-edit-target" : ""} ${selectedPlacement === "HOME_SETUP_STUDIO" ? "is-banner-selected" : ""}`}
           href={onSelectPlacement ? undefined : poster.link}
           data-banner-placement="HOME_SETUP_STUDIO"
-          onClick={onSelectPlacement ? (event) => { event.preventDefault(); onSelectPlacement("HOME_SETUP_STUDIO"); } : undefined}
+          onClick={
+            onSelectPlacement
+              ? (event) => {
+                  event.preventDefault();
+                  onSelectPlacement("HOME_SETUP_STUDIO");
+                }
+              : undefined
+          }
         >
-          {onSelectPlacement && <button className="banner-edit-hitarea" type="button" onClick={() => onSelectPlacement("HOME_SETUP_STUDIO")} aria-label="Chỉnh sửa banner Setup Studio" />}
+          {onSelectPlacement && (
+            <button
+              className="banner-edit-hitarea"
+              type="button"
+              onClick={() => onSelectPlacement("HOME_SETUP_STUDIO")}
+              aria-label="Chỉnh sửa banner Setup Studio"
+            />
+          )}
           <ProductImage key={poster.id} src={poster.imageUrl} alt={poster.title} loading="lazy" />
           <span className="home-campaign-poster-shade" />
-          {previewStatuses.HOME_SETUP_STUDIO?.[posterIndex] && <span className="banner-preview-state">{previewStatuses.HOME_SETUP_STUDIO[posterIndex]}</span>}
+          {previewStatuses.HOME_SETUP_STUDIO?.[posterIndex] && (
+            <span className="banner-preview-state">
+              {previewStatuses.HOME_SETUP_STUDIO[posterIndex]}
+            </span>
+          )}
           <span className="home-campaign-poster-copy">
-            <small><Sparkles size={14} /> TECHNEST SETUP STUDIO</small>
+            <small>
+              <Sparkles size={14} /> TECHNEST SETUP STUDIO
+            </small>
             <strong>{poster.title}</strong>
             {poster.subtitle && <span>{poster.subtitle}</span>}
-            <em>{poster.buttonText || (language === "vi" ? "Khám phá ngay" : "Explore now")} <ArrowRight size={16} /></em>
+            <em>
+              {poster.buttonText || (language === "vi" ? "Khám phá ngay" : "Explore now")}{" "}
+              <ArrowRight size={16} />
+            </em>
           </span>
-          {posters.length > 1 && <span className="home-campaign-poster-count">{posterIndex + 1}/{posters.length}</span>}
+          {posters.length > 1 && (
+            <span className="home-campaign-poster-count">
+              {posterIndex + 1}/{posters.length}
+            </span>
+          )}
         </a>
       ) : onSelectPlacement ? (
-        <button className={`home-campaign-poster home-campaign-poster-empty banner-edit-target ${selectedPlacement === "HOME_SETUP_STUDIO" ? "is-banner-selected" : ""}`} type="button" data-banner-placement="HOME_SETUP_STUDIO" onClick={() => onSelectPlacement("HOME_SETUP_STUDIO")}>
+        <button
+          className={`home-campaign-poster home-campaign-poster-empty banner-edit-target ${selectedPlacement === "HOME_SETUP_STUDIO" ? "is-banner-selected" : ""}`}
+          type="button"
+          data-banner-placement="HOME_SETUP_STUDIO"
+          onClick={() => onSelectPlacement("HOME_SETUP_STUDIO")}
+        >
           <span>+ Chọn banner Setup Studio</span>
         </button>
       ) : posterResult.loading ? (
-        <div className="home-campaign-poster home-campaign-poster-empty" aria-busy="true">Đang tải banner…</div>
+        <div className="home-campaign-poster home-campaign-poster-empty" aria-busy="true">
+          Đang tải banner…
+        </div>
       ) : null}
 
       <div className="home-campaign-shop">
@@ -101,7 +139,10 @@ export default function HomeCampaignBanners({
           ))}
         </div>
 
-        <div className="home-campaign-brands" aria-label={language === "vi" ? "Lọc theo thương hiệu" : "Filter by brand"}>
+        <div
+          className="home-campaign-brands"
+          aria-label={language === "vi" ? "Lọc theo thương hiệu" : "Filter by brand"}
+        >
           <button
             type="button"
             className={activeBrand === "all" ? "is-active" : ""}

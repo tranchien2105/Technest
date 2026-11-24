@@ -2,7 +2,13 @@ import type { RequestHandler } from "express";
 import { sendData } from "../../shared/response.js";
 import type { Env } from "../../config/env.js";
 import type { AuthService, SafeUser } from "./auth.service.js";
-import { AUTH_COOKIE_PATH, CSRF_COOKIE, cookieValue, REFRESH_COOKIE, requireCsrf } from "./auth.http.js";
+import {
+  AUTH_COOKIE_PATH,
+  CSRF_COOKIE,
+  cookieValue,
+  REFRESH_COOKIE,
+  requireCsrf,
+} from "./auth.http.js";
 
 type CookieResponse = Parameters<RequestHandler>[1];
 const refreshCookieOptions = (env: Env) => ({
@@ -45,7 +51,11 @@ export function createAuthController(auth: AuthService, env: Env) {
   return {
     register: (async (_request, response, next) => {
       try {
-        const body = response.locals.validated.body as { email: string; password: string; fullName?: string };
+        const body = response.locals.validated.body as {
+          email: string;
+          password: string;
+          fullName?: string;
+        };
         credentialsResponse(response, env, await auth.register(body), 201);
       } catch (error) {
         next(error);

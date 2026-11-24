@@ -368,7 +368,10 @@ describe.runIf(run)("SEO HTTP with actual PostgreSQL (rollback fixtures)", () =>
     await client.query("insert into inventories(variant_id,on_hand,reserved) values($1,0,0)", [
       variant,
     ]);
-    await client.query("insert into product_images(product_id,variant_id,url,alt_text) values($1,$2,'/images/alternate-keyboard.png','Alternate keyboard')", [productId, variant]);
+    await client.query(
+      "insert into product_images(product_id,variant_id,url,alt_text) values($1,$2,'/images/alternate-keyboard.png','Alternate keyboard')",
+      [productId, variant],
+    );
     const page = await service.page(`/products/${slug}?variant=${variant}&utm_source=test`);
     expect(page.image).toBe("https://shop.example.test/images/alternate-keyboard.png");
     expect(page.content).toContain('alt="Alternate keyboard"');

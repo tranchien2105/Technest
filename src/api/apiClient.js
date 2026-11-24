@@ -53,7 +53,11 @@ export async function apiGet(path, { signal } = {}) {
 export function apiAssetUrl(path) {
   if (!path || !path.startsWith("/images/uploads/")) return path;
   const apiBase = API_BASE_URL || DEFAULT_API_BASE_URL;
-  return new URL(path, new URL(apiBase, typeof location !== "undefined" ? location.origin : "http://localhost:3000").origin).href;
+  return new URL(
+    path,
+    new URL(apiBase, typeof location !== "undefined" ? location.origin : "http://localhost:3000")
+      .origin,
+  ).href;
 }
 
 export function safeCatalogInteger(value) {

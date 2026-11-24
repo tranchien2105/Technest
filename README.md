@@ -12,7 +12,7 @@ Technest is a full-stack electronics and desk-setup store with a customer storef
 | Shopping | Favorites, comparison, recently viewed products, cart persistence and desk-setup builder |
 | Checkout | COD, shipping addresses, server price/stock validation, idempotent order creation, order history and cancellation |
 | Flash Sale | Scheduled campaigns, server-clock countdowns, variant pricing, quotas, per-customer limits and inventory/quota reservations |
-| Account | Registration/login, refresh sessions, profile, addresses, password/session management and notifications |
+| Account | Registration/login, email password recovery, refresh sessions, profile, addresses, password/session management and notifications |
 | Admin | Dashboard, products/variants, categories, brands, inventory, orders, customers, staff/RBAC, vouchers, banners and email operations |
 | Homepage CMS | Draft editing, visual preview and protected publish workflow |
 | SEO | Route-specific HTML metadata/content, canonical URLs, Open Graph/Twitter, JSON-LD, sitemap index, robots policy and redirects |
@@ -126,6 +126,24 @@ RUN_ADMIN_DB_READ_TESTS=1 npm test -- tests/admin.integration.test.ts
 ```
 
 Browser and Lighthouse tools are under `scripts/`; they require Chrome/Chromium and running local audit servers. [Browser checkpoints](docs/technest-browser-mobile-progress.md) and the [SEO audit](docs/technest-local-seo-audit.md) document the fixture setup and actual results.
+
+## Password recovery
+
+Customers can request a reset at `/forgot-password`. Reset emails use the existing SMTP configuration and `FRONTEND_URL`; locally, open Mailpit at <http://localhost:8025> to read the message. Set `FRONTEND_URL` to the trusted public HTTPS storefront origin in production.
+
+Reset links expire after 15 minutes and can be used once. A new request invalidates previous links. The database stores only SHA-256 token hashes; the email link carries the token in its fragment. Successful reset replaces the Argon2 password hash and revokes refresh sessions and existing access tokens. Email requests are limited by IP and normalized email; unknown and blocked accounts receive the same response. SMTP failures are logged without recipients or tokens; users can request a new link if delivery fails. Confirmation-email failure does not undo a successful password change.
+
+Apply migration `0021_password_reset` before running the updated backend. Verify the feature locally:
+
+```sh
+# From backend/, against the local development database:
+RUN_PASSWORD_RESET_DB_TESTS=1 npm test -- tests/password-reset.test.ts tests/password-reset-db.integration.test.ts tests/auth.integration.test.ts
+
+# From the repository root, with FE/BE/PostgreSQL/Redis/Mailpit running:
+node scripts/verify-password-reset-browser.mjs
+```
+
+The browser verifier creates its own temporary account, uses Mailpit, and removes its account and captured test messages afterward. Set `CHROME_PATH` and `LD_LIBRARY_PATH` if needed by the local Chromium installation.
 
 ## Build and deployment
 

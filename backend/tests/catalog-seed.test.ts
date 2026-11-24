@@ -32,7 +32,10 @@ describe("development catalog seed", () => {
 
   it("keeps product slugs unique and seed fields usable", () => {
     const slugs = products.map((product) =>
-      product.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+      product.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, ""),
     );
 
     expect(new Set(slugs).size).toBe(products.length);

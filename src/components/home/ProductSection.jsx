@@ -150,7 +150,11 @@ export default function ProductSection({
               aria-label={language === "vi" ? "Một số sản phẩm đang giảm giá" : "Selected deals"}
             >
               {discountedProducts.slice(0, 3).map((product) => (
-                <span className="home-promo-product" key={`promo-${product.id}`} title={product.name}>
+                <span
+                  className="home-promo-product"
+                  key={`promo-${product.id}`}
+                  title={product.name}
+                >
                   <span>{product.name}</span>
                   <strong>-{discountPercent(product)}%</strong>
                 </span>

@@ -6,7 +6,11 @@ const database = new URL(env.DATABASE_URL);
 if (env.NODE_ENV !== "development" || database.pathname !== "/technest_dev") {
   throw new Error("Data-quality checker is restricted to development database technest_dev");
 }
-const { pool } = createDatabase(env.DATABASE_URL, { connectionTimeoutMillis: 10000, statement_timeout: 30000, query_timeout: 32000 });
+const { pool } = createDatabase(env.DATABASE_URL, {
+  connectionTimeoutMillis: 10000,
+  statement_timeout: 30000,
+  query_timeout: 32000,
+});
 
 try {
   if (process.argv.includes("--repair")) {
@@ -57,11 +61,36 @@ try {
   );
   const counts = metrics.rows[0] as Record<string, number>;
   const checks = violations.rows[0] as Record<string, number>;
-  const targets = { categories: 60, brands: 50, active_brands: 50, products: 5000, variants: 10000, images: 15000, customers: 100, orders: 2000, order_items: 5000, addresses: 20, order_status_history: 20, inventory_movements: 20, inventory_reservations: 20 };
-  const belowTarget = Object.fromEntries(Object.entries(targets).filter(([key, minimum]) => counts[key]! < minimum).map(([key, minimum]) => [key, { actual: counts[key], minimum }]));
-  const report = { database: database.pathname.slice(1), counts, targets, belowTarget, violations: checks };
+  const targets = {
+    categories: 60,
+    brands: 50,
+    active_brands: 50,
+    products: 5000,
+    variants: 10000,
+    images: 15000,
+    customers: 100,
+    orders: 2000,
+    order_items: 5000,
+    addresses: 20,
+    order_status_history: 20,
+    inventory_movements: 20,
+    inventory_reservations: 20,
+  };
+  const belowTarget = Object.fromEntries(
+    Object.entries(targets)
+      .filter(([key, minimum]) => counts[key]! < minimum)
+      .map(([key, minimum]) => [key, { actual: counts[key], minimum }]),
+  );
+  const report = {
+    database: database.pathname.slice(1),
+    counts,
+    targets,
+    belowTarget,
+    violations: checks,
+  };
   console.log(JSON.stringify(report, null, 2));
-  if (Object.values(checks).some((count) => count > 0) || Object.keys(belowTarget).length) process.exitCode = 1;
+  if (Object.values(checks).some((count) => count > 0) || Object.keys(belowTarget).length)
+    process.exitCode = 1;
 } catch (error) {
   console.error(error instanceof Error ? error.message : "Data-quality check failed");
   process.exitCode = 1;

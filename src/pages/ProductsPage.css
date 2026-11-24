@@ -1,8 +1,7 @@
 .catalog-page .catalog-hero {
   min-height: 190px;
   background:
-    radial-gradient(circle at 92% 12%, rgb(255 94 0 / 8%), transparent 28%),
-    var(--ui-paper);
+    radial-gradient(circle at 92% 12%, rgb(255 94 0 / 8%), transparent 28%), var(--ui-paper);
 }
 
 .catalog-page-category .catalog-hero-copy h1 {
@@ -11,7 +10,9 @@
 
 .catalog-page .store-filters {
   display: grid;
-  grid-template-columns: minmax(175px, 1.25fr) minmax(170px, 1.1fr) repeat(2, minmax(130px, 0.8fr)) minmax(175px, 1fr) auto;
+  grid-template-columns:
+    minmax(175px, 1.25fr) minmax(170px, 1.1fr) repeat(2, minmax(130px, 0.8fr))
+    minmax(175px, 1fr) auto;
   align-items: end;
   gap: 12px;
   padding: 16px;
@@ -94,7 +95,10 @@
   background: #fff;
   color: var(--ui-ink);
   font-size: 13px;
-  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
 }
 
 .catalog-pagination-controls button:hover:not(:disabled):not([aria-current="page"]) {

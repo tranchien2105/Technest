@@ -23,7 +23,10 @@ export function createCatalogController(service: CatalogService) {
   const brands: RequestHandler = async (_request, response) => {
     const query = response.locals.validated.query as ListBrandsQuery;
     const result = await service.brandsList(query);
-    sendData(response, query.paginated === "1" ? result : Array.isArray(result) ? result : result.items);
+    sendData(
+      response,
+      query.paginated === "1" ? result : Array.isArray(result) ? result : result.items,
+    );
   };
   return { list, detail, categories, brands };
 }

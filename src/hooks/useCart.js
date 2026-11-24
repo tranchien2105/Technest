@@ -11,6 +11,7 @@ export function useCart() {
     addItem: (product, quantity = 1) =>
       setCart((current) => addCartItem(current, product, quantity)),
     changeQuantity: (id, delta) => setCart((current) => changeCartQuantity(current, id, delta)),
-    removeFromCart: (id) => setCart((current) => current.filter((item) => String(item.id) !== String(id))),
+    removeFromCart: (id) =>
+      setCart((current) => current.filter((item) => String(item.id) !== String(id))),
   };
 }

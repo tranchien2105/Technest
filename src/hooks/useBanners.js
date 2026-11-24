@@ -12,7 +12,8 @@ export function useBanners(position, { enabled = true } = {}) {
     }
     apiGet(`/banners?position=${encodeURIComponent(position)}`, { signal: controller.signal })
       .then((items) => {
-        if (active) setState({ items: Array.isArray(items) ? items : [], loading: false, error: "" });
+        if (active)
+          setState({ items: Array.isArray(items) ? items : [], loading: false, error: "" });
       })
       .catch((error) => {
         if (active && error?.name !== "AbortError") {

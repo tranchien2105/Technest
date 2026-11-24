@@ -25,19 +25,35 @@ for (const snapshot of snapshots) {
     fullName: province.FullName,
     ...(snapshot.mode === "current"
       ? { wards: province.Wards.map(area) }
-      : { districts: province.District.map((district) => ({ ...area(district), wards: (district.Ward || []).map(area) })) }),
+      : {
+          districts: province.District.map((district) => ({
+            ...area(district),
+            wards: (district.Ward || []).map(area),
+          })),
+        }),
   }));
   const districts = data.flatMap((province) => province.districts || []);
-  const wards = data.flatMap((province) => province.wards || province.districts.flatMap((district) => district.wards));
-  if (data.length !== snapshot.provinces || districts.length !== snapshot.districts || wards.length !== snapshot.wards) {
+  const wards = data.flatMap(
+    (province) => province.wards || province.districts.flatMap((district) => district.wards),
+  );
+  if (
+    data.length !== snapshot.provinces ||
+    districts.length !== snapshot.districts ||
+    wards.length !== snapshot.wards
+  ) {
     throw new Error(`Unexpected administrative unit counts for ${snapshot.mode}`);
   }
-  const licenseResponse = inputDirectory ? null : await fetch(`${repository}/${snapshot.version}/LICENSE`);
-  if (licenseResponse && !licenseResponse.ok) throw new Error(`License download failed: ${licenseResponse.status}`);
+  const licenseResponse = inputDirectory
+    ? null
+    : await fetch(`${repository}/${snapshot.version}/LICENSE`);
+  if (licenseResponse && !licenseResponse.ok)
+    throw new Error(`License download failed: ${licenseResponse.status}`);
   const license = inputDirectory
     ? await readFile(`${inputDirectory}/technest-vn-license.txt`, "utf8")
     : await licenseResponse.text();
   await writeFile(new URL(`${snapshot.mode}.json`, destination), `${JSON.stringify(data)}\n`);
   await writeFile(new URL("LICENSE", destination), license);
-  console.log(`${snapshot.mode}: ${data.length} provinces, ${districts.length} districts, ${wards.length} wards (${snapshot.version})`);
+  console.log(
+    `${snapshot.mode}: ${data.length} provinces, ${districts.length} districts, ${wards.length} wards (${snapshot.version})`,
+  );
 }

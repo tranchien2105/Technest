@@ -1,12 +1,4 @@
-import {
-  bigint,
-  text,
-  index,
-  pgEnum,
-  pgTable,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { bigint, text, index, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const userRole = pgEnum("user_role", ["CUSTOMER", "ADMIN", "STAFF"]);
 export const userStatus = pgEnum("user_status", ["ACTIVE", "BLOCKED"]);
@@ -14,6 +6,7 @@ export const userStatus = pgEnum("user_status", ["ACTIVE", "BLOCKED"]);
 export const users = pgTable("users", {
   id: bigint("id", { mode: "number" }).generatedAlwaysAsIdentity().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),
+  passwordResetAt: timestamp("password_reset_at", { withTimezone: true }),
   passwordHash: varchar("password_hash", { length: 255 }).notNull(),
   fullName: varchar("full_name", { length: 200 }),
   phone: varchar("phone", { length: 30 }),

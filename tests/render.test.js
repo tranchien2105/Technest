@@ -84,6 +84,8 @@ test("all store routes render with populated, empty and malformed persisted data
       "/login",
       "/register",
       "/forgot-password",
+      "/reset-password",
+      "/reset-password#token=" + "a".repeat(43),
       "/account",
       "/account/orders",
       "/account/orders/TN-test",
@@ -137,8 +139,12 @@ test("all store routes render with populated, empty and malformed persisted data
     );
     // Server-owned orders must not appear merely because browser data was passed in.
     assert.match(orderDetail, /account-order-skeleton/);
-    const { default: OrderProgress } = await server.ssrLoadModule("/src/components/account/OrderProgress.jsx");
-    const progress = renderToStaticMarkup(createElement(OrderProgress, { order: { ...order, status: "PENDING" }, language: "vi" }));
+    const { default: OrderProgress } = await server.ssrLoadModule(
+      "/src/components/account/OrderProgress.jsx",
+    );
+    const progress = renderToStaticMarkup(
+      createElement(OrderProgress, { order: { ...order, status: "PENDING" }, language: "vi" }),
+    );
     assert.match(progress, /order-timeline/);
     assert.match(progress, /Trạng thái đơn hàng được cập nhật từ Technest/);
   } finally {
@@ -156,25 +162,31 @@ test("header shows the authenticated customer's name and status indicator", asyn
   });
   try {
     const { default: Header } = await server.ssrLoadModule("/src/components/layout/Header.jsx");
-    const { NotificationsContext } = await server.ssrLoadModule("/src/hooks/notificationsContext.js");
+    const { NotificationsContext } = await server.ssrLoadModule(
+      "/src/hooks/notificationsContext.js",
+    );
     const { content } = await server.ssrLoadModule("/src/data/products.js");
     const noop = () => {};
     const markup = renderToStaticMarkup(
-      createElement(NotificationsContext.Provider, { value: { unreadCount: 4, refreshUnreadCount: noop, revision: 0 } }, createElement(Header, {
-        language: "vi",
-        setLanguage: noop,
-        search: "",
-        setSearch: noop,
-        searchOpen: false,
-        setSearchOpen: noop,
-        favorites: [],
-        cartCount: 0,
-        mobileMenu: false,
-        setMobileMenu: noop,
-        t: content.vi,
-        navigate: noop,
-        authUser: { fullName: "Test Customer", email: "test@example.com" },
-      })),
+      createElement(
+        NotificationsContext.Provider,
+        { value: { unreadCount: 4, refreshUnreadCount: noop, revision: 0 } },
+        createElement(Header, {
+          language: "vi",
+          setLanguage: noop,
+          search: "",
+          setSearch: noop,
+          searchOpen: false,
+          setSearchOpen: noop,
+          favorites: [],
+          cartCount: 0,
+          mobileMenu: false,
+          setMobileMenu: noop,
+          t: content.vi,
+          navigate: noop,
+          authUser: { fullName: "Test Customer", email: "test@example.com" },
+        }),
+      ),
     );
     assert.match(markup, /Test Customer/);
     assert.match(markup, /account-signed-in-dot/);

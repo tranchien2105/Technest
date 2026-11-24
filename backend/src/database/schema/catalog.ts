@@ -16,12 +16,16 @@ import { categories } from "./categories.js";
 
 export const catalogStatus = pgEnum("catalog_status", ["ACTIVE", "INACTIVE", "ARCHIVED"]);
 
-export const brands = pgTable("brands", {
-  id: bigint("id", { mode: "bigint" }).generatedAlwaysAsIdentity().primaryKey(),
-  name: varchar("name", { length: 120 }).notNull().unique(),
-  slug: varchar("slug", { length: 140 }).notNull().unique(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-}, (table) => [index("brands_created_id_idx").on(table.createdAt.desc(), table.id.desc())]);
+export const brands = pgTable(
+  "brands",
+  {
+    id: bigint("id", { mode: "bigint" }).generatedAlwaysAsIdentity().primaryKey(),
+    name: varchar("name", { length: 120 }).notNull().unique(),
+    slug: varchar("slug", { length: 140 }).notNull().unique(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("brands_created_id_idx").on(table.createdAt.desc(), table.id.desc())],
+);
 
 export const products = pgTable(
   "products",
@@ -53,7 +57,11 @@ export const products = pgTable(
     index("products_category_status_idx").on(table.categoryId, table.status),
     index("products_brand_status_idx").on(table.brandId, table.status),
     index("products_created_at_idx").on(table.createdAt),
-    index("products_status_created_id_idx").on(table.status, table.createdAt.desc(), table.id.desc()),
+    index("products_status_created_id_idx").on(
+      table.status,
+      table.createdAt.desc(),
+      table.id.desc(),
+    ),
     index("products_featured_idx").on(table.featuredRank),
     index("products_trending_idx").on(table.trendingRank),
   ],

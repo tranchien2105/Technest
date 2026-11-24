@@ -21,13 +21,17 @@ export function useProductLists(products, favoritesState, compareState) {
       const path = new URL(url, "http://technest.local").pathname;
       const match = path.match(/^\/products\/([^/]+)$/);
       const identifier = match?.[1];
-      const product = identifier && products.find((item) => String(item.id) === identifier || item.slug === identifier);
+      const product =
+        identifier &&
+        products.find((item) => String(item.id) === identifier || item.slug === identifier);
       if (product)
         setViewedIds((current) =>
-          current[0] === String(product.id) ? current : [String(product.id), ...current.filter((id) => String(id) !== String(product.id))].slice(
-            0,
-            8,
-          ),
+          current[0] === String(product.id)
+            ? current
+            : [
+                String(product.id),
+                ...current.filter((id) => String(id) !== String(product.id)),
+              ].slice(0, 8),
         );
     },
     [products, setViewedIds],

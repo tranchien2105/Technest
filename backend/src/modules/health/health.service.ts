@@ -25,7 +25,12 @@ async function probe(check: () => Promise<unknown>) {
 export function createHealthService(dependencies: HealthDependencies) {
   return async () => {
     if (dependencies.isReady?.() === false) {
-      return { status: "not_ready" as const, timestamp: new Date().toISOString(), uptime: Math.floor(process.uptime()), dependencies: {} };
+      return {
+        status: "not_ready" as const,
+        timestamp: new Date().toISOString(),
+        uptime: Math.floor(process.uptime()),
+        dependencies: {},
+      };
     }
     const [postgres, redis] = await Promise.all([
       probe(dependencies.postgres),
@@ -33,7 +38,11 @@ export function createHealthService(dependencies: HealthDependencies) {
     ]);
     return {
       status:
-        dependencies.isReady?.() === false ? ("not_ready" as const) : postgres.status === "up" && redis.status === "up" ? ("ok" as const) : ("degraded" as const),
+        dependencies.isReady?.() === false
+          ? ("not_ready" as const)
+          : postgres.status === "up" && redis.status === "up"
+            ? ("ok" as const)
+            : ("degraded" as const),
       timestamp: new Date().toISOString(),
       uptime: Math.floor(process.uptime()),
       dependencies: { postgres, redis },

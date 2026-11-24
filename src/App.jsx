@@ -1,4 +1,4 @@
-import {useSeo} from "./hooks/useSeo";
+import { useSeo } from "./hooks/useSeo";
 import { productUrl as getProductUrl } from "./routing/productUrl";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Check, ShoppingCart, X } from "lucide-react";
@@ -53,7 +53,11 @@ function App() {
     [navigateRoute],
   );
   const catalog = useCatalog({
-    homeFeaturedSort: homepage.config?.sections?.featured?.sort && homepage.config.sections.featured.sort !== "recommended" ? homepage.config.sections.featured.sort : "newest",
+    homeFeaturedSort:
+      homepage.config?.sections?.featured?.sort &&
+      homepage.config.sections.featured.sort !== "recommended"
+        ? homepage.config.sections.featured.sort
+        : "newest",
     homeArrivalSort: homepage.config?.sections?.["new-arrivals"]?.sort || "newest",
     // The Admin visual preview must load the same catalog as the real Homepage.
     route: path.startsWith("/admin") ? "/" : route,
@@ -102,14 +106,25 @@ function App() {
               ? {
                   variantId: variant.id,
                   sku: variant.sku,
-                  price: item.flashSaleItemId ? item.flashSalePrice : variant.price ?? currentProduct.price,
-                  oldPrice: item.flashSaleItemId ? item.oldPrice : variant.compareAtPrice ?? currentProduct.oldPrice,
-                  availableQuantity: item.flashSaleItemId ? Math.min(item.flashSaleAvailableQuantity ?? item.availableQuantity, variant.availableQuantity) : variant.availableQuantity,
+                  price: item.flashSaleItemId
+                    ? item.flashSalePrice
+                    : (variant.price ?? currentProduct.price),
+                  oldPrice: item.flashSaleItemId
+                    ? item.oldPrice
+                    : (variant.compareAtPrice ?? currentProduct.oldPrice),
+                  availableQuantity: item.flashSaleItemId
+                    ? Math.min(
+                        item.flashSaleAvailableQuantity ?? item.availableQuantity,
+                        variant.availableQuantity,
+                      )
+                    : variant.availableQuantity,
                   inStock: variant.inStock,
                   stockStatus: variant.stockStatus,
                 }
               : {}),
-            id: item.flashSaleItemId ? `${String(variant?.id || currentProduct.id)}:flash:${item.flashSaleItemId}` : String(variant?.id || currentProduct.id),
+            id: item.flashSaleItemId
+              ? `${String(variant?.id || currentProduct.id)}:flash:${item.flashSaleItemId}`
+              : String(variant?.id || currentProduct.id),
             productId: String(currentProduct.id),
             quantity: item.quantity,
           },
@@ -183,9 +198,18 @@ function App() {
           ...product,
           variantId: variant.id,
           sku: variant.sku,
-          price: product.flashSaleItemId ? product.flashSalePrice : variant.price ?? product.price,
-          oldPrice: product.flashSaleItemId ? product.oldPrice : variant.compareAtPrice ?? product.oldPrice,
-          availableQuantity: product.flashSaleItemId ? Math.min(product.flashSaleAvailableQuantity ?? variant.availableQuantity, variant.availableQuantity) : variant.availableQuantity,
+          price: product.flashSaleItemId
+            ? product.flashSalePrice
+            : (variant.price ?? product.price),
+          oldPrice: product.flashSaleItemId
+            ? product.oldPrice
+            : (variant.compareAtPrice ?? product.oldPrice),
+          availableQuantity: product.flashSaleItemId
+            ? Math.min(
+                product.flashSaleAvailableQuantity ?? variant.availableQuantity,
+                variant.availableQuantity,
+              )
+            : variant.availableQuantity,
           inStock: variant.inStock,
           stockStatus: variant.stockStatus,
         }
@@ -291,7 +315,15 @@ function App() {
   if (path.startsWith("/admin")) {
     return (
       <NotificationsProvider user={authState.user}>
-        <Suspense fallback={<div className="route-loading-state admin-route-loading" role="status"><span /><span /><span /></div>}>
+        <Suspense
+          fallback={
+            <div className="route-loading-state admin-route-loading" role="status">
+              <span />
+              <span />
+              <span />
+            </div>
+          }
+        >
           <AdminApp
             path={path}
             authUser={authState.user}
@@ -307,68 +339,72 @@ function App() {
   }
   return (
     <NotificationsProvider user={authState.user}>
-    <main className="technest">
-      <HomePage
-        {...props}
-        showHome={path === "/"}
-        pageContent={path !== "/" ? <StoreRoutes {...pageProps} /> : null}
-      />
-      {toast && (
-        <div className="toast-message" role="status" aria-live="polite">
-          <span className="toast-icon">
-            <Check size={19} />
-          </span>
-          <span className="toast-copy">{toast.message}</span>
-          {toast.action && (
-            <button className="toast-action" type="button" onClick={() => navigate("/cart")}>
-              <ShoppingCart size={16} /> {toast.action}
+      <main className="technest">
+        <HomePage
+          {...props}
+          showHome={path === "/"}
+          pageContent={path !== "/" ? <StoreRoutes {...pageProps} /> : null}
+        />
+        {toast && (
+          <div className="toast-message" role="status" aria-live="polite">
+            <span className="toast-icon">
+              <Check size={19} />
+            </span>
+            <span className="toast-copy">{toast.message}</span>
+            {toast.action && (
+              <button className="toast-action" type="button" onClick={() => navigate("/cart")}>
+                <ShoppingCart size={16} /> {toast.action}
+              </button>
+            )}
+            <button
+              className="toast-close"
+              type="button"
+              aria-label={language === "vi" ? "Đóng thông báo" : "Dismiss notification"}
+              onClick={() => {
+                dismissToast();
+              }}
+            >
+              <X size={17} />
             </button>
-          )}
-          <button
-            className="toast-close"
-            type="button"
-            aria-label={language === "vi" ? "Đóng thông báo" : "Dismiss notification"}
-            onClick={() => {
-              dismissToast();
-            }}
-          >
-            <X size={17} />
-          </button>
-        </div>
-      )}
-      <CartDrawer
-        drawer={drawer}
-        setDrawer={setDrawer}
-        t={t}
-        language={language}
-        cart={cart}
-        cartStockReady={cartStockReady}
-        subtotal={subtotal}
-        favoriteProducts={favoriteProducts}
-        changeQuantity={changeQuantity}
-        removeFromCart={removeFromCart}
-        toggleFavorite={toggleFavorite}
-        addToCart={addToCart}
-        notify={notify}
-        navigate={navigate}
-      />
-      {compareIds.length > 0 && path !== "/compare" && (
-        <div className="compare-floating-bar">
-          <span>
-            {language === "vi"
-              ? `Đang chọn ${compareIds.length}/3 sản phẩm`
-              : `Comparing ${compareIds.length}/3 products`}
-          </span>
-          <button type="button" className="primary-button" onClick={() => navigate("/compare")}>
-            {language === "vi" ? "So sánh ngay" : "Compare now"}
-          </button>
-          <button type="button" className="compare-clear-button" onClick={() => setCompareIds([])}>
-            {language === "vi" ? "Xóa" : "Clear"}
-          </button>
-        </div>
-      )}
-      <FloatingActions language={language} />
-    </main>
+          </div>
+        )}
+        <CartDrawer
+          drawer={drawer}
+          setDrawer={setDrawer}
+          t={t}
+          language={language}
+          cart={cart}
+          cartStockReady={cartStockReady}
+          subtotal={subtotal}
+          favoriteProducts={favoriteProducts}
+          changeQuantity={changeQuantity}
+          removeFromCart={removeFromCart}
+          toggleFavorite={toggleFavorite}
+          addToCart={addToCart}
+          notify={notify}
+          navigate={navigate}
+        />
+        {compareIds.length > 0 && path !== "/compare" && (
+          <div className="compare-floating-bar">
+            <span>
+              {language === "vi"
+                ? `Đang chọn ${compareIds.length}/3 sản phẩm`
+                : `Comparing ${compareIds.length}/3 products`}
+            </span>
+            <button type="button" className="primary-button" onClick={() => navigate("/compare")}>
+              {language === "vi" ? "So sánh ngay" : "Compare now"}
+            </button>
+            <button
+              type="button"
+              className="compare-clear-button"
+              onClick={() => setCompareIds([])}
+            >
+              {language === "vi" ? "Xóa" : "Clear"}
+            </button>
+          </div>
+        )}
+        <FloatingActions language={language} />
+      </main>
     </NotificationsProvider>
   );
 }

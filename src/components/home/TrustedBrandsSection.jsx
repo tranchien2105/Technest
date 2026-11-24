@@ -3,8 +3,6 @@ import { apiGet } from "../../api/apiClient";
 import { selectHomepageBrands } from "../../domain/homepageSelection";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
-
-
 export default function TrustedBrandsSection({ t, language, cms, brands = [] }) {
   const vi = language === "vi";
   const ids = (cms?.brandSlugs || []).join(",");
@@ -12,7 +10,9 @@ export default function TrustedBrandsSection({ t, language, cms, brands = [] }) 
   useEffect(() => {
     if (!ids) return undefined;
     const controller = new AbortController();
-    apiGet(`/brands?ids=${encodeURIComponent(ids)}&limit=24`, { signal: controller.signal }).then((items) => setManual({ key: ids, items })).catch(() => {});
+    apiGet(`/brands?ids=${encodeURIComponent(ids)}&limit=24`, { signal: controller.signal })
+      .then((items) => setManual({ key: ids, items }))
+      .catch(() => {});
     return () => controller.abort();
   }, [ids]);
   const source = ids ? (manual.key === ids ? manual.items : []) : brands;
@@ -23,12 +23,15 @@ export default function TrustedBrandsSection({ t, language, cms, brands = [] }) 
     <section className="trusted-brands unified-section" aria-labelledby="trusted-brands-title">
       <div className="trusted-brands-heading">
         <div>
-          <span className="section-kicker">{cms?.eyebrow ?? (vi ? "THƯƠNG HIỆU CÔNG NGHỆ" : "TECH BRANDS")}</span>
+          <span className="section-kicker">
+            {cms?.eyebrow ?? (vi ? "THƯƠNG HIỆU CÔNG NGHỆ" : "TECH BRANDS")}
+          </span>
           <h2 id="trusted-brands-title">{cms?.title ?? t.trustedBrands}</h2>
           <p>
-            {cms?.description ?? (vi
-              ? "Khám phá thương hiệu đang có sản phẩm tại Technest."
-              : "Explore brands available at Technest.")}
+            {cms?.description ??
+              (vi
+                ? "Khám phá thương hiệu đang có sản phẩm tại Technest."
+                : "Explore brands available at Technest.")}
           </p>
         </div>
         <a className="trusted-brands-view-all" href={cms?.ctaUrl ?? "/products"}>

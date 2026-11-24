@@ -1,9 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { changeVietnamAddress, findVietnamArea, initialVietnamAddress, loadVietnamAreas } from "../src/domain/vietnamAddress.js";
+import {
+  changeVietnamAddress,
+  findVietnamArea,
+  initialVietnamAddress,
+  loadVietnamAreas,
+} from "../src/domain/vietnamAddress.js";
 
-const readSnapshot = async (mode) => JSON.parse(await readFile(new URL(`../src/data/vietnam/${mode}.json`, import.meta.url), "utf8"));
+const readSnapshot = async (mode) =>
+  JSON.parse(await readFile(new URL(`../src/data/vietnam/${mode}.json`, import.meta.url), "utf8"));
 
 test("current address snapshot covers every province and 3,321 distinct communes with 2026 city changes", async () => {
   const areas = await readSnapshot("current");
@@ -43,18 +49,44 @@ test("legacy address snapshot includes all districts, communes and the island di
 });
 
 test("changing province, district or address format clears dependent values", () => {
-  const saved = { mode: "legacy", city: "Hồ Chí Minh", district: "Quận 1", ward: "Phường Bến Nghé" };
-  assert.deepEqual(changeVietnamAddress(saved, "city", "Hà Nội"), { mode: "legacy", city: "Hà Nội", district: "", ward: "" });
-  assert.deepEqual(changeVietnamAddress(saved, "district", "Quận 3"), { ...saved, district: "Quận 3", ward: "" });
-  assert.deepEqual(changeVietnamAddress(saved, "mode", "current"), { mode: "current", city: "", district: "", ward: "" });
+  const saved = {
+    mode: "legacy",
+    city: "Hồ Chí Minh",
+    district: "Quận 1",
+    ward: "Phường Bến Nghé",
+  };
+  assert.deepEqual(changeVietnamAddress(saved, "city", "Hà Nội"), {
+    mode: "legacy",
+    city: "Hà Nội",
+    district: "",
+    ward: "",
+  });
+  assert.deepEqual(changeVietnamAddress(saved, "district", "Quận 3"), {
+    ...saved,
+    district: "Quận 3",
+    ward: "",
+  });
+  assert.deepEqual(changeVietnamAddress(saved, "mode", "current"), {
+    mode: "current",
+    city: "",
+    district: "",
+    ward: "",
+  });
   assert.equal(saved.ward, "Phường Bến Nghé");
 });
 
 test("saved addresses retain historical names without guessing a new location", async () => {
-  const historical = initialVietnamAddress({ city: "Hồ Chí Minh", district: "Quận 3", ward: "Phường 2" });
+  const historical = initialVietnamAddress({
+    city: "Hồ Chí Minh",
+    district: "Quận 3",
+    ward: "Phường 2",
+  });
   assert.equal(historical.mode, "legacy");
   assert.equal(historical.ward, "Phường 2");
-  assert.equal(initialVietnamAddress({ city: "Hồ Chí Minh", ward: "Phường Sài Gòn" }).mode, "current");
+  assert.equal(
+    initialVietnamAddress({ city: "Hồ Chí Minh", ward: "Phường Sài Gòn" }).mode,
+    "current",
+  );
   const areas = await readSnapshot("current");
   assert.equal(findVietnamArea(areas, "Quảng Nam"), undefined);
   assert.equal(findVietnamArea(areas, ""), undefined);

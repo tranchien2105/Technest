@@ -18,8 +18,13 @@ function loadSocketClient() {
       const script = existing || document.createElement("script");
       script.src = SOCKET_SCRIPT;
       script.async = true;
-      script.onload = () => window.io ? resolve(window.io) : reject(new Error("Socket client did not load"));
-      script.onerror = () => { script.remove(); scriptPromise = undefined; reject(new Error("Socket client did not load")); };
+      script.onload = () =>
+        window.io ? resolve(window.io) : reject(new Error("Socket client did not load"));
+      script.onerror = () => {
+        script.remove();
+        scriptPromise = undefined;
+        reject(new Error("Socket client did not load"));
+      };
       if (!existing) document.head.append(script);
     });
   }
@@ -34,7 +39,10 @@ export function NotificationsProvider({ user, children }) {
     if (!userId) return;
     try {
       const result = await notificationsApi.unreadCount();
-      setCountState({ userId, count: Number.isFinite(result?.unreadCount) ? result.unreadCount : 0 });
+      setCountState({
+        userId,
+        count: Number.isFinite(result?.unreadCount) ? result.unreadCount : 0,
+      });
     } catch {
       // Keep the last server-confirmed count while the API is temporarily unavailable.
     }
@@ -45,40 +53,45 @@ export function NotificationsProvider({ user, children }) {
     let socket;
     let recovering = false;
     if (!userId) return undefined;
-    const initialFetch = window.setTimeout(() => { void refreshUnreadCount(); }, 0);
-    loadSocketClient().then((io) => {
-      if (!active) return;
-      socket = io(API_ORIGIN, {
-        withCredentials: true,
-        auth: (callback) => callback({ token: getAccessToken() || "" }),
-      });
-      const refresh = () => {
-        setRevision((value) => value + 1);
-        void refreshUnreadCount();
-      };
-      socket.on("connect", refresh);
-      socket.on("notification:new", () => {
-        setRevision((value) => value + 1);
-        void refreshUnreadCount();
-      });
-      socket.on("notification:unread-count", (payload) => {
-        if (Number.isFinite(payload?.unreadCount)) setCountState({ userId, count: payload.unreadCount });
-      });
-      socket.on("connect_error", async (error) => {
-        if (recovering || !String(error?.message).includes("UNAUTHENTICATED")) return;
-        recovering = true;
-        await restoreSession();
-        if (active && getAccessToken()) socket?.connect();
-        recovering = false;
-      });
-      socket.on("disconnect", async (reason) => {
-        if (reason !== "io server disconnect" || recovering) return;
-        recovering = true;
-        await restoreSession();
-        if (active && getAccessToken()) socket?.connect();
-        recovering = false;
-      });
-    }).catch(() => {});
+    const initialFetch = window.setTimeout(() => {
+      void refreshUnreadCount();
+    }, 0);
+    loadSocketClient()
+      .then((io) => {
+        if (!active) return;
+        socket = io(API_ORIGIN, {
+          withCredentials: true,
+          auth: (callback) => callback({ token: getAccessToken() || "" }),
+        });
+        const refresh = () => {
+          setRevision((value) => value + 1);
+          void refreshUnreadCount();
+        };
+        socket.on("connect", refresh);
+        socket.on("notification:new", () => {
+          setRevision((value) => value + 1);
+          void refreshUnreadCount();
+        });
+        socket.on("notification:unread-count", (payload) => {
+          if (Number.isFinite(payload?.unreadCount))
+            setCountState({ userId, count: payload.unreadCount });
+        });
+        socket.on("connect_error", async (error) => {
+          if (recovering || !String(error?.message).includes("UNAUTHENTICATED")) return;
+          recovering = true;
+          await restoreSession();
+          if (active && getAccessToken()) socket?.connect();
+          recovering = false;
+        });
+        socket.on("disconnect", async (reason) => {
+          if (reason !== "io server disconnect" || recovering) return;
+          recovering = true;
+          await restoreSession();
+          if (active && getAccessToken()) socket?.connect();
+          recovering = false;
+        });
+      })
+      .catch(() => {});
     return () => {
       active = false;
       socket?.removeAllListeners();
@@ -88,6 +101,9 @@ export function NotificationsProvider({ user, children }) {
   }, [userId, refreshUnreadCount]);
 
   const unreadCount = userId && countState.userId === userId ? countState.count : 0;
-  const value = useMemo(() => ({ unreadCount, refreshUnreadCount, revision }), [unreadCount, refreshUnreadCount, revision]);
+  const value = useMemo(
+    () => ({ unreadCount, refreshUnreadCount, revision }),
+    [unreadCount, refreshUnreadCount, revision],
+  );
   return <NotificationsContext.Provider value={value}>{children}</NotificationsContext.Provider>;
 }

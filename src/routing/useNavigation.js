@@ -34,10 +34,24 @@ export function useNavigation(authenticated, onVisit) {
         const currentIndex = Number.isInteger(history.state?.__technestIndex)
           ? history.state.__technestIndex
           : historyIndexRef.current;
-        history.replaceState({ ...history.state, __technestIndex: currentIndex, __technestScrollY: window.scrollY }, "", currentUrl());
+        history.replaceState(
+          { ...history.state, __technestIndex: currentIndex, __technestScrollY: window.scrollY },
+          "",
+          currentUrl(),
+        );
         historyIndexRef.current = replace ? currentIndex : currentIndex + 1;
-        if (replace) history.replaceState({ ...history.state, __technestIndex: currentIndex }, "", destination);
-        else history.pushState({ __technestIndex: historyIndexRef.current, __technestScrollY: 0 }, "", destination);
+        if (replace)
+          history.replaceState(
+            { ...history.state, __technestIndex: currentIndex },
+            "",
+            destination,
+          );
+        else
+          history.pushState(
+            { __technestIndex: historyIndexRef.current, __technestScrollY: 0 },
+            "",
+            destination,
+          );
       }
       routeRef.current = destination;
       setRoute(destination);
@@ -53,7 +67,15 @@ export function useNavigation(authenticated, onVisit) {
     const destination = guardedRoute(currentUrl(), authenticated, location.origin);
     if (destination !== currentUrl()) history.replaceState({}, "", destination);
     if (!Number.isInteger(history.state?.__technestIndex)) {
-      history.replaceState({ ...history.state, __technestIndex: historyIndexRef.current, __technestScrollY: window.scrollY }, "", currentUrl());
+      history.replaceState(
+        {
+          ...history.state,
+          __technestIndex: historyIndexRef.current,
+          __technestScrollY: window.scrollY,
+        },
+        "",
+        currentUrl(),
+      );
     } else historyIndexRef.current = history.state.__technestIndex;
     let scrollFrame = 0;
     let scrollSaveTimer = 0;
@@ -86,7 +108,15 @@ export function useNavigation(authenticated, onVisit) {
           skipPopToRef.current = historyIndexRef.current;
           history.go(historyIndexRef.current - nextIndex);
         } else {
-          history.pushState({ ...history.state, __technestIndex: historyIndexRef.current, __technestScrollY: window.scrollY }, "", routeRef.current);
+          history.pushState(
+            {
+              ...history.state,
+              __technestIndex: historyIndexRef.current,
+              __technestScrollY: window.scrollY,
+            },
+            "",
+            routeRef.current,
+          );
         }
         return;
       }

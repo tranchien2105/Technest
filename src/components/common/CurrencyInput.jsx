@@ -4,7 +4,9 @@ import "./formatted-inputs.css";
 const onlyDigits = (value) => String(value ?? "").replace(/\D/g, "");
 const groupedDigits = (value) => {
   const digits = onlyDigits(value);
-  return digits ? new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(BigInt(digits)) : "";
+  return digits
+    ? new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(BigInt(digits))
+    : "";
 };
 
 export default function CurrencyInput({ value, onValueChange, onFocus, onBlur, ...props }) {
@@ -45,7 +47,9 @@ export default function CurrencyInput({ value, onValueChange, onFocus, onBlur, .
         }}
         onChange={(event) => {
           const input = event.currentTarget;
-          const digitsBeforeCaret = onlyDigits(input.value.slice(0, input.selectionStart ?? 0)).length;
+          const digitsBeforeCaret = onlyDigits(
+            input.value.slice(0, input.selectionStart ?? 0),
+          ).length;
           const nextValue = onlyDigits(input.value);
           pendingCaret.current = { digits: digitsBeforeCaret };
           onValueChange(nextValue);
@@ -54,7 +58,9 @@ export default function CurrencyInput({ value, onValueChange, onFocus, onBlur, .
           onBlur?.(event);
         }}
       />
-      <span className="currency-input-unit" aria-hidden="true">₫</span>
+      <span className="currency-input-unit" aria-hidden="true">
+        ₫
+      </span>
     </span>
   );
 }

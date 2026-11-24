@@ -115,7 +115,8 @@ export default function Header({
 
   useEffect(() => {
     const closeAccountMenu = (event) => {
-      if (event.key === "Escape" || !accountMenuRef.current?.contains(event.target)) setAccountMenuOpen(false);
+      if (event.key === "Escape" || !accountMenuRef.current?.contains(event.target))
+        setAccountMenuOpen(false);
     };
     document.addEventListener("mousedown", closeAccountMenu);
     document.addEventListener("keydown", closeAccountMenu);
@@ -168,12 +169,21 @@ export default function Header({
               setActiveSuggestion(-1);
             }}
             onKeyDown={(event) => {
-              if (event.key === "Escape") { setSuggestionsOpen(false); setActiveSuggestion(-1); }
+              if (event.key === "Escape") {
+                setSuggestionsOpen(false);
+                setActiveSuggestion(-1);
+              }
               if ((event.key === "ArrowDown" || event.key === "ArrowUp") && suggestions.length) {
                 event.preventDefault();
                 setSuggestionsOpen(true);
                 const direction = event.key === "ArrowDown" ? 1 : -1;
-                setActiveSuggestion((current) => current < 0 ? (direction > 0 ? 0 : suggestions.length - 1) : (current + direction + suggestions.length) % suggestions.length);
+                setActiveSuggestion((current) =>
+                  current < 0
+                    ? direction > 0
+                      ? 0
+                      : suggestions.length - 1
+                    : (current + direction + suggestions.length) % suggestions.length,
+                );
               }
               if (event.key === "Enter" && suggestionsOpen && suggestions[activeSuggestion]) {
                 event.preventDefault();
@@ -186,8 +196,16 @@ export default function Header({
             aria-label={t.search}
             role="combobox"
             aria-expanded={suggestionsOpen && normalizedSearch.length >= 2}
-            aria-controls={suggestionsOpen && normalizedSearch.length >= 2 ? "header-search-suggestions" : undefined}
-            aria-activedescendant={suggestionsOpen && suggestions[activeSuggestion] ? `search-suggestion-${suggestions[activeSuggestion].id}` : undefined}
+            aria-controls={
+              suggestionsOpen && normalizedSearch.length >= 2
+                ? "header-search-suggestions"
+                : undefined
+            }
+            aria-activedescendant={
+              suggestionsOpen && suggestions[activeSuggestion]
+                ? `search-suggestion-${suggestions[activeSuggestion].id}`
+                : undefined
+            }
             aria-autocomplete="list"
           />
           {search && (
@@ -205,52 +223,68 @@ export default function Header({
           )}
         </form>
         {suggestionsOpen && normalizedSearch.length >= 2 && (
-          <div
-            className="header-search-suggestions"
-            aria-live="polite"
-          >
-            <div role="listbox" id="header-search-suggestions" aria-label={language === "vi" ? "Gợi ý sản phẩm" : "Product suggestions"}>
-            {suggestionState === "loading" && (
-              <p className="search-suggestion-message" role="option" aria-disabled="true" aria-selected="false">
-                {language === "vi" ? "Đang tìm sản phẩm…" : "Searching products…"}
-              </p>
-            )}
-            {suggestionState === "empty" && (
-              <p className="search-suggestion-message" role="option" aria-disabled="true" aria-selected="false">
-                {language === "vi"
-                  ? "Không tìm thấy sản phẩm phù hợp."
-                  : "No matching products found."}
-              </p>
-            )}
-            {suggestionState === "error" && (
-              <p className="search-suggestion-message" role="option" aria-disabled="true" aria-selected="false">
-                {language === "vi"
-                  ? "Chưa thể tải gợi ý. Nhấn Enter để tìm kiếm."
-                  : "Suggestions are unavailable. Press Enter to search."}
-              </p>
-            )}
-            {suggestions.map((product, index) => (
-              <a
-                className="search-suggestion-item"
-                href={getProductUrl(product)}
-                key={product.id}
-                id={`search-suggestion-${product.id}`}
-                role="option"
-                aria-selected={activeSuggestion === index}
-                onMouseEnter={() => setActiveSuggestion(index)}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => setSuggestionsOpen(false)}
-              >
-                <ProductImage src={product.image} alt="" loading="lazy" />
-                <span className="search-suggestion-copy">
-                  <strong>{product.name}</strong>
-                  <small>{product.brand}</small>
-                </span>
-                <strong className="search-suggestion-price">
-                  {product.price == null ? "—" : formatPrice(product.price)}
-                </strong>
-              </a>
-            ))}
+          <div className="header-search-suggestions" aria-live="polite">
+            <div
+              role="listbox"
+              id="header-search-suggestions"
+              aria-label={language === "vi" ? "Gợi ý sản phẩm" : "Product suggestions"}
+            >
+              {suggestionState === "loading" && (
+                <p
+                  className="search-suggestion-message"
+                  role="option"
+                  aria-disabled="true"
+                  aria-selected="false"
+                >
+                  {language === "vi" ? "Đang tìm sản phẩm…" : "Searching products…"}
+                </p>
+              )}
+              {suggestionState === "empty" && (
+                <p
+                  className="search-suggestion-message"
+                  role="option"
+                  aria-disabled="true"
+                  aria-selected="false"
+                >
+                  {language === "vi"
+                    ? "Không tìm thấy sản phẩm phù hợp."
+                    : "No matching products found."}
+                </p>
+              )}
+              {suggestionState === "error" && (
+                <p
+                  className="search-suggestion-message"
+                  role="option"
+                  aria-disabled="true"
+                  aria-selected="false"
+                >
+                  {language === "vi"
+                    ? "Chưa thể tải gợi ý. Nhấn Enter để tìm kiếm."
+                    : "Suggestions are unavailable. Press Enter to search."}
+                </p>
+              )}
+              {suggestions.map((product, index) => (
+                <a
+                  className="search-suggestion-item"
+                  href={getProductUrl(product)}
+                  key={product.id}
+                  id={`search-suggestion-${product.id}`}
+                  role="option"
+                  aria-selected={activeSuggestion === index}
+                  onMouseEnter={() => setActiveSuggestion(index)}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => setSuggestionsOpen(false)}
+                >
+                  <ProductImage src={product.image} alt="" loading="lazy" />
+                  <span className="search-suggestion-copy">
+                    <strong>{product.name}</strong>
+                    <small>{product.brand}</small>
+                  </span>
+                  <strong className="search-suggestion-price">
+                    {product.price == null ? "—" : formatPrice(product.price)}
+                  </strong>
+                </a>
+              ))}
             </div>
             {suggestionState === "results" && (
               <button
@@ -329,7 +363,9 @@ export default function Header({
         <div className="header-account-menu" ref={accountMenuRef}>
           <button
             className="header-action account-action"
-            onClick={() => authUser ? setAccountMenuOpen((open) => !open) : navigate?.("/account")}
+            onClick={() =>
+              authUser ? setAccountMenuOpen((open) => !open) : navigate?.("/account")
+            }
             aria-label={authUser ? `${accountLabel} · ${t.account}` : t.account}
             title={authUser ? `${accountLabel} · ${t.account}` : t.account}
             aria-expanded={authUser ? accountMenuOpen : undefined}
@@ -338,18 +374,52 @@ export default function Header({
             <span className="header-action-icon account-icon-wrap">
               <UserRound size={21} />
               {authUser && <i className="account-signed-in-dot" aria-hidden="true" />}
-              {authUser && unreadCount > 0 && <i className="notification-count-bubble" aria-label={`${unreadCount} thông báo chưa đọc`}>{unreadCount > 9 ? "9+" : unreadCount}</i>}
+              {authUser && unreadCount > 0 && (
+                <i
+                  className="notification-count-bubble"
+                  aria-label={`${unreadCount} thông báo chưa đọc`}
+                >
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </i>
+              )}
             </span>
             <span>{accountLabel}</span>
           </button>
-          {authUser && accountMenuOpen && <div className="header-account-dropdown" role="menu">
-            {[
-              ["/account", "Tổng quan"], ["/account/orders", "Đơn hàng"],
-              ["/account/notifications", `Thông báo${unreadCount ? ` (${unreadCount})` : ""}`],
-              ["/account/profile", "Hồ sơ"], ["/account/addresses", "Địa chỉ"], ["/account/security", "Bảo mật"],
-            ].map(([url, label]) => <button role="menuitem" type="button" key={url} onClick={() => { setAccountMenuOpen(false); navigate?.(url, true); }}>{label}</button>)}
-            <button role="menuitem" type="button" className="account-menu-logout" onClick={() => { setAccountMenuOpen(false); onLogout?.(); }}>Đăng xuất</button>
-          </div>}
+          {authUser && accountMenuOpen && (
+            <div className="header-account-dropdown" role="menu">
+              {[
+                ["/account", "Tổng quan"],
+                ["/account/orders", "Đơn hàng"],
+                ["/account/notifications", `Thông báo${unreadCount ? ` (${unreadCount})` : ""}`],
+                ["/account/profile", "Hồ sơ"],
+                ["/account/addresses", "Địa chỉ"],
+                ["/account/security", "Bảo mật"],
+              ].map(([url, label]) => (
+                <button
+                  role="menuitem"
+                  type="button"
+                  key={url}
+                  onClick={() => {
+                    setAccountMenuOpen(false);
+                    navigate?.(url, true);
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+              <button
+                role="menuitem"
+                type="button"
+                className="account-menu-logout"
+                onClick={() => {
+                  setAccountMenuOpen(false);
+                  onLogout?.();
+                }}
+              >
+                Đăng xuất
+              </button>
+            </div>
+          )}
         </div>
         <button
           className="header-action cart-action"

@@ -35,7 +35,10 @@ const metrics = () =>
 function verifyLayout(data, width) {
   assert.equal(data.viewport, width);
   assert.ok(data.scrollWidth <= data.pageWidth + 1, `Page overflow at ${width}px`);
-  const expected = width >= 1200 ? Math.min(1500, data.pageWidth * 0.78) : data.pageWidth - (width <= 760 ? 32 : 40);
+  const expected =
+    width >= 1200
+      ? Math.min(1500, data.pageWidth * 0.78)
+      : data.pageWidth - (width <= 760 ? 32 : 40);
   assert.ok(
     Math.abs(data.frame.width - expected) < 2,
     `Centered canvas has unexpected width: ${data.frame.width}/${expected}`,
@@ -43,12 +46,19 @@ function verifyLayout(data, width) {
   assert.ok(data.rail.width <= data.frame.width + 1, "Carousel must stay inside its section");
   assert.equal(data.rail.display, "flex");
   assert.ok(data.cards.length > 0, "Real catalog cards required");
-  assert.ok(Math.abs(data.frame.x - (data.pageWidth - data.frame.width) / 2) < 2, "Canvas must be centered");
+  assert.ok(
+    Math.abs(data.frame.x - (data.pageWidth - data.frame.width) / 2) < 2,
+    "Canvas must be centered",
+  );
   if (!data.campaign.poster)
-    assert.ok(Math.abs(data.campaign.shop.width - data.campaign.width) < 2, "Campaign without a poster must use the whole section");
+    assert.ok(
+      Math.abs(data.campaign.shop.width - data.campaign.width) < 2,
+      "Campaign without a poster must use the whole section",
+    );
   for (const rail of data.allRails) {
     assert.ok(rail.width <= data.frame.width + 1, `Rail overflow: ${rail.className}`);
-    for (const card of rail.cards) assert.ok(card.width >= 150, `Collapsed card in ${rail.className}: ${card.width}`);
+    for (const card of rail.cards)
+      assert.ok(card.width >= 150, `Collapsed card in ${rail.className}: ${card.width}`);
   }
   for (const card of [...data.cards, ...data.campaign.cards]) {
     assert.ok(card.width >= 150, `Collapsed product card: ${card.width}px`);
@@ -114,43 +124,79 @@ try {
     await pause(150);
     await browser.screenshot(`${directory}/${width}-products.png`);
 
-    await browser.evaluate("window.scrollTo({top:scrollY+document.querySelector('.home-campaigns').getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().height-16,behavior:'instant'})");
+    await browser.evaluate(
+      "window.scrollTo({top:scrollY+document.querySelector('.home-campaigns').getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().height-16,behavior:'instant'})",
+    );
     await pause(200);
     await browser.screenshot(`${directory}/${width}-campaigns.png`);
-    await browser.evaluate("window.scrollTo({top:scrollY+document.querySelector('.home-campaign-products').getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().height-16,behavior:'instant'})");
+    await browser.evaluate(
+      "window.scrollTo({top:scrollY+document.querySelector('.home-campaign-products').getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().height-16,behavior:'instant'})",
+    );
     await pause(150);
     await browser.screenshot(`${directory}/${width}-campaign-products.png`);
 
     for (const tab of ["mice", "monitors", "accessories", "audio", "keyboards"]) {
       const index = ["keyboards", "mice", "monitors", "accessories", "audio"].indexOf(tab);
       await browser.click(`.home-campaign-tabs button:nth-child(${index + 1})`);
-      await browser.wait(`document.querySelector('.home-campaign-tabs button:nth-child(${index + 1})').getAttribute('aria-selected')==='true'`, "campaign category tab");
-      if (await browser.evaluate("!!document.querySelector('.home-campaign-products .product-card')")) verifyLayout(await metrics(), width);
+      await browser.wait(
+        `document.querySelector('.home-campaign-tabs button:nth-child(${index + 1})').getAttribute('aria-selected')==='true'`,
+        "campaign category tab",
+      );
+      if (
+        await browser.evaluate("!!document.querySelector('.home-campaign-products .product-card')")
+      )
+        verifyLayout(await metrics(), width);
     }
-    if (await browser.evaluate("document.querySelectorAll('.home-campaign-brands button').length>1")) {
+    if (
+      await browser.evaluate("document.querySelectorAll('.home-campaign-brands button').length>1")
+    ) {
       await browser.click(".home-campaign-brands button:nth-child(2)");
-      await browser.wait("document.querySelector('.home-campaign-brands button:nth-child(2)').classList.contains('is-active')", "campaign brand filter");
+      await browser.wait(
+        "document.querySelector('.home-campaign-brands button:nth-child(2)').classList.contains('is-active')",
+        "campaign brand filter",
+      );
       verifyLayout(await metrics(), width);
       await browser.click(".home-campaign-brands button:first-child");
     }
     // Exercise banner presence/absence without changing CMS records or the database.
-    await browser.evaluate("(()=>{window.technestLayoutPosters=[...document.querySelectorAll('.home-campaigns>.home-campaign-poster')];window.technestLayoutPosters.forEach(el=>el.remove())})()");
+    await browser.evaluate(
+      "(()=>{window.technestLayoutPosters=[...document.querySelectorAll('.home-campaigns>.home-campaign-poster')];window.technestLayoutPosters.forEach(el=>el.remove())})()",
+    );
     verifyLayout(await metrics(), width);
-    await browser.evaluate("(()=>{const poster=document.createElement('div');poster.className='home-campaign-poster';poster.dataset.layoutFixture='true';document.querySelector('.home-campaigns').prepend(poster)})()");
+    await browser.evaluate(
+      "(()=>{const poster=document.createElement('div');poster.className='home-campaign-poster';poster.dataset.layoutFixture='true';document.querySelector('.home-campaigns').prepend(poster)})()",
+    );
     const withPoster = await metrics();
     verifyLayout(withPoster, width);
-    if (width > 760) assert.ok(withPoster.campaign.shop.width < withPoster.campaign.width - 150, "Poster must occupy its own column");
-    await browser.evaluate("document.querySelector('[data-layout-fixture]').classList.add('home-campaign-poster-empty')");
+    if (width > 760)
+      assert.ok(
+        withPoster.campaign.shop.width < withPoster.campaign.width - 150,
+        "Poster must occupy its own column",
+      );
+    await browser.evaluate(
+      "document.querySelector('[data-layout-fixture]').classList.add('home-campaign-poster-empty')",
+    );
     const placeholder = await metrics();
     verifyLayout(placeholder, width);
-    assert.ok(Math.abs(placeholder.campaign.shop.width - placeholder.campaign.width) < 2, "Empty banner placeholder must keep products full width");
-    await browser.evaluate("(()=>{document.querySelector('[data-layout-fixture]').remove();window.technestLayoutPosters.forEach(el=>document.querySelector('.home-campaigns').prepend(el));delete window.technestLayoutPosters})()");
+    assert.ok(
+      Math.abs(placeholder.campaign.shop.width - placeholder.campaign.width) < 2,
+      "Empty banner placeholder must keep products full width",
+    );
+    await browser.evaluate(
+      "(()=>{document.querySelector('[data-layout-fixture]').remove();window.technestLayoutPosters.forEach(el=>document.querySelector('.home-campaigns').prepend(el));delete window.technestLayoutPosters})()",
+    );
 
     await browser.click(".home-campaign-shop .home-carousel-controls button:last-child");
-    await browser.wait("document.querySelector('.home-campaign-products').scrollLeft>20", "campaign next control");
+    await browser.wait(
+      "document.querySelector('.home-campaign-products').scrollLeft>20",
+      "campaign next control",
+    );
     await pause(400);
     await browser.click(".home-campaign-shop .home-carousel-controls button:first-child");
-    await browser.wait("document.querySelector('.home-campaign-products').scrollLeft<5", "campaign previous control");
+    await browser.wait(
+      "document.querySelector('.home-campaign-products').scrollLeft<5",
+      "campaign previous control",
+    );
 
     await browser.click("#products .home-carousel-controls button:last-child");
     await browser.wait(

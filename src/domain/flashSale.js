@@ -15,8 +15,12 @@ export function flashCampaignStatus(campaign, now) {
 export function findVariantFlashDeal(campaigns, variantId, now, regularPrice) {
   for (const campaign of campaigns || []) {
     if (flashCampaignStatus(campaign, now) !== "ACTIVE") continue;
-    const item = campaign.items?.find((candidate) => String(candidate.variantId) === String(variantId)
-      && candidate.availableQuantity > 0 && candidate.stockAvailable > 0);
+    const item = campaign.items?.find(
+      (candidate) =>
+        String(candidate.variantId) === String(variantId) &&
+        candidate.availableQuantity > 0 &&
+        candidate.stockAvailable > 0,
+    );
     if (!item) continue;
     // The backend rejects an offer that no longer beats the regular variant price.
     if (regularPrice != null && compareMoney(item.flashPrice, regularPrice) >= 0) continue;

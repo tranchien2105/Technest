@@ -73,15 +73,29 @@ export default function AdminImportPanel({ user }) {
         </div>
       </div>
       <div className="admin-row-actions">
-        {["template", "products", "inventory", "orders"].filter(kind => !user || canAdmin(user,"reports") || canAdmin(user, kind === "template" ? "products" : kind)).map((kind) => (
-          <button
-            key={kind}
-            disabled={busy}
-            onClick={() => downloadExcel(kind).catch((e) => setError(e.message))}
-          >
-            {{template:"Tải tệp mẫu",products:"Xuất sản phẩm",inventory:"Xuất tồn kho",orders:"Xuất đơn hàng"}[kind]}
-          </button>
-        ))}
+        {["template", "products", "inventory", "orders"]
+          .filter(
+            (kind) =>
+              !user ||
+              canAdmin(user, "reports") ||
+              canAdmin(user, kind === "template" ? "products" : kind),
+          )
+          .map((kind) => (
+            <button
+              key={kind}
+              disabled={busy}
+              onClick={() => downloadExcel(kind).catch((e) => setError(e.message))}
+            >
+              {
+                {
+                  template: "Tải tệp mẫu",
+                  products: "Xuất sản phẩm",
+                  inventory: "Xuất tồn kho",
+                  orders: "Xuất đơn hàng",
+                }[kind]
+              }
+            </button>
+          ))}
       </div>
       <label className="admin-upload-zone">
         <strong>Chọn tệp sản phẩm .xlsx để kiểm tra</strong>

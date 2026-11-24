@@ -1,4 +1,13 @@
-import { bigint, boolean, index, pgTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/pg-core";
+import {
+  bigint,
+  boolean,
+  index,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users } from "./users.js";
 
@@ -6,7 +15,9 @@ export const userAddresses = pgTable(
   "user_addresses",
   {
     id: bigint("id", { mode: "bigint" }).generatedAlwaysAsIdentity().primaryKey(),
-    userId: bigint("user_id", { mode: "number" }).notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: bigint("user_id", { mode: "number" })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     recipientName: varchar("recipient_name", { length: 200 }).notNull(),
     phone: varchar("phone", { length: 30 }).notNull(),
     addressLine: text("address_line").notNull(),

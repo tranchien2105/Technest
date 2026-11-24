@@ -170,11 +170,15 @@ async function seedBanners() {
       });
     }
     if (values.length !== missing)
-      throw new Error(`Only ${values.length}/${missing} distinct banners available for ${position}`);
+      throw new Error(
+        `Only ${values.length}/${missing} distinct banners available for ${position}`,
+      );
     if (values.length) {
       await db.insert(banners).values(values);
       placementAdded += values.length;
-      console.info(`[incremental-seed:${batchId}] ${position}: ${existingCount + values.length}/10`);
+      console.info(
+        `[incremental-seed:${batchId}] ${position}: ${existingCount + values.length}/10`,
+      );
     }
   }
   const finalCounts = await db
@@ -187,7 +191,9 @@ async function seedBanners() {
       throw new Error(`Banner placement ${position} has fewer than 10 records after seeding`);
   }
   if (addTenPerPlacement) {
-    const existing = new Set((await db.select({ title: banners.title }).from(banners)).map((row) => row.title));
+    const existing = new Set(
+      (await db.select({ title: banners.title }).from(banners)).map((row) => row.title),
+    );
     const categoryFor = (position: string) => {
       if (position === "HOME_HERO_RIGHT_TOP") return "keyboards";
       if (position === "HOME_HERO_RIGHT_BOTTOM") return "audio";
@@ -197,28 +203,39 @@ async function seedBanners() {
     let batchAdded = 0;
     for (const [position, displayName] of allBannerPlacements) {
       const category = categoryFor(position);
-      const candidates = category ? catalog.filter((product) => product.categorySlug === category) : catalog;
-      if (candidates.length < 10) throw new Error(`Not enough matching product images for ${position}`);
-      const rows = candidates.slice(0, 10).map((product, index) => ({
-        title: `${displayName} · Gợi ý ${batchId}-${String(index + 1).padStart(2, "0")}`.slice(0, 160),
-        subtitle: `Khám phá ${product.name} tại Technest.`,
-        imageUrl: product.imageUrl,
-        link: `/products?category=${encodeURIComponent(product.categorySlug)}`,
-        buttonText: "Khám phá ngay",
-        position,
-        sortOrder: 1000 + index,
-        active: false,
-        startsAt: seededAt,
-        endsAt: new Date(seededAt.getTime() + 90 * day),
-        createdAt: seededAt,
-        updatedAt: seededAt,
-      })).filter((row) => !existing.has(row.title));
+      const candidates = category
+        ? catalog.filter((product) => product.categorySlug === category)
+        : catalog;
+      if (candidates.length < 10)
+        throw new Error(`Not enough matching product images for ${position}`);
+      const rows = candidates
+        .slice(0, 10)
+        .map((product, index) => ({
+          title: `${displayName} · Gợi ý ${batchId}-${String(index + 1).padStart(2, "0")}`.slice(
+            0,
+            160,
+          ),
+          subtitle: `Khám phá ${product.name} tại Technest.`,
+          imageUrl: product.imageUrl,
+          link: `/products?category=${encodeURIComponent(product.categorySlug)}`,
+          buttonText: "Khám phá ngay",
+          position,
+          sortOrder: 1000 + index,
+          active: false,
+          startsAt: seededAt,
+          endsAt: new Date(seededAt.getTime() + 90 * day),
+          createdAt: seededAt,
+          updatedAt: seededAt,
+        }))
+        .filter((row) => !existing.has(row.title));
       if (rows.length) {
         await db.insert(banners).values(rows);
         rows.forEach((row) => existing.add(row.title));
         batchAdded += rows.length;
       }
-      console.info(`[incremental-seed:${batchId}] ${position}: added ${rows.length}/10 curated options (inactive)`);
+      console.info(
+        `[incremental-seed:${batchId}] ${position}: added ${rows.length}/10 curated options (inactive)`,
+      );
     }
     added += batchAdded;
   }
@@ -411,25 +428,21 @@ async function seedVouchers() {
       await tx
         .insert(orderInventoryReservations)
         .values({ orderId: order.id, reservationId: BigInt(reserved.reservation.id) });
-      await tx
-        .insert(orderStatusHistory)
-        .values({
-          orderId: order.id,
-          fromStatus: null,
-          toStatus: "PENDING",
-          changedBy: BigInt(customer.id),
-          note: "Đơn development để kiểm tra mã giảm giá đã hết lượt.",
-          createdAt,
-        });
-      await tx
-        .insert(voucherRedemptions)
-        .values({
-          voucherId: voucher.id,
-          userId: customer.id,
-          orderId: order.id,
-          discount,
-          createdAt,
-        });
+      await tx.insert(orderStatusHistory).values({
+        orderId: order.id,
+        fromStatus: null,
+        toStatus: "PENDING",
+        changedBy: BigInt(customer.id),
+        note: "Đơn development để kiểm tra mã giảm giá đã hết lượt.",
+        createdAt,
+      });
+      await tx.insert(voucherRedemptions).values({
+        voucherId: voucher.id,
+        userId: customer.id,
+        orderId: order.id,
+        discount,
+        createdAt,
+      });
       ordersAdded += 1;
     }
     console.info(

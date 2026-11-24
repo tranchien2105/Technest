@@ -51,7 +51,11 @@ export function createOperationsService(db: Database) {
     const where = and(
       q.q ? ilike(banners.title, `%${q.q}%`) : undefined,
       q.status ? eq(banners.active, q.status === "ACTIVE") : undefined,
-      q.type === "UNASSIGNED" ? isNull(banners.position) : q.type ? eq(banners.position, q.type) : undefined,
+      q.type === "UNASSIGNED"
+        ? isNull(banners.position)
+        : q.type
+          ? eq(banners.position, q.type)
+          : undefined,
     );
     const [items, total] = await Promise.all([
       db
@@ -65,7 +69,15 @@ export function createOperationsService(db: Database) {
     ]);
     return pageResult(q, items, total[0]!.n);
   }
-  async function publicBanners(position?: "HOME_HERO" | "HOME_HERO_RIGHT_TOP" | "HOME_HERO_RIGHT_BOTTOM" | "HOME_PROMO" | "HOME_BOTTOM" | "HOME_SETUP_STUDIO") {
+  async function publicBanners(
+    position?:
+      | "HOME_HERO"
+      | "HOME_HERO_RIGHT_TOP"
+      | "HOME_HERO_RIGHT_BOTTOM"
+      | "HOME_PROMO"
+      | "HOME_BOTTOM"
+      | "HOME_SETUP_STUDIO",
+  ) {
     const homepageLimit = position ? 10 : 60;
     return jsonValue(
       await db
@@ -87,25 +99,61 @@ export function createOperationsService(db: Database) {
     return db.transaction(async (tx) => {
       await tx.execute(sql`LOCK TABLE store_banners IN SHARE ROW EXCLUSIVE MODE`);
       const ids = Object.values(placements).flat();
-      const rows = ids.length ? await tx.select({ id: banners.id }).from(banners).where(inArray(banners.id, ids.map(BigInt))) : [];
-      if (rows.length !== ids.length) throw new AppError(404, "BANNER_NOT_FOUND", "Một hoặc nhiều banner không còn tồn tại.");
-      await tx.update(banners).set({ position: null, sortOrder: 0, updatedAt: new Date() }).where(inArray(banners.position, Object.keys(placements)));
+      const rows = ids.length
+        ? await tx
+            .select({ id: banners.id })
+            .from(banners)
+            .where(inArray(banners.id, ids.map(BigInt)))
+        : [];
+      if (rows.length !== ids.length)
+        throw new AppError(404, "BANNER_NOT_FOUND", "Một hoặc nhiều banner không còn tồn tại.");
+      await tx
+        .update(banners)
+        .set({ position: null, sortOrder: 0, updatedAt: new Date() })
+        .where(inArray(banners.position, Object.keys(placements)));
       for (const [position, bannerIds] of Object.entries(placements)) {
         for (const [sortOrder, id] of bannerIds.entries()) {
-          await tx.update(banners).set({ position, sortOrder, updatedAt: new Date() }).where(eq(banners.id, BigInt(id)));
+          await tx
+            .update(banners)
+            .set({ position, sortOrder, updatedAt: new Date() })
+            .where(eq(banners.id, BigInt(id)));
         }
       }
       return { saved: ids.length };
     });
   }
   async function getBannerPlacements() {
-    const rows = await db.select().from(banners).where(inArray(banners.position, ["HOME_HERO", "HOME_HERO_RIGHT_TOP", "HOME_HERO_RIGHT_BOTTOM", "HOME_PROMO", "HOME_BOTTOM", "HOME_SETUP_STUDIO"])).orderBy(asc(banners.sortOrder), desc(banners.id));
-    const placements: Record<string, unknown[]> = { HOME_HERO: [], HOME_HERO_RIGHT_TOP: [], HOME_HERO_RIGHT_BOTTOM: [], HOME_PROMO: [], HOME_BOTTOM: [], HOME_SETUP_STUDIO: [] };
+    const rows = await db
+      .select()
+      .from(banners)
+      .where(
+        inArray(banners.position, [
+          "HOME_HERO",
+          "HOME_HERO_RIGHT_TOP",
+          "HOME_HERO_RIGHT_BOTTOM",
+          "HOME_PROMO",
+          "HOME_BOTTOM",
+          "HOME_SETUP_STUDIO",
+        ]),
+      )
+      .orderBy(asc(banners.sortOrder), desc(banners.id));
+    const placements: Record<string, unknown[]> = {
+      HOME_HERO: [],
+      HOME_HERO_RIGHT_TOP: [],
+      HOME_HERO_RIGHT_BOTTOM: [],
+      HOME_PROMO: [],
+      HOME_BOTTOM: [],
+      HOME_SETUP_STUDIO: [],
+    };
     for (const row of rows) placements[row.position!]?.push(row);
     return jsonValue({ placements });
   }
   async function getBanner(id: string) {
-    const [row] = await db.select().from(banners).where(eq(banners.id, BigInt(id))).limit(1);
+    const [row] = await db
+      .select()
+      .from(banners)
+      .where(eq(banners.id, BigInt(id)))
+      .limit(1);
     if (!row) throw missing();
     return jsonValue(row);
   }
@@ -247,8 +295,17 @@ export function createOperationsService(db: Database) {
         throw new AppError(400, "INVALID_BRAND", "Thương hiệu không tồn tại.");
       for (const row of rows) {
         if (input.action === "STATUS" && input.status === "ACTIVE") {
-          const [image] = await tx.select({id:productImages.id}).from(productImages).where(eq(productImages.productId,row.id)).limit(1);
-          if (!image) throw new AppError(409,"PRODUCT_IMAGE_REQUIRED",`Sản phẩm ${row.name} cần có ảnh trước khi bật bán.`);
+          const [image] = await tx
+            .select({ id: productImages.id })
+            .from(productImages)
+            .where(eq(productImages.productId, row.id))
+            .limit(1);
+          if (!image)
+            throw new AppError(
+              409,
+              "PRODUCT_IMAGE_REQUIRED",
+              `Sản phẩm ${row.name} cần có ảnh trước khi bật bán.`,
+            );
         }
         if (input.action === "PRICE") {
           if (input.includeVariants) {

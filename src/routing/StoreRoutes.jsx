@@ -59,7 +59,8 @@ function RouteContent(props) {
   if (page === "cart") return <CartPage {...props} />;
   if (page === "checkout") return <CheckoutPage key={url.search} {...props} />;
   if (page === "success") return <OrderSuccessPage {...props} />;
-  if (page === "auth") return <AuthPage key={url.pathname} {...props} />;
+  if (page === "auth")
+    return <AuthPage key={`${url.pathname}:${url.hash}:${url.search}`} {...props} />;
   if (page === "account") return <AccountPage key={url.pathname} {...props} />;
   return <NotFoundPage {...props} />;
 }

@@ -15,7 +15,9 @@ export default function AfterSalesRequests({ order }) {
     [version, setVersion] = useState(0);
   useEffect(() => {
     let active = true;
-    privateRequest(`/account/after-sales?limit=500&q=${encodeURIComponent(order.orderNumber || "")}`)
+    privateRequest(
+      `/account/after-sales?limit=500&q=${encodeURIComponent(order.orderNumber || "")}`,
+    )
       .then((d) => {
         if (active) setItems(d.items.filter((i) => String(i.orderId) === String(order.id)));
       })

@@ -2,7 +2,10 @@ import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
 import nodemailer from "nodemailer";
 import { parseEnv } from "../src/config/env.js";
-import { createOrderEmailService, type OrderEmailRow } from "../src/modules/email/order-email.service.js";
+import {
+  createOrderEmailService,
+  type OrderEmailRow,
+} from "../src/modules/email/order-email.service.js";
 import { orderEmailEventSchema } from "../src/modules/email/order-email.types.js";
 import { render } from "@react-email/render";
 import { orderEmailEventKey } from "../src/modules/email/order-email.outbox.js";
@@ -34,35 +37,52 @@ const payload: OrderEmailPayload = {
 };
 
 describe("transactional order emails", () => {
-  it.each(orderEmailEventSchema.options)("renders and submits %s through the mail service", async (event) => {
-    const sendMail = vi.fn().mockResolvedValue({});
-    const transport = vi.spyOn(nodemailer, "createTransport").mockReturnValue(
-      { sendMail } as unknown as ReturnType<typeof nodemailer.createTransport>,
-    );
-    try {
-      const env = parseEnv({
-        NODE_ENV: "test",
-        AUTH_JWT_SECRET: "test-secret-with-at-least-32-characters",
-        DATABASE_URL: "postgres://test:test@localhost/test",
-        REDIS_URL: "redis://localhost:6379",
-      });
-      const now = new Date();
-      const row: OrderEmailRow = {
-        id: 184n, retryOfId: null, eventKey: orderEmailEventKey("184", event), eventType: event,
-        orderId: "184", recipientEmail: "customer@example.test", recipientName: "Nguyễn An",
-        payload, status: "PENDING", attempts: 0, enqueuedAt: null,
-        lockedUntil: null, sentAt: null, lastError: null, createdAt: now, updatedAt: now,
-      };
-      await createOrderEmailService(env).send(row);
-      expect(sendMail).toHaveBeenCalledWith(expect.objectContaining({
-        to: "customer@example.test",
-        subject: orderEmailSubject(event, payload.orderNumber),
-        html: expect.stringContaining("/account/orders/184"),
-      }));
-    } finally {
-      transport.mockRestore();
-    }
-  });
+  it.each(orderEmailEventSchema.options)(
+    "renders and submits %s through the mail service",
+    async (event) => {
+      const sendMail = vi.fn().mockResolvedValue({});
+      const transport = vi
+        .spyOn(nodemailer, "createTransport")
+        .mockReturnValue({ sendMail } as unknown as ReturnType<typeof nodemailer.createTransport>);
+      try {
+        const env = parseEnv({
+          NODE_ENV: "test",
+          AUTH_JWT_SECRET: "test-secret-with-at-least-32-characters",
+          DATABASE_URL: "postgres://test:test@localhost/test",
+          REDIS_URL: "redis://localhost:6379",
+        });
+        const now = new Date();
+        const row: OrderEmailRow = {
+          id: 184n,
+          retryOfId: null,
+          eventKey: orderEmailEventKey("184", event),
+          eventType: event,
+          orderId: "184",
+          recipientEmail: "customer@example.test",
+          recipientName: "Nguyễn An",
+          payload,
+          status: "PENDING",
+          attempts: 0,
+          enqueuedAt: null,
+          lockedUntil: null,
+          sentAt: null,
+          lastError: null,
+          createdAt: now,
+          updatedAt: now,
+        };
+        await createOrderEmailService(env).send(row);
+        expect(sendMail).toHaveBeenCalledWith(
+          expect.objectContaining({
+            to: "customer@example.test",
+            subject: orderEmailSubject(event, payload.orderNumber),
+            html: expect.stringContaining("/account/orders/184"),
+          }),
+        );
+      } finally {
+        transport.mockRestore();
+      }
+    },
+  );
 
   it("uses a stable unique event key and required confirmation subject", () => {
     expect(orderEmailEventKey("184", "ORDER_PLACED")).toBe("order:184:ORDER_PLACED");

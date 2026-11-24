@@ -16,7 +16,10 @@ class MemoryAuthRepository {
     role: "CUSTOMER" | "ADMIN";
     status: "ACTIVE" | "BLOCKED";
   }> = [];
-  sessions = new Map<string, { userId: number; expiresAt: Date; revokedAt?: Date; rotatedAt?: Date }>();
+  sessions = new Map<
+    string,
+    { userId: number; expiresAt: Date; revokedAt?: Date; rotatedAt?: Date }
+  >();
   private id = 1;
   async findUserByEmail(email: string) {
     return this.users.find((user) => user.email === email);
@@ -25,7 +28,8 @@ class MemoryAuthRepository {
     return this.users.find((user) => user.id === id);
   }
   async createUser(input: { email: string; passwordHash: string; fullName: string | null }) {
-    if (await this.findUserByEmail(input.email)) throw Object.assign(new Error("unique"), { code: "23505" });
+    if (await this.findUserByEmail(input.email))
+      throw Object.assign(new Error("unique"), { code: "23505" });
     const user = { ...input, id: this.id++, role: "CUSTOMER" as const, status: "ACTIVE" as const };
     this.users.push(user);
     return user;
@@ -41,7 +45,8 @@ class MemoryAuthRepository {
         return { kind: "concurrent" as const };
       }
       for (const candidate of this.sessions.values()) {
-        if (candidate.userId === session.userId && !candidate.revokedAt) candidate.revokedAt = new Date();
+        if (candidate.userId === session.userId && !candidate.revokedAt)
+          candidate.revokedAt = new Date();
       }
       return { kind: "reuse" as const };
     }
@@ -93,7 +98,9 @@ function setup() {
 }
 
 function register(app: ReturnType<typeof setup>["app"], email = "person@example.com") {
-  return request(app).post("/api/v1/auth/register").send({ email, password: "long-password-123", fullName: "Test User" });
+  return request(app)
+    .post("/api/v1/auth/register")
+    .send({ email, password: "long-password-123", fullName: "Test User" });
 }
 function csrf(response: { body: { data: { csrfToken: string } } }) {
   return response.body.data.csrfToken;
@@ -105,7 +112,10 @@ describe("Authentication API integration", () => {
   it("registers a customer and sets HttpOnly refresh cookie without exposing its value", async () => {
     const { app, repository } = setup();
     const response = await register(app).expect(201);
-    expect(response.body.data).toMatchObject({ user: { email: "person@example.com", role: "CUSTOMER" }, expiresIn: 900 });
+    expect(response.body.data).toMatchObject({
+      user: { email: "person@example.com", role: "CUSTOMER" },
+      expiresIn: 900,
+    });
     expect(response.body.data).not.toHaveProperty("refreshToken");
     expect(String(response.headers["set-cookie"])).toContain(`${REFRESH_COOKIE}=`);
     expect(String(response.headers["set-cookie"])).toContain("HttpOnly");
@@ -125,7 +135,10 @@ describe("Authentication API integration", () => {
   it("logs in only with the correct password", async () => {
     const { app } = setup();
     await register(app).expect(201);
-    await request(app).post("/api/v1/auth/login").send({ email: "person@example.com", password: "wrong" }).expect(401);
+    await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "person@example.com", password: "wrong" })
+      .expect(401);
     await request(app)
       .post("/api/v1/auth/login")
       .send({ email: "person@example.com", password: "long-password-123" })
@@ -153,8 +166,13 @@ describe("Authentication API integration", () => {
     vi.useFakeTimers();
     const { app } = setup();
     const agent = request.agent(app);
-    const first = await agent.post("/api/v1/auth/register").send({ email: "rotate@example.com", password: "long-password-123" }).expect(201);
-    const oldCookie = String(first.headers["set-cookie"]).match(new RegExp(`(${REFRESH_COOKIE}=[^;,]+)`))?.[1];
+    const first = await agent
+      .post("/api/v1/auth/register")
+      .send({ email: "rotate@example.com", password: "long-password-123" })
+      .expect(201);
+    const oldCookie = String(first.headers["set-cookie"]).match(
+      new RegExp(`(${REFRESH_COOKIE}=[^;,]+)`),
+    )?.[1];
     expect(oldCookie).toBeDefined();
     const rotated = await agent
       .post("/api/v1/auth/refresh")
@@ -173,8 +191,13 @@ describe("Authentication API integration", () => {
   it("requires double-submit CSRF and logout revokes the refresh session", async () => {
     const { app } = setup();
     const agent = request.agent(app);
-    const login = await agent.post("/api/v1/auth/register").send({ email: "logout@example.com", password: "long-password-123" }).expect(201);
-    const refreshCookie = String(login.headers["set-cookie"]).match(new RegExp(`(${REFRESH_COOKIE}=[^;,]+)`))?.[1];
+    const login = await agent
+      .post("/api/v1/auth/register")
+      .send({ email: "logout@example.com", password: "long-password-123" })
+      .expect(201);
+    const refreshCookie = String(login.headers["set-cookie"]).match(
+      new RegExp(`(${REFRESH_COOKIE}=[^;,]+)`),
+    )?.[1];
     await agent.post("/api/v1/auth/logout").expect(403);
     await agent.post("/api/v1/auth/logout").set("x-csrf-token", csrf(login)).expect(200);
     await request(app)
@@ -188,8 +211,14 @@ describe("Authentication API integration", () => {
     const { app } = setup();
     const firstDevice = request.agent(app);
     const secondDevice = request.agent(app);
-    const first = await firstDevice.post("/api/v1/auth/register").send({ email: "devices@example.com", password: "long-password-123" }).expect(201);
-    const second = await secondDevice.post("/api/v1/auth/login").send({ email: "devices@example.com", password: "long-password-123" }).expect(200);
+    const first = await firstDevice
+      .post("/api/v1/auth/register")
+      .send({ email: "devices@example.com", password: "long-password-123" })
+      .expect(201);
+    const second = await secondDevice
+      .post("/api/v1/auth/login")
+      .send({ email: "devices@example.com", password: "long-password-123" })
+      .expect(200);
     await firstDevice
       .post("/api/v1/auth/logout-all")
       .set("Authorization", `Bearer ${first.body.data.accessToken}`)
@@ -201,16 +230,25 @@ describe("Authentication API integration", () => {
   it("rejects a blocked user on login and refresh", async () => {
     const { app, repository } = setup();
     const agent = request.agent(app);
-    const registered = await agent.post("/api/v1/auth/register").send({ email: "blocked@example.com", password: "long-password-123" }).expect(201);
+    const registered = await agent
+      .post("/api/v1/auth/register")
+      .send({ email: "blocked@example.com", password: "long-password-123" })
+      .expect(201);
     repository.users[0]!.status = "BLOCKED";
-    await request(app).post("/api/v1/auth/login").send({ email: "blocked@example.com", password: "long-password-123" }).expect(403);
+    await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "blocked@example.com", password: "long-password-123" })
+      .expect(403);
     await agent.post("/api/v1/auth/refresh").set("x-csrf-token", csrf(registered)).expect(403);
   });
 
   it("allows only one concurrent rotation and keeps the winning token usable", async () => {
     const { app } = setup();
     const agent = request.agent(app);
-    const initial = await agent.post("/api/v1/auth/register").send({ email: "race@example.com", password: "long-password-123" }).expect(201);
+    const initial = await agent
+      .post("/api/v1/auth/register")
+      .send({ email: "race@example.com", password: "long-password-123" })
+      .expect(201);
     const [one, two] = await Promise.all([
       agent.post("/api/v1/auth/refresh").set("x-csrf-token", csrf(initial)),
       agent.post("/api/v1/auth/refresh").set("x-csrf-token", csrf(initial)),

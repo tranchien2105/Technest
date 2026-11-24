@@ -90,7 +90,8 @@ export default function TrendingSection({
       <div className="section-heading">
         <div>
           <span className="section-kicker">
-            {cms?.eyebrow ?? (language === "vi" ? "ĐƯỢC CỘNG ĐỒNG LỰA CHỌN" : "COMMUNITY FAVORITES")}
+            {cms?.eyebrow ??
+              (language === "vi" ? "ĐƯỢC CỘNG ĐỒNG LỰA CHỌN" : "COMMUNITY FAVORITES")}
           </span>
           <h2>
             {cms?.title ?? t.trending} <Sparkles size={22} className="heading-sparkle" />

@@ -19,11 +19,45 @@ export function createAuthRepository(db: Database) {
       const [user] = await db.insert(users).values(input).returning();
       return user;
     },
-    async createSession(userId: number, tokenHash: string, expiresAt: Date) {
-      await db.insert(authSessions).values({ userId, refreshTokenHash: tokenHash, expiresAt });
+    async createSession(
+      userId: number,
+      tokenHash: string,
+      expiresAt: Date,
+      expectedResetAt?: Date | null,
+    ) {
+      return db.transaction(async (tx) => {
+        const [user] = await tx
+          .select()
+          .from(users)
+          .where(eq(users.id, userId))
+          .for("update")
+          .limit(1);
+        if (
+          !user ||
+          user.status !== "ACTIVE" ||
+          (expectedResetAt !== undefined &&
+            (user.passwordResetAt?.getTime() || 0) !== (expectedResetAt?.getTime() || 0))
+        )
+          return false;
+        await tx.insert(authSessions).values({ userId, refreshTokenHash: tokenHash, expiresAt });
+        return true;
+      });
     },
     async rotateSession(oldHash: string, newHash: string, expiresAt: Date) {
       return db.transaction(async (tx) => {
+        const [candidate] = await tx
+          .select({ userId: authSessions.userId })
+          .from(authSessions)
+          .where(eq(authSessions.refreshTokenHash, oldHash))
+          .limit(1);
+        if (!candidate) return { kind: "invalid" as const };
+        // Lock users before sessions, matching password reset and session issuance.
+        const [user] = await tx
+          .select()
+          .from(users)
+          .where(eq(users.id, candidate.userId))
+          .for("update")
+          .limit(1);
         const [session] = await tx
           .select()
           .from(authSessions)
@@ -43,7 +77,6 @@ export function createAuthRepository(db: Database) {
           return { kind: "reuse" as const };
         }
         if (session.expiresAt <= new Date()) return { kind: "invalid" as const };
-        const [user] = await tx.select().from(users).where(eq(users.id, session.userId)).limit(1);
         if (!user || user.status !== "ACTIVE") {
           await tx
             .update(authSessions)
@@ -55,7 +88,9 @@ export function createAuthRepository(db: Database) {
           .update(authSessions)
           .set({ revokedAt: new Date(), rotatedAt: new Date() })
           .where(and(eq(authSessions.id, session.id), isNull(authSessions.revokedAt)));
-        await tx.insert(authSessions).values({ userId: user.id, refreshTokenHash: newHash, expiresAt });
+        await tx
+          .insert(authSessions)
+          .values({ userId: user.id, refreshTokenHash: newHash, expiresAt });
         return { kind: "ok" as const, user };
       });
     },

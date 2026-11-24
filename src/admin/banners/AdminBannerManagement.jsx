@@ -124,7 +124,10 @@ export default function AdminBannerManagement({ canWrite, previewProps }) {
   useEffect(() => {
     const controller = new AbortController();
     const timer = window.setTimeout(() => load(controller.signal), 0);
-    return () => { window.clearTimeout(timer); controller.abort(); };
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
   }, [load, refresh]);
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(published);
@@ -287,7 +290,13 @@ export default function AdminBannerManagement({ canWrite, previewProps }) {
         key,
         (draft[key] || [])
           .map((id) => byId.get(id))
-          .filter((banner) => banner && banner.active && (!banner.startsAt || new Date(banner.startsAt).getTime() <= Date.now()) && (!banner.endsAt || new Date(banner.endsAt).getTime() > Date.now()))
+          .filter(
+            (banner) =>
+              banner &&
+              banner.active &&
+              (!banner.startsAt || new Date(banner.startsAt).getTime() <= Date.now()) &&
+              (!banner.endsAt || new Date(banner.endsAt).getTime() > Date.now()),
+          )
           .slice(0, 10),
       ]),
     ),

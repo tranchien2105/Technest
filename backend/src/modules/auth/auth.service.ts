@@ -28,8 +28,14 @@ const safeUser = (user: SafeUser): SafeUser => ({
 
 export function createAuthService(repository: AuthRepository, jwtSecret: string) {
   const key = new TextEncoder().encode(jwtSecret);
-  async function issue(user: SafeUser, refreshToken = opaqueToken()) {
-    const accessToken = await new SignJWT({ role: user.role })
+  async function issue(
+    user: SafeUser & { passwordResetAt?: Date | null },
+    refreshToken = opaqueToken(),
+  ) {
+    const accessToken = await new SignJWT({
+      role: user.role,
+      resetVersion: user.passwordResetAt?.getTime() || 0,
+    })
       .setProtectedHeader({ alg: "HS256" })
       .setSubject(String(user.id))
       .setIssuedAt()
@@ -46,7 +52,11 @@ export function createAuthService(repository: AuthRepository, jwtSecret: string)
   return {
     async register(input: { email: string; password: string; fullName?: string }) {
       if (await repository.findUserByEmail(input.email)) {
-        throw new AppError(409, "EMAIL_ALREADY_EXISTS", "An account with this email already exists");
+        throw new AppError(
+          409,
+          "EMAIL_ALREADY_EXISTS",
+          "An account with this email already exists",
+        );
       }
       const passwordHash = await argon2.hash(input.password, {
         type: argon2.argon2id,
@@ -63,30 +73,42 @@ export function createAuthService(repository: AuthRepository, jwtSecret: string)
         });
       } catch (error) {
         if (error && typeof error === "object" && "code" in error && error.code === "23505") {
-          throw new AppError(409, "EMAIL_ALREADY_EXISTS", "An account with this email already exists");
+          throw new AppError(
+            409,
+            "EMAIL_ALREADY_EXISTS",
+            "An account with this email already exists",
+          );
         }
         throw error;
       }
       if (!user) throw new AppError(500, "INTERNAL_ERROR", "Unable to create account");
       const credentials = await issue(user);
-      await repository.createSession(
+      const sessionCreated = await repository.createSession(
         user.id,
         refreshHash(credentials.refreshToken),
         new Date(Date.now() + REFRESH_TTL_SECONDS * 1000),
+        user.passwordResetAt ?? null,
       );
+      if (sessionCreated === false)
+        throw new AppError(401, "INVALID_CREDENTIALS", "Credentials changed; please sign in again");
       return credentials;
     },
     async login(input: { email: string; password: string }) {
       const user = await repository.findUserByEmail(input.email);
       const valid = user ? await argon2.verify(user.passwordHash, input.password) : false;
-      if (!user || !valid) throw new AppError(401, "INVALID_CREDENTIALS", "Email or password is incorrect");
-      if (user.status !== "ACTIVE") throw new AppError(403, "ACCOUNT_BLOCKED", "This account is blocked");
+      if (!user || !valid)
+        throw new AppError(401, "INVALID_CREDENTIALS", "Email or password is incorrect");
+      if (user.status !== "ACTIVE")
+        throw new AppError(403, "ACCOUNT_BLOCKED", "This account is blocked");
       const credentials = await issue(user);
-      await repository.createSession(
+      const sessionCreated = await repository.createSession(
         user.id,
         refreshHash(credentials.refreshToken),
         new Date(Date.now() + REFRESH_TTL_SECONDS * 1000),
+        user.passwordResetAt ?? null,
       );
+      if (sessionCreated === false)
+        throw new AppError(401, "INVALID_CREDENTIALS", "Credentials changed; please sign in again");
       return credentials;
     },
     async refresh(token: string | undefined) {
@@ -101,10 +123,16 @@ export function createAuthService(repository: AuthRepository, jwtSecret: string)
         throw new AppError(401, "REFRESH_TOKEN_REUSE", "Session revoked; please sign in again");
       }
       if (result.kind === "concurrent") {
-        throw new AppError(409, "REFRESH_ALREADY_USED", "A concurrent refresh already rotated this session");
+        throw new AppError(
+          409,
+          "REFRESH_ALREADY_USED",
+          "A concurrent refresh already rotated this session",
+        );
       }
-      if (result.kind === "blocked") throw new AppError(403, "ACCOUNT_BLOCKED", "This account is blocked");
-      if (result.kind !== "ok") throw new AppError(401, "INVALID_REFRESH_TOKEN", "Refresh token is invalid or expired");
+      if (result.kind === "blocked")
+        throw new AppError(403, "ACCOUNT_BLOCKED", "This account is blocked");
+      if (result.kind !== "ok")
+        throw new AppError(401, "INVALID_REFRESH_TOKEN", "Refresh token is invalid or expired");
       return issue(result.user, replacement);
     },
     async logout(token: string | undefined) {
@@ -120,7 +148,11 @@ export function createAuthService(repository: AuthRepository, jwtSecret: string)
         const id = Number(payload.sub);
         if (!Number.isSafeInteger(id) || id <= 0) throw new Error("Invalid subject");
         const user = await repository.findUserById(id);
-        if (!user || user.status !== "ACTIVE") {
+        if (
+          !user ||
+          user.status !== "ACTIVE" ||
+          (payload.resetVersion ?? 0) !== (user.passwordResetAt?.getTime() || 0)
+        ) {
           throw new AppError(401, "UNAUTHENTICATED", "Access token is invalid");
         }
         return safeUser(user);

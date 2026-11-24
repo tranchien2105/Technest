@@ -35,7 +35,16 @@ export default function CheckoutPage({
     toggleCompare,
   };
   const lang = language === "vi";
-  const { checkoutCart, checkoutSubtotal, submitOrder, submitting, error, preview, applyVoucher, invalidatePreview } = useCheckout({
+  const {
+    checkoutCart,
+    checkoutSubtotal,
+    submitOrder,
+    submitting,
+    error,
+    preview,
+    applyVoucher,
+    invalidatePreview,
+  } = useCheckout({
     route,
     cart,
     setCart,

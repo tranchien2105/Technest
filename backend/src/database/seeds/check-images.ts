@@ -9,7 +9,11 @@ const database = new URL(env.DATABASE_URL);
 if (env.NODE_ENV !== "development" || database.pathname !== "/technest_dev") {
   throw new Error("Image checker is restricted to development database technest_dev");
 }
-const { pool } = createDatabase(env.DATABASE_URL, { connectionTimeoutMillis: 10000, statement_timeout: 30000, query_timeout: 32000 });
+const { pool } = createDatabase(env.DATABASE_URL, {
+  connectionTimeoutMillis: 10000,
+  statement_timeout: 30000,
+  query_timeout: 32000,
+});
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../");
 const concurrency = 8;
 const timeoutMs = 6000;
@@ -27,9 +31,14 @@ async function checkUrl(url: string) {
   let lastStatus = 0;
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
-      const response = await fetch(url, { method: "HEAD", redirect: "follow", signal: AbortSignal.timeout(timeoutMs) });
+      const response = await fetch(url, {
+        method: "HEAD",
+        redirect: "follow",
+        signal: AbortSignal.timeout(timeoutMs),
+      });
       lastStatus = response.status;
-      if (response.ok && (response.headers.get("content-type") || "").startsWith("image/")) return { ok: true, status: response.status };
+      if (response.ok && (response.headers.get("content-type") || "").startsWith("image/"))
+        return { ok: true, status: response.status };
     } catch {
       lastStatus = 0;
     }
@@ -55,13 +64,21 @@ async function checkUrls(urls: string[]) {
 
 try {
   await mkdir(path.join(root, "public", "images", "catalog-illustrations"), { recursive: true });
-  const selectImages = () => pool.query<{ id: string; product_id: string; url: string; sort_order: number; product_name: string; root_slug: string }>(
-    `SELECT pi.id::text, pi.product_id::text, pi.url, pi.sort_order, p.name AS product_name,
+  const selectImages = () =>
+    pool.query<{
+      id: string;
+      product_id: string;
+      url: string;
+      sort_order: number;
+      product_name: string;
+      root_slug: string;
+    }>(
+      `SELECT pi.id::text, pi.product_id::text, pi.url, pi.sort_order, p.name AS product_name,
       COALESCE(parent.slug, c.slug) AS root_slug
      FROM product_images pi JOIN products p ON p.id = pi.product_id
      JOIN categories c ON c.id = p.category_id
      LEFT JOIN categories parent ON parent.id = c.parent_category_id ORDER BY pi.id`,
-  );
+    );
   let images = await selectImages();
   let uniqueUrls = [...new Set(images.rows.map((image) => image.url))];
   let results = await checkUrls(uniqueUrls);
@@ -73,7 +90,11 @@ try {
       const assetPath = path.resolve(root, "public", `.${url}`);
       try {
         await (await import("node:fs/promises")).access(assetPath);
-        await pool.query("UPDATE product_images SET url=$1, alt_text=$2 WHERE id=$3", [url, `Ảnh minh họa ${image.product_name} · không phải ảnh chính thức của nhà sản xuất`, image.id]);
+        await pool.query("UPDATE product_images SET url=$1, alt_text=$2 WHERE id=$3", [
+          url,
+          `Ảnh minh họa ${image.product_name} · không phải ảnh chính thức của nhà sản xuất`,
+          image.id,
+        ]);
       } catch {
         // Report the broken URL if the matching illustration is not present.
       }
@@ -87,17 +108,26 @@ try {
     `SELECT count(*)::text AS count FROM products p WHERE p.status='ACTIVE'
      AND NOT EXISTS (SELECT 1 FROM product_images pi WHERE pi.product_id=p.id AND pi.sort_order=0)`,
   );
-  const productCount = await pool.query<{ count: string }>("SELECT count(*)::text AS count FROM products WHERE status='ACTIVE'");
+  const productCount = await pool.query<{ count: string }>(
+    "SELECT count(*)::text AS count FROM products WHERE status='ACTIVE'",
+  );
   const report = {
     activeProducts: Number(productCount.rows[0]?.count || 0),
-    activeProductsWithThumbnail: Number(productCount.rows[0]?.count || 0) - Number(missingProducts.rows[0]?.count || 0),
+    activeProductsWithThumbnail:
+      Number(productCount.rows[0]?.count || 0) - Number(missingProducts.rows[0]?.count || 0),
     activeProductsMissingThumbnail: Number(missingProducts.rows[0]?.count || 0),
     totalImageRows: images.rows.length,
     distinctImageUrls: uniqueUrls.length,
     validImageUrls: uniqueUrls.filter((url) => results.get(url)?.ok).length,
     brokenImageUrls: reportBroken.length,
-    brokenRecords: reportBroken.slice(0, 30).map((image) => ({ product: image.product_name, url: image.url, status: results.get(image.url)?.status })),
-    illustrationImageRows: images.rows.filter((image) => image.url.startsWith("/images/catalog-illustrations/")).length,
+    brokenRecords: reportBroken.slice(0, 30).map((image) => ({
+      product: image.product_name,
+      url: image.url,
+      status: results.get(image.url)?.status,
+    })),
+    illustrationImageRows: images.rows.filter((image) =>
+      image.url.startsWith("/images/catalog-illustrations/"),
+    ).length,
     concurrency,
     retryCount: 1,
   };

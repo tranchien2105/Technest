@@ -22,21 +22,38 @@ export function errorHandler(logger: Logger): ErrorRequestHandler {
     const known =
       error instanceof AppError
         ? error
-        : error instanceof MulterError ? new AppError(400, "UPLOAD_LIMIT", "Tệp tải lên vượt giới hạn kích thước hoặc số lượng.")
-        : error instanceof ZodError ? new AppError(400, "VALIDATION_ERROR", "Dữ liệu không hợp lệ.", error.issues)
-        : databaseCode === "23505" ? new AppError(409, "DUPLICATE_RECORD", "Mã hoặc email đã tồn tại. Vui lòng kiểm tra lại.")
-        : databaseCode === "23503" ? new AppError(409, "REFERENCE_CONFLICT", "Bản ghi đang được sử dụng hoặc liên kết không còn tồn tại.")
-        : malformedJson
-          ? new AppError(400, "INVALID_JSON", "Malformed JSON body")
-          : tooLarge
-            ? new AppError(413, "PAYLOAD_TOO_LARGE", "Request body exceeds size limit")
-            : new AppError(500, "INTERNAL_ERROR", "An unexpected error occurred");
+        : error instanceof MulterError
+          ? new AppError(400, "UPLOAD_LIMIT", "Tệp tải lên vượt giới hạn kích thước hoặc số lượng.")
+          : error instanceof ZodError
+            ? new AppError(400, "VALIDATION_ERROR", "Dữ liệu không hợp lệ.", error.issues)
+            : databaseCode === "23505"
+              ? new AppError(
+                  409,
+                  "DUPLICATE_RECORD",
+                  "Mã hoặc email đã tồn tại. Vui lòng kiểm tra lại.",
+                )
+              : databaseCode === "23503"
+                ? new AppError(
+                    409,
+                    "REFERENCE_CONFLICT",
+                    "Bản ghi đang được sử dụng hoặc liên kết không còn tồn tại.",
+                  )
+                : malformedJson
+                  ? new AppError(400, "INVALID_JSON", "Malformed JSON body")
+                  : tooLarge
+                    ? new AppError(413, "PAYLOAD_TOO_LARGE", "Request body exceeds size limit")
+                    : new AppError(500, "INTERNAL_ERROR", "An unexpected error occurred");
     if (known.statusCode >= 500) {
       // Avoid logging arbitrary exception messages that could contain connection URLs or secrets.
       logger.error(
-        { requestId: request.id, method: request.method, path: request.path, statusCode: known.statusCode,
+        {
+          requestId: request.id,
+          method: request.method,
+          path: request.path,
+          statusCode: known.statusCode,
           errorType: error instanceof Error ? error.name : "UnknownError",
-          ...(databaseCode && /^[0-9A-Z]{5}$/.test(databaseCode) ? { databaseCode } : {}) },
+          ...(databaseCode && /^[0-9A-Z]{5}$/.test(databaseCode) ? { databaseCode } : {}),
+        },
         "Request failed",
       );
     }

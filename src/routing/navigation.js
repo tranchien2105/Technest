@@ -44,17 +44,22 @@ export function categoryFromRoute(route, categories) {
 export function updateRouteQuery(route, updates) {
   const url = new URL(route, "http://technest.local");
   for (const [key, value] of Object.entries(updates)) {
-    if (value === null || value === "" || value === "all")
-      url.searchParams.delete(key);
+    if (value === null || value === "" || value === "all") url.searchParams.delete(key);
     else url.searchParams.set(key, value);
   }
   return url.pathname + (url.searchParams.size ? `?${url.searchParams}` : "") + url.hash;
 }
 
 export function updateCatalogQuery(route, key, value) {
-  if ((key === "category" && route.startsWith("/categories/")) || (key === "brand" && route.startsWith("/brands/"))) {
+  if (
+    (key === "category" && route.startsWith("/categories/")) ||
+    (key === "brand" && route.startsWith("/brands/"))
+  ) {
     const url = new URL(route, "http://technest.local");
-    url.pathname = value && value !== "all" ? `/${key === "category" ? "categories" : "brands"}/${encodeURIComponent(value)}` : "/products";
+    url.pathname =
+      value && value !== "all"
+        ? `/${key === "category" ? "categories" : "brands"}/${encodeURIComponent(value)}`
+        : "/products";
     url.searchParams.delete(key);
     url.searchParams.delete("page");
     return url.pathname + url.search;
@@ -67,15 +72,27 @@ export function updateCatalogQuery(route, key, value) {
 export function routePage(route) {
   const { pathname: path } = new URL(route, "http://technest.local");
   if (path === "/") return "home";
-  if (path === "/products" || path === "/search" || /^\/(categories|brands)\/[a-z0-9-]+$/.test(path)) return "products";
+  if (
+    path === "/products" ||
+    path === "/search" ||
+    /^\/(categories|brands)\/[a-z0-9-]+$/.test(path)
+  )
+    return "products";
   if (path === "/flash-sale") return "flash-sale";
   if (/^\/products\/[^/]+$/.test(path)) return "detail";
   if (["/favorites", "/compare", "/setup", "/cart", "/checkout"].includes(path))
     return path.slice(1);
   if (/^\/order-success\/[^/]+$/.test(path)) return "success";
-  if (["/login", "/register", "/forgot-password"].includes(path)) return "auth";
+  if (["/login", "/register", "/forgot-password", "/reset-password"].includes(path)) return "auth";
   if (
-    ["/account", "/account/orders", "/account/profile", "/account/addresses", "/account/security", "/account/notifications"].includes(path) ||
+    [
+      "/account",
+      "/account/orders",
+      "/account/profile",
+      "/account/addresses",
+      "/account/security",
+      "/account/notifications",
+    ].includes(path) ||
     /^\/account\/orders\/[^/]+$/.test(path)
   )
     return "account";

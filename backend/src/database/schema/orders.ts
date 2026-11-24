@@ -31,7 +31,9 @@ export const orders = pgTable(
   {
     id: bigint("id", { mode: "bigint" }).generatedAlwaysAsIdentity().primaryKey(),
     orderNumber: varchar("order_number", { length: 40 }).notNull().unique(),
-    userId: bigint("user_id", { mode: "bigint" }).notNull().references(() => users.id, { onDelete: "restrict" }),
+    userId: bigint("user_id", { mode: "bigint" })
+      .notNull()
+      .references(() => users.id, { onDelete: "restrict" }),
     idempotencyKey: varchar("idempotency_key", { length: 160 }),
     requestHash: varchar("request_hash", { length: 64 }).notNull(),
     status: orderStatus("status").notNull().default("PENDING"),
@@ -39,7 +41,9 @@ export const orders = pgTable(
     paymentStatus: orderPaymentStatus("payment_status").notNull().default("UNPAID"),
     subtotal: bigint("subtotal", { mode: "bigint" }).notNull(),
     shippingFee: bigint("shipping_fee", { mode: "bigint" }).notNull(),
-    discountAmount: bigint("discount_amount", { mode: "bigint" }).notNull().default(sql`0`),
+    discountAmount: bigint("discount_amount", { mode: "bigint" })
+      .notNull()
+      .default(sql`0`),
     totalAmount: bigint("total_amount", { mode: "bigint" }).notNull(),
     shippingFullName: varchar("shipping_full_name", { length: 200 }).notNull(),
     shippingPhone: varchar("shipping_phone", { length: 30 }).notNull(),
@@ -70,9 +74,15 @@ export const orderItems = pgTable(
   "order_items",
   {
     id: bigint("id", { mode: "bigint" }).generatedAlwaysAsIdentity().primaryKey(),
-    orderId: bigint("order_id", { mode: "bigint" }).notNull().references(() => orders.id, { onDelete: "restrict" }),
-    variantId: bigint("variant_id", { mode: "bigint" }).notNull().references(() => productVariants.id, { onDelete: "restrict" }),
-    productId: bigint("product_id", { mode: "bigint" }).notNull().references(() => products.id, { onDelete: "restrict" }),
+    orderId: bigint("order_id", { mode: "bigint" })
+      .notNull()
+      .references(() => orders.id, { onDelete: "restrict" }),
+    variantId: bigint("variant_id", { mode: "bigint" })
+      .notNull()
+      .references(() => productVariants.id, { onDelete: "restrict" }),
+    productId: bigint("product_id", { mode: "bigint" })
+      .notNull()
+      .references(() => products.id, { onDelete: "restrict" }),
     productName: varchar("product_name", { length: 220 }).notNull(),
     variantName: varchar("variant_name", { length: 180 }),
     sku: varchar("sku", { length: 100 }).notNull(),
@@ -92,15 +102,23 @@ export const orderItems = pgTable(
     check("order_items_unit_price_check", sql`${table.unitPrice} >= 0`),
     check("order_items_line_total_check", sql`${table.lineTotal} >= 0`),
     check("order_items_quantity_check", sql`${table.quantity} > 0`),
-    check("order_items_flash_sale_snapshot_check", sql`(${table.flashSaleItemId} IS NULL AND ${table.flashSaleCampaignId} IS NULL AND ${table.flashSaleOriginalPrice} IS NULL AND ${table.flashSaleDiscountAmount} IS NULL) OR (${table.flashSaleItemId} IS NOT NULL AND ${table.flashSaleCampaignId} IS NOT NULL AND ${table.flashSaleOriginalPrice} > ${table.unitPrice} AND ${table.flashSaleDiscountAmount} > 0)`),
+    check(
+      "order_items_flash_sale_snapshot_check",
+      sql`(${table.flashSaleItemId} IS NULL AND ${table.flashSaleCampaignId} IS NULL AND ${table.flashSaleOriginalPrice} IS NULL AND ${table.flashSaleDiscountAmount} IS NULL) OR (${table.flashSaleItemId} IS NOT NULL AND ${table.flashSaleCampaignId} IS NOT NULL AND ${table.flashSaleOriginalPrice} > ${table.unitPrice} AND ${table.flashSaleDiscountAmount} > 0)`,
+    ),
   ],
 );
 
 export const orderInventoryReservations = pgTable(
   "order_inventory_reservations",
   {
-    orderId: bigint("order_id", { mode: "bigint" }).notNull().references(() => orders.id, { onDelete: "restrict" }),
-    reservationId: bigint("reservation_id", { mode: "bigint" }).notNull().unique().references(() => inventoryReservations.id, { onDelete: "restrict" }),
+    orderId: bigint("order_id", { mode: "bigint" })
+      .notNull()
+      .references(() => orders.id, { onDelete: "restrict" }),
+    reservationId: bigint("reservation_id", { mode: "bigint" })
+      .notNull()
+      .unique()
+      .references(() => inventoryReservations.id, { onDelete: "restrict" }),
   },
   (table) => [unique().on(table.orderId, table.reservationId)],
 );
@@ -109,10 +127,14 @@ export const orderStatusHistory = pgTable(
   "order_status_history",
   {
     id: bigint("id", { mode: "bigint" }).generatedAlwaysAsIdentity().primaryKey(),
-    orderId: bigint("order_id", { mode: "bigint" }).notNull().references(() => orders.id, { onDelete: "restrict" }),
+    orderId: bigint("order_id", { mode: "bigint" })
+      .notNull()
+      .references(() => orders.id, { onDelete: "restrict" }),
     fromStatus: orderStatus("from_status"),
     toStatus: orderStatus("to_status").notNull(),
-    changedBy: bigint("changed_by", { mode: "bigint" }).references(() => users.id, { onDelete: "set null" }),
+    changedBy: bigint("changed_by", { mode: "bigint" }).references(() => users.id, {
+      onDelete: "set null",
+    }),
     note: text("note"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },

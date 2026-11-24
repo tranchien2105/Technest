@@ -88,7 +88,10 @@ export function useSeo(route) {
     };
     const refresh = async () => {
       try {
-        let page = await apiGet(`/seo/page?path=${encodeURIComponent(route)}&metadata=1`, {
+        const url = new URL(route, "http://technest.local");
+        const metadataPath =
+          url.pathname === "/reset-password" ? url.pathname : url.pathname + url.search;
+        let page = await apiGet(`/seo/page?path=${encodeURIComponent(metadataPath)}&metadata=1`, {
           signal: controller.signal,
         });
         for (let i = 0; page.redirect && i < 3; i++)

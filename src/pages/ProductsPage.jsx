@@ -72,7 +72,9 @@ export default function ProductsPage({
           <option value="all">{tx("All categories", "Tất cả danh mục", lang)}</option>
           {categories.slice(1).map((c) => (
             <optgroup key={c.id} label={c[language]}>
-              <option value={c.id}>{c[language]} · {tx("All", "Tất cả", lang)}</option>
+              <option value={c.id}>
+                {c[language]} · {tx("All", "Tất cả", lang)}
+              </option>
               {(c.children || []).map((child) => (
                 <option key={child.id} value={child.id}>
                   {child.name}
@@ -82,14 +84,21 @@ export default function ProductsPage({
           ))}
         </select>
       </label>
-      <BrandFilter brands={brands} value={catalogQuery.brand || "all"} onChange={(value) => setCatalogQuery("brand", value)} language={language}/>
+      <BrandFilter
+        brands={brands}
+        value={catalogQuery.brand || "all"}
+        onChange={(value) => setCatalogQuery("brand", value)}
+        language={language}
+      />
       <label>
         {tx("Min price", "Giá thấp nhất", lang)}
         <CurrencyInput
           key={`min-${min}`}
           value={minDraft}
           onValueChange={setMinDraft}
-          onBlur={(event) => setCatalogQuery("minPrice", event.currentTarget.value.replace(/\D/g, ""))}
+          onBlur={(event) =>
+            setCatalogQuery("minPrice", event.currentTarget.value.replace(/\D/g, ""))
+          }
           placeholder="Giá thấp nhất"
         />
       </label>
@@ -99,7 +108,9 @@ export default function ProductsPage({
           key={`max-${max}`}
           value={maxDraft}
           onValueChange={setMaxDraft}
-          onBlur={(event) => setCatalogQuery("maxPrice", event.currentTarget.value.replace(/\D/g, ""))}
+          onBlur={(event) =>
+            setCatalogQuery("maxPrice", event.currentTarget.value.replace(/\D/g, ""))
+          }
           placeholder="Giá cao nhất"
         />
       </label>
@@ -144,8 +155,8 @@ export default function ProductsPage({
             {categoryName
               ? categoryName
               : path === "/search"
-              ? `${tx("Results for", "Kết quả tìm kiếm cho", lang)} “${q}”`
-              : tx("Find the right tech for you", "Chọn công nghệ phù hợp với bạn", lang)}
+                ? `${tx("Results for", "Kết quả tìm kiếm cho", lang)} “${q}”`
+                : tx("Find the right tech for you", "Chọn công nghệ phù hợp với bạn", lang)}
           </h1>
           <p>
             {categoryName
@@ -155,16 +166,16 @@ export default function ProductsPage({
                   lang,
                 )
               : path === "/search"
-              ? tx(
-                  "Explore matching products and refine your results below.",
-                  "Khám phá sản phẩm phù hợp và tinh chỉnh kết quả bên dưới.",
-                  lang,
-                )
-              : tx(
-                  "Explore reliable devices, useful accessories and everyday essentials.",
-                  "Khám phá thiết bị chính hãng, phụ kiện hữu ích và sản phẩm thiết yếu mỗi ngày.",
-                  lang,
-                )}
+                ? tx(
+                    "Explore matching products and refine your results below.",
+                    "Khám phá sản phẩm phù hợp và tinh chỉnh kết quả bên dưới.",
+                    lang,
+                  )
+                : tx(
+                    "Explore reliable devices, useful accessories and everyday essentials.",
+                    "Khám phá thiết bị chính hãng, phụ kiện hữu ích và sản phẩm thiết yếu mỗi ngày.",
+                    lang,
+                  )}
           </p>
           <a href="#catalog-results" className="catalog-hero-link">
             {tx("Browse products", "Xem sản phẩm", lang)} <ArrowRight size={15} />
@@ -289,22 +300,41 @@ function CatalogPagination({ pagination, onPageChange, language }) {
   const lastItem = Math.min(page * limit, total);
   const jump = (nextPage) => {
     onPageChange(nextPage);
-    document.getElementById("catalog-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById("catalog-results")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <nav className="catalog-pagination" aria-label={tx("Product pages", "Trang sản phẩm", lang)}>
       <p className="catalog-pagination-count">
-        {tx("Showing", "Đang xem", lang)} <strong>{firstItem}–{lastItem}</strong> {tx("of", "/", lang)} <strong>{total}</strong>
+        {tx("Showing", "Đang xem", lang)}{" "}
+        <strong>
+          {firstItem}–{lastItem}
+        </strong>{" "}
+        {tx("of", "/", lang)} <strong>{total}</strong>
       </p>
       <div className="catalog-pagination-controls">
-        <button type="button" className="catalog-page-step" disabled={page <= 1} onClick={() => jump(page - 1)}>
+        <button
+          type="button"
+          className="catalog-page-step"
+          disabled={page <= 1}
+          onClick={() => jump(page - 1)}
+        >
           {tx("Previous", "Trước", lang)}
         </button>
-        {start > 1 && <>
-          <button type="button" className="catalog-page-number" onClick={() => jump(1)}>1</button>
-          {start > 2 && <span className="catalog-page-ellipsis" aria-hidden="true">…</span>}
-        </>}
+        {start > 1 && (
+          <>
+            <button type="button" className="catalog-page-number" onClick={() => jump(1)}>
+              1
+            </button>
+            {start > 2 && (
+              <span className="catalog-page-ellipsis" aria-hidden="true">
+                …
+              </span>
+            )}
+          </>
+        )}
         {pages.map((number) => (
           <button
             key={number}
@@ -312,13 +342,28 @@ function CatalogPagination({ pagination, onPageChange, language }) {
             className="catalog-page-number"
             aria-current={number === page ? "page" : undefined}
             onClick={() => jump(number)}
-          >{number}</button>
+          >
+            {number}
+          </button>
         ))}
-        {start + pages.length - 1 < totalPages && <>
-          {start + pages.length < totalPages && <span className="catalog-page-ellipsis" aria-hidden="true">…</span>}
-          <button type="button" className="catalog-page-number" onClick={() => jump(totalPages)}>{totalPages}</button>
-        </>}
-        <button type="button" className="catalog-page-step" disabled={page >= totalPages} onClick={() => jump(page + 1)}>
+        {start + pages.length - 1 < totalPages && (
+          <>
+            {start + pages.length < totalPages && (
+              <span className="catalog-page-ellipsis" aria-hidden="true">
+                …
+              </span>
+            )}
+            <button type="button" className="catalog-page-number" onClick={() => jump(totalPages)}>
+              {totalPages}
+            </button>
+          </>
+        )}
+        <button
+          type="button"
+          className="catalog-page-step"
+          disabled={page >= totalPages}
+          onClick={() => jump(page + 1)}
+        >
           {tx("Next", "Sau", lang)}
         </button>
       </div>

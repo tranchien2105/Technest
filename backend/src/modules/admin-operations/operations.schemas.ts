@@ -13,7 +13,17 @@ export const bannerInput = z
       .max(500)
       .refine((v) => v.startsWith("/") && !v.startsWith("//") && !v.includes("\\")),
     buttonText: z.string().trim().min(1).max(60).default("Khám phá ngay"),
-    position: z.enum(["HOME_HERO", "HOME_HERO_RIGHT_TOP", "HOME_HERO_RIGHT_BOTTOM", "HOME_PROMO", "HOME_BOTTOM", "HOME_SETUP_STUDIO"]).nullable().default("HOME_PROMO"),
+    position: z
+      .enum([
+        "HOME_HERO",
+        "HOME_HERO_RIGHT_TOP",
+        "HOME_HERO_RIGHT_BOTTOM",
+        "HOME_PROMO",
+        "HOME_BOTTOM",
+        "HOME_SETUP_STUDIO",
+      ])
+      .nullable()
+      .default("HOME_PROMO"),
     sortOrder: z.number().int().min(0).max(999).default(0),
     active: z.boolean().default(true),
     startsAt: z.iso.datetime({ offset: true }).nullable().default(null),
@@ -23,19 +33,25 @@ export const bannerInput = z
     path: ["endsAt"],
     message: "Ngày kết thúc phải sau ngày bắt đầu",
   });
-export const bannerPlacementsInput = z.object({
-  placements: z.object({
-    HOME_HERO: z.array(idString).max(100),
-    HOME_HERO_RIGHT_TOP: z.array(idString).max(100),
-    HOME_HERO_RIGHT_BOTTOM: z.array(idString).max(100),
-    HOME_PROMO: z.array(idString).max(100),
-    HOME_BOTTOM: z.array(idString).max(100),
-    HOME_SETUP_STUDIO: z.array(idString).max(100),
-  }),
-}).superRefine(({ placements }, ctx) => {
-  const ids = Object.values(placements).flat();
-  if (new Set(ids).size !== ids.length) ctx.addIssue({ code: "custom", message: "Một banner không thể được gán nhiều vị trí cùng lúc." });
-});
+export const bannerPlacementsInput = z
+  .object({
+    placements: z.object({
+      HOME_HERO: z.array(idString).max(100),
+      HOME_HERO_RIGHT_TOP: z.array(idString).max(100),
+      HOME_HERO_RIGHT_BOTTOM: z.array(idString).max(100),
+      HOME_PROMO: z.array(idString).max(100),
+      HOME_BOTTOM: z.array(idString).max(100),
+      HOME_SETUP_STUDIO: z.array(idString).max(100),
+    }),
+  })
+  .superRefine(({ placements }, ctx) => {
+    const ids = Object.values(placements).flat();
+    if (new Set(ids).size !== ids.length)
+      ctx.addIssue({
+        code: "custom",
+        message: "Một banner không thể được gán nhiều vị trí cùng lúc.",
+      });
+  });
 export const voucherInput = z
   .object({
     code: z

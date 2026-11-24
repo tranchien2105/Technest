@@ -41,11 +41,41 @@ describe.skipIf(process.env.RUN_ADMIN_OPS_DB_TESTS !== "1")(
               fullName: "Fixture",
             })
             .returning();
-          const staff = await ops.saveStaff({email:`staff-${key}@example.test`, fullName:"Nhân viên kiểm thử", password:"FixturePassword!92", status:"ACTIVE", permissions:["products:read"]}, user!.id);
-          const [storedStaff] = await tx.select().from(s.users).where(eq(s.users.id, Number(staff.id)));
-          expect(storedStaff!.role).toBe("STAFF"); expect(storedStaff!.permissions).toEqual(["products:read"]); expect(storedStaff!.passwordHash).not.toBe("FixturePassword!92");
-          await ops.saveStaff({email:storedStaff!.email,fullName:storedStaff!.fullName!,status:"BLOCKED",permissions:[]},user!.id,staff.id);
-          expect((await tx.select().from(s.users).where(eq(s.users.id,Number(staff.id))))[0]!.status).toBe("BLOCKED");
+          const staff = await ops.saveStaff(
+            {
+              email: `staff-${key}@example.test`,
+              fullName: "Nhân viên kiểm thử",
+              password: "FixturePassword!92",
+              status: "ACTIVE",
+              permissions: ["products:read"],
+            },
+            user!.id,
+          );
+          const [storedStaff] = await tx
+            .select()
+            .from(s.users)
+            .where(eq(s.users.id, Number(staff.id)));
+          expect(storedStaff!.role).toBe("STAFF");
+          expect(storedStaff!.permissions).toEqual(["products:read"]);
+          expect(storedStaff!.passwordHash).not.toBe("FixturePassword!92");
+          await ops.saveStaff(
+            {
+              email: storedStaff!.email,
+              fullName: storedStaff!.fullName!,
+              status: "BLOCKED",
+              permissions: [],
+            },
+            user!.id,
+            staff.id,
+          );
+          expect(
+            (
+              await tx
+                .select()
+                .from(s.users)
+                .where(eq(s.users.id, Number(staff.id)))
+            )[0]!.status,
+          ).toBe("BLOCKED");
           const [p] = await tx
             .insert(s.products)
             .values({
@@ -264,13 +294,39 @@ describe.skipIf(process.env.RUN_ADMIN_OPS_DB_TESTS !== "1")(
             .get("/api/v1/admin/reports")
             .set("Authorization", "Bearer admin")
             .expect(200);
-          const audit = await request(app).get("/api/v1/admin/audit").set("Authorization","Bearer admin").expect(200);
+          const audit = await request(app)
+            .get("/api/v1/admin/audit")
+            .set("Authorization", "Bearer admin")
+            .expect(200);
           expect(audit.body.data.items.length).toBeGreaterThan(0);
-          const publicBanner = await request(app).post("/api/v1/admin/banners").set("Authorization","Bearer admin").send({title:"Active fixture banner", imageUrl:"/images/technest-product-placeholder.svg",link:"/products"}).expect(201);
-          const activeBanners=await request(app).get("/api/v1/banners?position=HOME_PROMO").expect(200);expect(activeBanners.body.data.some((b:{id:string})=>b.id===publicBanner.body.data.id)).toBe(true);
-          const otherPlacement=await request(app).get("/api/v1/banners?position=HOME_BOTTOM").expect(200);expect(otherPlacement.body.data.some((b:{id:string})=>b.id===publicBanner.body.data.id)).toBe(false);
+          const publicBanner = await request(app)
+            .post("/api/v1/admin/banners")
+            .set("Authorization", "Bearer admin")
+            .send({
+              title: "Active fixture banner",
+              imageUrl: "/images/technest-product-placeholder.svg",
+              link: "/products",
+            })
+            .expect(201);
+          const activeBanners = await request(app)
+            .get("/api/v1/banners?position=HOME_PROMO")
+            .expect(200);
+          expect(
+            activeBanners.body.data.some((b: { id: string }) => b.id === publicBanner.body.data.id),
+          ).toBe(true);
+          const otherPlacement = await request(app)
+            .get("/api/v1/banners?position=HOME_BOTTOM")
+            .expect(200);
+          expect(
+            otherPlacement.body.data.some(
+              (b: { id: string }) => b.id === publicBanner.body.data.id,
+            ),
+          ).toBe(false);
           await request(app).get("/api/v1/banners?position=INVALID").expect(400);
-          await request(app).delete(`/api/v1/admin/banners/${publicBanner.body.data.id}`).set("Authorization","Bearer admin").expect(200);
+          await request(app)
+            .delete(`/api/v1/admin/banners/${publicBanner.body.data.id}`)
+            .set("Authorization", "Bearer admin")
+            .expect(200);
           throw stop;
         });
       } catch (e) {

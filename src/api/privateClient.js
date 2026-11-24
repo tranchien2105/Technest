@@ -11,13 +11,17 @@ export class PrivateApiError extends Error {
   }
 }
 
-export async function privateRequest(path, { method = "GET", body, signal, headers = {}, retry = true, download = false } = {}) {
+export async function privateRequest(
+  path,
+  { method = "GET", body, signal, headers = {}, retry = true, download = false } = {},
+) {
   let token = getAccessToken();
   if (!token) {
     await restoreSession();
     token = getAccessToken();
   }
-  if (!token) throw new PrivateApiError("Vui lòng đăng nhập lại để tiếp tục.", "UNAUTHENTICATED", 401);
+  if (!token)
+    throw new PrivateApiError("Vui lòng đăng nhập lại để tiếp tục.", "UNAUTHENTICATED", 401);
   let response;
   try {
     response = await fetch(`${API_BASE_URL}${path}`, {
@@ -43,7 +47,11 @@ export async function privateRequest(path, { method = "GET", body, signal, heade
   if (download && response.ok) return response.blob();
   const payload = await response.json().catch(() => null);
   if (!response.ok || payload?.success !== true) {
-    throw new PrivateApiError(payload?.error?.message || "Yêu cầu không thành công.", payload?.error?.code, response.status);
+    throw new PrivateApiError(
+      payload?.error?.message || "Yêu cầu không thành công.",
+      payload?.error?.code,
+      response.status,
+    );
   }
   return payload.data;
 }

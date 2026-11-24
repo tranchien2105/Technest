@@ -9,7 +9,9 @@ const catalog = {
     items: [{ id: "9007199254740993", price: "90071992547409930", query }],
     pagination: { page: 2, limit: 24, total: 25, totalPages: 2 },
   })),
-  productById: vi.fn(async (id: string) => (id === "1" || id === "wireless-keyboard" ? { id: "1", variants: [], images: [] } : null)),
+  productById: vi.fn(async (id: string) =>
+    id === "1" || id === "wireless-keyboard" ? { id: "1", variants: [], images: [] } : null,
+  ),
   categoriesList: vi.fn(async () => [{ id: "keyboards", name: "Bàn phím", nameEn: "Keyboards" }]),
   brandsList: vi.fn(async () => [{ id: "logitech", name: "LOGITECH" }]),
 } as unknown as ReturnType<typeof createCatalogService>;

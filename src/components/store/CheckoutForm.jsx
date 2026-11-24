@@ -9,8 +9,20 @@ import { accountApi } from "../../api/accountClient";
 import { quotedCheckoutItems } from "../../domain/checkoutQuote";
 import VietnamAddressFields from "./VietnamAddressFields";
 
-export default function CheckoutForm({ cart, subtotal, submitOrder, language, authenticated = false, submitting = false, error = "", preview, applyVoucher, invalidatePreview }) {
-  const [voucher,setVoucher]=useState(""),[voucherBusy,setVoucherBusy]=useState(false);
+export default function CheckoutForm({
+  cart,
+  subtotal,
+  submitOrder,
+  language,
+  authenticated = false,
+  submitting = false,
+  error = "",
+  preview,
+  applyVoucher,
+  invalidatePreview,
+}) {
+  const [voucher, setVoucher] = useState(""),
+    [voucherBusy, setVoucherBusy] = useState(false);
   const lang = language === "vi";
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
@@ -25,21 +37,31 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
   useEffect(() => {
     if (!authenticated) return;
     let active = true;
-    Promise.all([accountApi.addresses(), accountApi.profile()]).then(([addresses, user]) => {
-      if (!active) return;
-      setSavedAddresses(Array.isArray(addresses) ? addresses : []);
-      setProfile(user);
-      const preferred = addresses?.find((address) => address.isDefault);
-      if (preferred) setSelectedAddress(preferred.id);
-    }).catch((error) => { if (active) setAddressLoadError(error.message); });
-    return () => { active = false; };
+    Promise.all([accountApi.addresses(), accountApi.profile()])
+      .then(([addresses, user]) => {
+        if (!active) return;
+        setSavedAddresses(Array.isArray(addresses) ? addresses : []);
+        setProfile(user);
+        const preferred = addresses?.find((address) => address.isDefault);
+        if (preferred) setSelectedAddress(preferred.id);
+      })
+      .catch((error) => {
+        if (active) setAddressLoadError(error.message);
+      });
+    return () => {
+      active = false;
+    };
   }, [authenticated]);
 
   useEffect(() => {
     const address = savedAddresses.find((item) => item.id === selectedAddress);
     const form = formRef.current;
     if (!address || !form) return;
-    for (const [field, value] of Object.entries({ name: address.recipientName, phone: address.phone, address: address.addressLine })) {
+    for (const [field, value] of Object.entries({
+      name: address.recipientName,
+      phone: address.phone,
+      address: address.addressLine,
+    })) {
       const control = form.elements.namedItem(field);
       if (!control) continue;
       control.value = value;
@@ -59,8 +81,19 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
       if (authenticated && form.elements.namedItem("saveAddress")?.checked && !selectedAddress) {
         const data = Object.fromEntries(new FormData(form));
         try {
-          const address = await accountApi.createAddress({ recipientName: data.name, phone: data.phone, addressLine: data.address, city: data.city, district: data.district || null, ward: data.ward || null, isDefault: savedAddresses.length === 0 });
-          setSavedAddresses((current) => [...current.filter((entry) => entry.id !== address.id), address]);
+          const address = await accountApi.createAddress({
+            recipientName: data.name,
+            phone: data.phone,
+            addressLine: data.address,
+            city: data.city,
+            district: data.district || null,
+            ward: data.ward || null,
+            isDefault: savedAddresses.length === 0,
+          });
+          setSavedAddresses((current) => [
+            ...current.filter((entry) => entry.id !== address.id),
+            address,
+          ]);
           setSelectedAddress(address.id);
           setAddressLoadError("");
         } catch (error) {
@@ -77,7 +110,11 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
   return (
     <form ref={formRef} className="checkout-layout checkout-form-layout" onSubmit={handleSubmit}>
       <div className="checkout-form-column">
-        {error && <p role="alert" className="catalog-feedback">{error}</p>}
+        {error && (
+          <p role="alert" className="catalog-feedback">
+            {error}
+          </p>
+        )}
         <section className="checkout-panel">
           <div className="checkout-section-heading">
             <span>01</span>
@@ -93,10 +130,34 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
             </div>
           </div>
           <div className="checkout-field-grid">
-            {authenticated && <>
-              {savedAddresses.length > 0 && <label className="checkout-field checkout-field-full">{tx("Saved delivery address", "Địa chỉ đã lưu", lang)}<select value={selectedAddress} onChange={(event) => setSelectedAddress(event.target.value)}><option value="">{tx("Enter a different address", "Nhập địa chỉ khác", lang)}</option>{savedAddresses.map((address) => <option value={address.id} key={address.id}>{address.label || address.recipientName} — {address.addressLine}, {address.city}</option>)}</select></label>}
-              {addressLoadError && <p className="catalog-feedback" role="status">{addressLoadError}</p>}
-            </>}
+            {authenticated && (
+              <>
+                {savedAddresses.length > 0 && (
+                  <label className="checkout-field checkout-field-full">
+                    {tx("Saved delivery address", "Địa chỉ đã lưu", lang)}
+                    <select
+                      value={selectedAddress}
+                      onChange={(event) => setSelectedAddress(event.target.value)}
+                    >
+                      <option value="">
+                        {tx("Enter a different address", "Nhập địa chỉ khác", lang)}
+                      </option>
+                      {savedAddresses.map((address) => (
+                        <option value={address.id} key={address.id}>
+                          {address.label || address.recipientName} — {address.addressLine},{" "}
+                          {address.city}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                {addressLoadError && (
+                  <p className="catalog-feedback" role="status">
+                    {addressLoadError}
+                  </p>
+                )}
+              </>
+            )}
             <label className="checkout-field checkout-field-full">
               {tx("Full name", "Họ và tên", lang)}
               <input
@@ -159,7 +220,12 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
                 )}
               />
             </label>
-            {authenticated && <label className="checkout-field checkout-field-full"><input type="checkbox" name="saveAddress" /> {tx("Save this address to my account", "Lưu địa chỉ này vào tài khoản", lang)}</label>}
+            {authenticated && (
+              <label className="checkout-field checkout-field-full">
+                <input type="checkbox" name="saveAddress" />{" "}
+                {tx("Save this address to my account", "Lưu địa chỉ này vào tài khoản", lang)}
+              </label>
+            )}
             <VietnamAddressFields
               key={selectedAddress || "new"}
               address={savedAddresses.find((address) => address.id === selectedAddress)}
@@ -209,11 +275,18 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
                 </small>
               </span>
             </label>
-
           </div>
         </section>
-        <button className="primary-button checkout-submit" type="submit" disabled={busy} aria-busy={busy}>
-          {busy ? tx("Placing order…", "Đang tạo đơn hàng…", lang) : tx("Place order", "Đặt hàng", lang)} {!busy && <ArrowRight size={17} />}
+        <button
+          className="primary-button checkout-submit"
+          type="submit"
+          disabled={busy}
+          aria-busy={busy}
+        >
+          {busy
+            ? tx("Placing order…", "Đang tạo đơn hàng…", lang)
+            : tx("Place order", "Đặt hàng", lang)}{" "}
+          {!busy && <ArrowRight size={17} />}
         </button>
       </div>
       <aside className="checkout-summary-card">
@@ -240,7 +313,39 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
             </div>
           ))}
         </div>
-        <div className="checkout-voucher"><label htmlFor="checkout-voucher">Mã giảm giá</label><div><input id="checkout-voucher" name="voucherCode" maxLength="40" value={voucher} onChange={e=>{setVoucher(e.target.value.toUpperCase());invalidatePreview?.();}} placeholder="Nhập mã ưu đãi"/><button type="button" disabled={voucherBusy||busy} onClick={async()=>{setVoucherBusy(true);try{await applyVoucher(formRef.current,voucher);}finally{setVoucherBusy(false);}}}>{voucherBusy?"Đang kiểm tra…":"Áp dụng"}</button></div>{preview?.voucherCode&&preview.voucherCode===voucher.trim()&&<small>Đã áp dụng {preview.voucherCode}</small>}</div>
+        <div className="checkout-voucher">
+          <label htmlFor="checkout-voucher">Mã giảm giá</label>
+          <div>
+            <input
+              id="checkout-voucher"
+              name="voucherCode"
+              maxLength="40"
+              value={voucher}
+              onChange={(e) => {
+                setVoucher(e.target.value.toUpperCase());
+                invalidatePreview?.();
+              }}
+              placeholder="Nhập mã ưu đãi"
+            />
+            <button
+              type="button"
+              disabled={voucherBusy || busy}
+              onClick={async () => {
+                setVoucherBusy(true);
+                try {
+                  await applyVoucher(formRef.current, voucher);
+                } finally {
+                  setVoucherBusy(false);
+                }
+              }}
+            >
+              {voucherBusy ? "Đang kiểm tra…" : "Áp dụng"}
+            </button>
+          </div>
+          {preview?.voucherCode && preview.voucherCode === voucher.trim() && (
+            <small>Đã áp dụng {preview.voucherCode}</small>
+          )}
+        </div>
         <div className="checkout-summary-totals">
           <p>
             <span>{tx("Subtotal", "Tạm tính", lang)}</span>
@@ -250,10 +355,21 @@ export default function CheckoutForm({ cart, subtotal, submitOrder, language, au
             <span>{tx("Shipping", "Phí giao hàng", lang)}</span>
             <strong>{shipping ? formatPrice(shipping) : tx("Free", "Miễn phí", lang)}</strong>
           </p>
-          {preview?.voucherCode===voucher.trim()&&Number(preview?.discountAmount)>0&&<p><span>Giảm giá</span><strong>−{formatPrice(preview.discountAmount)}</strong></p>}
+          {preview?.voucherCode === voucher.trim() && Number(preview?.discountAmount) > 0 && (
+            <p>
+              <span>Giảm giá</span>
+              <strong>−{formatPrice(preview.discountAmount)}</strong>
+            </p>
+          )}
           <p className="checkout-grand-total">
             <span>{tx("Total", "Tổng thanh toán", lang)}</span>
-            <strong>{formatPrice(preview?.voucherCode===voucher.trim() ? preview.totalAmount : addMoney(subtotal, shipping))}</strong>
+            <strong>
+              {formatPrice(
+                preview?.voucherCode === voucher.trim()
+                  ? preview.totalAmount
+                  : addMoney(subtotal, shipping),
+              )}
+            </strong>
           </p>
         </div>
         <p className="checkout-summary-note">

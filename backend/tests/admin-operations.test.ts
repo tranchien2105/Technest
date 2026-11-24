@@ -58,11 +58,37 @@ describe("Admin operational safeguards", () => {
     ).toBe(false);
   });
   it("validates banner placement capacity and prevents duplicate assignments", () => {
-    const valid = { placements: { HOME_HERO: ["1", "2"], HOME_HERO_RIGHT_TOP: ["3"], HOME_HERO_RIGHT_BOTTOM: [], HOME_PROMO: [], HOME_BOTTOM: [], HOME_SETUP_STUDIO: [] } };
+    const valid = {
+      placements: {
+        HOME_HERO: ["1", "2"],
+        HOME_HERO_RIGHT_TOP: ["3"],
+        HOME_HERO_RIGHT_BOTTOM: [],
+        HOME_PROMO: [],
+        HOME_BOTTOM: [],
+        HOME_SETUP_STUDIO: [],
+      },
+    };
     expect(bannerPlacementsInput.safeParse(valid).success).toBe(true);
-    expect(bannerPlacementsInput.safeParse({ placements: { ...valid.placements, HOME_HERO_RIGHT_TOP: Array.from({ length: 101 }, (_, index) => String(index + 10)) } }).success).toBe(false);
-    expect(bannerPlacementsInput.safeParse({ placements: { ...valid.placements, HOME_SETUP_STUDIO: Array.from({ length: 10 }, (_, index) => String(index + 20)) } }).success).toBe(true);
-    expect(bannerPlacementsInput.safeParse({ placements: { ...valid.placements, HOME_PROMO: ["1"] } }).success).toBe(false);
+    expect(
+      bannerPlacementsInput.safeParse({
+        placements: {
+          ...valid.placements,
+          HOME_HERO_RIGHT_TOP: Array.from({ length: 101 }, (_, index) => String(index + 10)),
+        },
+      }).success,
+    ).toBe(false);
+    expect(
+      bannerPlacementsInput.safeParse({
+        placements: {
+          ...valid.placements,
+          HOME_SETUP_STUDIO: Array.from({ length: 10 }, (_, index) => String(index + 20)),
+        },
+      }).success,
+    ).toBe(true);
+    expect(
+      bannerPlacementsInput.safeParse({ placements: { ...valid.placements, HOME_PROMO: ["1"] } })
+        .success,
+    ).toBe(false);
   });
   it("rejects malformed and oversized workbook archives", () => {
     expect(() => checkWorkbookArchive(Buffer.from("bad"))).toThrow();

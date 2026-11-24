@@ -39,7 +39,10 @@ export const notifications = pgTable(
     entityType: varchar("entity_type", { length: 40 }),
     entityId: varchar("entity_id", { length: 100 }),
     targetUrl: varchar("target_url", { length: 500 }),
-    metadata: jsonb("metadata").$type<Record<string, string | number | boolean | null>>().notNull().default({}),
+    metadata: jsonb("metadata")
+      .$type<Record<string, string | number | boolean | null>>()
+      .notNull()
+      .default({}),
     eventKey: varchar("event_key", { length: 200 }),
     readAt: timestamp("read_at", { withTimezone: true }),
     expiresAt: timestamp("expires_at", { withTimezone: true }),
@@ -48,6 +51,8 @@ export const notifications = pgTable(
   (table) => [
     index("notifications_recipient_created_idx").on(table.recipientUserId, table.createdAt),
     index("notifications_recipient_read_idx").on(table.recipientUserId, table.readAt),
-    uniqueIndex("notifications_event_key_unique_idx").on(table.eventKey).where(sql`${table.eventKey} IS NOT NULL`),
+    uniqueIndex("notifications_event_key_unique_idx")
+      .on(table.eventKey)
+      .where(sql`${table.eventKey} IS NOT NULL`),
   ],
 );

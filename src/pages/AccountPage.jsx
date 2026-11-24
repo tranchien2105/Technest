@@ -21,7 +21,7 @@ import { accountApi } from "../api/accountClient";
 import { normalizeOrderStatus } from "../domain/orderTracking";
 import OrderProgress from "../components/account/OrderProgress";
 import AccountNotifications from "../components/account/AccountNotifications";
-import PasswordInput from "../components/common/PasswordInput";
+import AccountSecurity from "../components/account/AccountSecurity";
 
 function orderStatusLabel(order, lang) {
   const status = normalizeOrderStatus(order.status);
@@ -70,14 +70,21 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
   const [loading, setLoading] = useState(false);
   const [debouncedOrderQuery, setDebouncedOrderQuery] = useState("");
   const [loadedSubsection, setLoadedSubsection] = useState("");
-  const [profileData, setProfileData] = useState({ fullName: authUser?.fullName || "", email: authUser?.email || "", phone: "" });
+  const [profileData, setProfileData] = useState({
+    fullName: authUser?.fullName || "",
+    email: authUser?.email || "",
+    phone: "",
+  });
   const [addresses, setAddresses] = useState([]);
   const [sessions, setSessions] = useState([]);
 
   const subsection = path.split("/")[2] || "";
   const orderId = subsection === "orders" ? path.split("/")[3] : null;
   const selectedOrder = detail?.id === orderId ? detail : null;
-  const accountName = authUser?.fullName || profileData.fullName || (lang ? "Khách hàng Technest" : "Technest Customer");
+  const accountName =
+    authUser?.fullName ||
+    profileData.fullName ||
+    (lang ? "Khách hàng Technest" : "Technest Customer");
   const initials =
     accountName
       .trim()
@@ -91,17 +98,41 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
   useEffect(() => {
     let active = true;
     if (["profile", "addresses", "security"].includes(subsection)) {
-      const load = subsection === "profile" ? accountApi.profile().then((data) => active && setProfileData(data))
-        : subsection === "addresses" ? accountApi.addresses().then((data) => active && setAddresses(Array.isArray(data) ? data : []))
-          : Promise.all([accountApi.sessions(), accountApi.profile()]).then(([data, profile]) => {
-            if (active) { setSessions(Array.isArray(data) ? data : []); setProfileData(profile); }
-          });
-      load.then(() => { if (active) { setApiError(""); setLoadedSubsection(subsection); } })
-        .catch((error) => { if (active) { setApiError(error.message); setLoadedSubsection(subsection); } });
+      const load =
+        subsection === "profile"
+          ? accountApi.profile().then((data) => active && setProfileData(data))
+          : subsection === "addresses"
+            ? accountApi
+                .addresses()
+                .then((data) => active && setAddresses(Array.isArray(data) ? data : []))
+            : Promise.all([accountApi.sessions(), accountApi.profile()]).then(([data, profile]) => {
+                if (active) {
+                  setSessions(Array.isArray(data) ? data : []);
+                  setProfileData(profile);
+                }
+              });
+      load
+        .then(() => {
+          if (active) {
+            setApiError("");
+            setLoadedSubsection(subsection);
+          }
+        })
+        .catch((error) => {
+          if (active) {
+            setApiError(error.message);
+            setLoadedSubsection(subsection);
+          }
+        });
     } else if (subsection === "") {
-      accountApi.addresses().then((data) => active && setAddresses(Array.isArray(data) ? data : [])).catch(() => {});
+      accountApi
+        .addresses()
+        .then((data) => active && setAddresses(Array.isArray(data) ? data : []))
+        .catch(() => {});
     }
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [subsection]);
 
   useEffect(() => {
@@ -111,20 +142,37 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
 
   useEffect(() => {
     let active = true;
-    if (subsection && subsection !== "orders") return () => { active = false; };
+    if (subsection && subsection !== "orders")
+      return () => {
+        active = false;
+      };
     const load = async () => {
       setOrdersLoading(true);
       setApiError("");
       try {
-        const result = await ordersApi.list(page, { ...(debouncedOrderQuery ? { q: debouncedOrderQuery } : {}), ...(orderStatus ? { status: orderStatus } : {}) });
+        const result = await ordersApi.list(page, {
+          ...(debouncedOrderQuery ? { q: debouncedOrderQuery } : {}),
+          ...(orderStatus ? { status: orderStatus } : {}),
+        });
         const selected = orderId ? await ordersApi.detail(orderId) : null;
-        if (active) { setOrders(result.items.map(orderView)); setPagination(result.pagination); setDetail(selected); setApiError(""); }
-      } catch (error) { if (active) setApiError(error.message); }
-      finally { if (active) setOrdersLoading(false); }
+        if (active) {
+          setOrders(result.items.map(orderView));
+          setPagination(result.pagination);
+          setDetail(selected);
+          setApiError("");
+        }
+      } catch (error) {
+        if (active) setApiError(error.message);
+      } finally {
+        if (active) setOrdersLoading(false);
+      }
     };
     void load();
     const timer = setInterval(load, 15000);
-    return () => { active = false; clearInterval(timer); };
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
   }, [subsection, orderId, page, revision, debouncedOrderQuery, orderStatus, authUser?.id]);
 
   useEffect(() => {
@@ -133,12 +181,21 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
   }, [authUser?.id, subsection]);
 
   const runAction = async (action, successMessage) => {
-    setApiError(""); setNotice(""); setLoading(true);
-    try { await action(); setNotice(successMessage); }
-    catch (error) { setApiError(error.message); }
-    finally { setLoading(false); }
+    setApiError("");
+    setNotice("");
+    setLoading(true);
+    try {
+      await action();
+      setNotice(successMessage);
+    } catch (error) {
+      setApiError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
-  const sectionLoading = loading || (["profile", "addresses", "security"].includes(subsection) && loadedSubsection !== subsection);
+  const sectionLoading =
+    loading ||
+    (["profile", "addresses", "security"].includes(subsection) && loadedSubsection !== subsection);
   return (
     <section className="store-page">
       <PageTitle
@@ -165,7 +222,11 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
           >
             {tx("Orders", "Đơn hàng", lang)}
           </a>
-          <a href="/account/notifications" className={subsection === "notifications" ? "is-active" : ""} aria-current={subsection === "notifications" ? "page" : undefined}>
+          <a
+            href="/account/notifications"
+            className={subsection === "notifications" ? "is-active" : ""}
+            aria-current={subsection === "notifications" ? "page" : undefined}
+          >
             {tx("Notifications", "Thông báo", lang)}
           </a>
           <a
@@ -182,13 +243,25 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
           >
             {tx("Addresses", "Địa chỉ", lang)}
           </a>
-          <a href="/account/security" className={subsection === "security" ? "is-active" : ""} aria-current={subsection === "security" ? "page" : undefined}>
+          <a
+            href="/account/security"
+            className={subsection === "security" ? "is-active" : ""}
+            aria-current={subsection === "security" ? "page" : undefined}
+          >
             {tx("Security", "Bảo mật", lang)}
           </a>
         </nav>
         <div className="account-panel">
-          {apiError && <p className="catalog-feedback" role="alert">{apiError}</p>}
-          {sectionLoading && subsection !== "addresses" && <p className="catalog-feedback" role="status">{tx("Loading account information…", "Đang tải thông tin tài khoản…", lang)}</p>}
+          {apiError && (
+            <p className="catalog-feedback" role="alert">
+              {apiError}
+            </p>
+          )}
+          {sectionLoading && !["addresses", "security"].includes(subsection) && (
+            <p className="catalog-feedback" role="status">
+              {tx("Loading account information…", "Đang tải thông tin tài khoản…", lang)}
+            </p>
+          )}
           {subsection === "notifications" ? (
             <AccountNotifications key={authUser?.id} language={language} navigate={navigate} />
           ) : subsection === "orders" ? (
@@ -216,23 +289,71 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
                   </span>
                 )}
               </div>
-              {!orderId && <div className="account-order-toolbar">
-                <div className="account-order-filters">
-                  <input aria-label="Tìm mã đơn" placeholder="Tìm mã đơn" value={orderQuery} onChange={(event) => { setOrderQuery(event.target.value); setPage(1); }}/>
-                  <select aria-label="Lọc trạng thái đơn" value={orderStatus} onChange={(event) => { setOrderStatus(event.target.value); setPage(1); }}>
-                    <option value="">Tất cả trạng thái</option>
-                    {["PENDING", "CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"].map((status) => <option key={status}>{status}</option>)}
-                  </select>
+              {!orderId && (
+                <div className="account-order-toolbar">
+                  <div className="account-order-filters">
+                    <input
+                      aria-label="Tìm mã đơn"
+                      placeholder="Tìm mã đơn"
+                      value={orderQuery}
+                      onChange={(event) => {
+                        setOrderQuery(event.target.value);
+                        setPage(1);
+                      }}
+                    />
+                    <select
+                      aria-label="Lọc trạng thái đơn"
+                      value={orderStatus}
+                      onChange={(event) => {
+                        setOrderStatus(event.target.value);
+                        setPage(1);
+                      }}
+                    >
+                      <option value="">Tất cả trạng thái</option>
+                      {[
+                        "PENDING",
+                        "CONFIRMED",
+                        "PROCESSING",
+                        "SHIPPED",
+                        "DELIVERED",
+                        "CANCELLED",
+                      ].map((status) => (
+                        <option key={status}>{status}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {pagination && (
+                    <div className="account-order-pagination">
+                      <button
+                        disabled={page <= 1}
+                        onClick={() => setPage((value) => value - 1)}
+                        aria-label="Trang trước"
+                      >
+                        ←
+                      </button>
+                      <span>
+                        Trang {pagination.page} / {pagination.totalPages || 1}
+                      </span>
+                      <button
+                        disabled={page >= pagination.totalPages}
+                        onClick={() => setPage((value) => value + 1)}
+                        aria-label="Trang sau"
+                      >
+                        →
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {pagination && <div className="account-order-pagination">
-                  <button disabled={page <= 1} onClick={() => setPage((value) => value - 1)} aria-label="Trang trước">←</button>
-                  <span>Trang {pagination.page} / {pagination.totalPages || 1}</span>
-                  <button disabled={page >= pagination.totalPages} onClick={() => setPage((value) => value + 1)} aria-label="Trang sau">→</button>
-                </div>}
-              </div>}
+              )}
               {ordersLoading && !orders.length ? (
-                <div className="account-order-skeleton" role="status" aria-label={tx("Loading orders", "Đang tải đơn hàng", lang)}>
-                  <span /><span /><span />
+                <div
+                  className="account-order-skeleton"
+                  role="status"
+                  aria-label={tx("Loading orders", "Đang tải đơn hàng", lang)}
+                >
+                  <span />
+                  <span />
+                  <span />
                 </div>
               ) : orderId ? (
                 selectedOrder ? (
@@ -242,7 +363,10 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
                         <span className="section-kicker">
                           {tx("ORDER NUMBER", "MÃ ĐƠN HÀNG", lang)}
                         </span>
-                        <h3>{selectedOrder.orderNumber || `TN-${String(selectedOrder.id).padStart(8, "0")}`}</h3>
+                        <h3>
+                          {selectedOrder.orderNumber ||
+                            `TN-${String(selectedOrder.id).padStart(8, "0")}`}
+                        </h3>
                         <p>
                           {tx("Placed on", "Đặt lúc", lang)}{" "}
                           {new Date(selectedOrder.createdAt).toLocaleString(
@@ -250,35 +374,67 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
                           )}
                         </p>
                       </div>
-                      <span className={orderStatusClass(selectedOrder)}>{orderStatusLabel(selectedOrder, lang)}</span>
+                      <span className={orderStatusClass(selectedOrder)}>
+                        {orderStatusLabel(selectedOrder, lang)}
+                      </span>
                     </div>
                     <OrderProgress order={selectedOrder} language={language} />
-                    <AfterSalesRequests order={selectedOrder}/>
+                    <AfterSalesRequests order={selectedOrder} />
 
-                    {selectedOrder.statusHistory?.length > 0 && <section className="order-history-card">
-                      <div className="order-detail-card-heading">
-                        <Clock3 size={18} />
-                        <h3>{tx("Status history", "Lịch sử cập nhật", lang)}</h3>
-                      </div>
-                      <ol className="order-history-list">
-                        {selectedOrder.statusHistory.map((event) => <li className="order-history-item" key={event.id}>
-                          <span className="order-history-marker" aria-hidden="true" />
-                          <div className="order-history-content">
-                            <strong>{historyStatusLabel(event.toStatus, lang)}</strong>
-                            <time dateTime={event.createdAt}>{new Date(event.createdAt).toLocaleString(lang ? "vi-VN" : "en-US")}</time>
-                            {event.note && <p>{event.note}</p>}
-                          </div>
-                        </li>)}
-                      </ol>
-                    </section>}
-                    {["PENDING", "CONFIRMED", "PROCESSING"].includes(selectedOrder.status) && <button disabled={loading} onClick={() => runAction(async () => { await ordersApi.cancel(selectedOrder.id); setRevision((value) => value + 1); }, "Đã hủy đơn hàng")}>Hủy đơn hàng</button>}
+                    {selectedOrder.statusHistory?.length > 0 && (
+                      <section className="order-history-card">
+                        <div className="order-detail-card-heading">
+                          <Clock3 size={18} />
+                          <h3>{tx("Status history", "Lịch sử cập nhật", lang)}</h3>
+                        </div>
+                        <ol className="order-history-list">
+                          {selectedOrder.statusHistory.map((event) => (
+                            <li className="order-history-item" key={event.id}>
+                              <span className="order-history-marker" aria-hidden="true" />
+                              <div className="order-history-content">
+                                <strong>{historyStatusLabel(event.toStatus, lang)}</strong>
+                                <time dateTime={event.createdAt}>
+                                  {new Date(event.createdAt).toLocaleString(
+                                    lang ? "vi-VN" : "en-US",
+                                  )}
+                                </time>
+                                {event.note && <p>{event.note}</p>}
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
+                      </section>
+                    )}
+                    {["PENDING", "CONFIRMED", "PROCESSING"].includes(selectedOrder.status) && (
+                      <button
+                        disabled={loading}
+                        onClick={() =>
+                          runAction(async () => {
+                            await ordersApi.cancel(selectedOrder.id);
+                            setRevision((value) => value + 1);
+                          }, "Đã hủy đơn hàng")
+                        }
+                      >
+                        Hủy đơn hàng
+                      </button>
+                    )}
                   </>
                 ) : apiError ? (
                   <div className="account-order-not-found">
                     <Box size={26} />
-                    <strong>{tx("Could not load this order", "Chưa tải được đơn hàng", lang)}</strong>
-                    <p>{tx("Check your connection and try again.", "Kiểm tra kết nối rồi thử tải lại.", lang)}</p>
-                    <button type="button" onClick={() => setRevision((value) => value + 1)}>{tx("Try again", "Thử lại", lang)}</button>
+                    <strong>
+                      {tx("Could not load this order", "Chưa tải được đơn hàng", lang)}
+                    </strong>
+                    <p>
+                      {tx(
+                        "Check your connection and try again.",
+                        "Kiểm tra kết nối rồi thử tải lại.",
+                        lang,
+                      )}
+                    </p>
+                    <button type="button" onClick={() => setRevision((value) => value + 1)}>
+                      {tx("Try again", "Thử lại", lang)}
+                    </button>
                   </div>
                 ) : (
                   <div className="account-order-not-found">
@@ -314,15 +470,35 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
                   </button>
                 ))
               ) : ordersLoading ? (
-                <div className="account-order-skeleton" role="status" aria-label={tx("Loading orders", "Đang tải đơn hàng", lang)}>
-                  <span /><span /><span />
+                <div
+                  className="account-order-skeleton"
+                  role="status"
+                  aria-label={tx("Loading orders", "Đang tải đơn hàng", lang)}
+                >
+                  <span />
+                  <span />
+                  <span />
                 </div>
               ) : apiError ? (
                 <div className="account-order-not-found">
                   <Box size={26} />
-                  <strong>{tx("Orders are temporarily unavailable", "Chưa thể tải danh sách đơn hàng", lang)}</strong>
-                  <p>{tx("Check your connection and try again.", "Kiểm tra kết nối rồi thử lại.", lang)}</p>
-                  <button type="button" onClick={() => setRevision((value) => value + 1)}>{tx("Try again", "Thử lại", lang)}</button>
+                  <strong>
+                    {tx(
+                      "Orders are temporarily unavailable",
+                      "Chưa thể tải danh sách đơn hàng",
+                      lang,
+                    )}
+                  </strong>
+                  <p>
+                    {tx(
+                      "Check your connection and try again.",
+                      "Kiểm tra kết nối rồi thử lại.",
+                      lang,
+                    )}
+                  </p>
+                  <button type="button" onClick={() => setRevision((value) => value + 1)}>
+                    {tx("Try again", "Thử lại", lang)}
+                  </button>
                 </div>
               ) : (
                 <p>
@@ -340,40 +516,79 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
               onSubmit={(e) => {
                 e.preventDefault();
                 const data = Object.fromEntries(new FormData(e.currentTarget));
-                void runAction(async () => { const result = await accountApi.updateProfile({ fullName: data.fullName, phone: data.phone || null }); setProfileData(result); }, tx("Profile updated.", "Đã cập nhật hồ sơ.", lang));
+                void runAction(
+                  async () => {
+                    const result = await accountApi.updateProfile({
+                      fullName: data.fullName,
+                      phone: data.phone || null,
+                    });
+                    setProfileData(result);
+                  },
+                  tx("Profile updated.", "Đã cập nhật hồ sơ.", lang),
+                );
               }}
             >
               <h2>{tx("Profile information", "Thông tin cá nhân", lang)}</h2>
               <label>
                 {tx("Name", "Họ tên", lang)}
-                <input name="fullName" value={profileData.fullName || ""} onChange={(event) => setProfileData((current) => ({ ...current, fullName: event.target.value }))} required maxLength={200} />
+                <input
+                  name="fullName"
+                  value={profileData.fullName || ""}
+                  onChange={(event) =>
+                    setProfileData((current) => ({ ...current, fullName: event.target.value }))
+                  }
+                  required
+                  maxLength={200}
+                />
               </label>
               <label>
                 {tx("Email", "Email", lang)}
-                <input type="email" name="email" value={profileData.email || authUser?.email || ""} readOnly />
+                <input
+                  type="email"
+                  name="email"
+                  value={profileData.email || authUser?.email || ""}
+                  readOnly
+                />
               </label>
               <label>
                 {tx("Phone", "Số điện thoại", lang)}
-                <input name="phone" value={profileData.phone || ""} onChange={(event) => setProfileData((current) => ({ ...current, phone: event.target.value }))} pattern="\+?[0-9 ()-]{7,30}" />
+                <input
+                  name="phone"
+                  value={profileData.phone || ""}
+                  onChange={(event) =>
+                    setProfileData((current) => ({ ...current, phone: event.target.value }))
+                  }
+                  pattern="\+?[0-9 ()-]{7,30}"
+                />
               </label>
-              <button className="primary-button" disabled={loading}>{tx("Save profile", "Lưu hồ sơ", lang)}</button>
+              <button className="primary-button" disabled={loading}>
+                {tx("Save profile", "Lưu hồ sơ", lang)}
+              </button>
               {notice && <p>{notice}</p>}
             </form>
           ) : subsection === "addresses" ? (
-            <AccountAddresses addresses={addresses} setAddresses={setAddresses} language={language} loading={loading} initialLoading={loadedSubsection !== "addresses"} error={apiError} notice={notice} runAction={runAction}/>
+            <AccountAddresses
+              addresses={addresses}
+              setAddresses={setAddresses}
+              language={language}
+              loading={loading}
+              initialLoading={loadedSubsection !== "addresses"}
+              error={apiError}
+              notice={notice}
+              runAction={runAction}
+            />
           ) : subsection === "security" ? (
-            <div className="store-form">
-              <h2>{tx("Account security", "Bảo mật tài khoản", lang)}</h2>
-              <form onSubmit={(e) => { e.preventDefault(); const form = e.currentTarget; const data = Object.fromEntries(new FormData(form)); void runAction(async () => { await accountApi.changePassword({ currentPassword: data.currentPassword, newPassword: data.newPassword }); form.reset(); await onLogout(); }, tx("Password updated. Please sign in again.", "Đã đổi mật khẩu. Vui lòng đăng nhập lại.", lang)); }}>
-                <label>{tx("Current password", "Mật khẩu hiện tại", lang)}<PasswordInput name="currentPassword" autoComplete="current-password" required showLabel={tx("Show password", "Hiện mật khẩu", lang)} hideLabel={tx("Hide password", "Ẩn mật khẩu", lang)} /></label>
-                <label>{tx("New password (12+ characters, upper/lowercase and number)", "Mật khẩu mới (ít nhất 12 ký tự, có chữ hoa, chữ thường và số)", lang)}<PasswordInput name="newPassword" autoComplete="new-password" minLength={12} required showLabel={tx("Show password", "Hiện mật khẩu", lang)} hideLabel={tx("Hide password", "Ẩn mật khẩu", lang)} /></label>
-                <button className="primary-button" disabled={loading}>{tx("Change password", "Đổi mật khẩu", lang)}</button>
-              </form>
-              <h3>{tx("Signed-in sessions", "Phiên đăng nhập", lang)}</h3>
-              {sessions.map((session) => <div className="address-row" key={session.id}><strong>{tx("Session", "Phiên", lang)} #{session.id}</strong><p>{tx("Signed in", "Đăng nhập lúc", lang)}: {new Date(session.createdAt).toLocaleString(lang ? "vi-VN" : "en-US")}</p><p>{tx("Expires", "Hết hạn", lang)}: {new Date(session.expiresAt).toLocaleString(lang ? "vi-VN" : "en-US")}</p>{session.revokedAt ? <span>{tx("Revoked", "Đã thu hồi", lang)}</span> : <button type="button" className="text-link" onClick={() => void runAction(async () => { await accountApi.revokeSession(session.id); setSessions(await accountApi.sessions()); }, tx("Session revoked.", "Đã thu hồi phiên.", lang))}>{tx("Revoke", "Thu hồi", lang)}</button>}</div>)}
-              {!sessions.length && <p>{tx("No active sessions found.", "Không có phiên đăng nhập nào.", lang)}</p>}
-              {notice && <p>{notice}</p>}
-            </div>
+            <AccountSecurity
+              sessions={sessions}
+              setSessions={setSessions}
+              language={language}
+              loading={loading}
+              initialLoading={loadedSubsection !== "security"}
+              notice={notice}
+              error={apiError}
+              runAction={runAction}
+              onLogout={onLogout}
+            />
           ) : (
             <div className="account-dashboard">
               <section className="account-welcome">
@@ -454,7 +669,9 @@ export default function AccountPage({ route, language, authUser, onLogout, navig
                             <Box size={17} />
                           </span>
                           <div className="account-order-info">
-                            <strong>{order.orderNumber || `TN-${String(order.id).padStart(8, "0")}`}</strong>
+                            <strong>
+                              {order.orderNumber || `TN-${String(order.id).padStart(8, "0")}`}
+                            </strong>
                             <span>
                               {new Date(order.createdAt).toLocaleDateString(
                                 lang ? "vi-VN" : "en-US",

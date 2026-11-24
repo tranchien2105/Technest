@@ -7,7 +7,10 @@ let refreshPromise = null;
 function readCookie(name) {
   if (typeof document === "undefined") return "";
   const prefix = `${name}=`;
-  const cookie = document.cookie.split(";").map((part) => part.trim()).find((part) => part.startsWith(prefix));
+  const cookie = document.cookie
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(prefix));
   return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : "";
 }
 
@@ -112,4 +115,13 @@ export function clearAuth() {
 
 export function getAccessToken() {
   return accessToken;
+}
+
+export function forgotPassword(email) {
+  return send("/forgot-password", { body: { email } });
+}
+export async function resetPassword(token, password) {
+  const result = await send("/reset-password", { body: { token, password } });
+  clearAuth();
+  return result;
 }

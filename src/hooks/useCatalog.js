@@ -29,11 +29,18 @@ function normalizeList(data) {
   };
 }
 
-export function useCatalog({ route, navigate, productIds = [], homeFeaturedSort = "newest", homeArrivalSort = "newest" }) {
+export function useCatalog({
+  route,
+  navigate,
+  productIds = [],
+  homeFeaturedSort = "newest",
+  homeArrivalSort = "newest",
+}) {
   const url = new URL(route, "http://technest.local");
   const categorySlug = /^\/categories\/([a-z0-9-]+)$/.exec(url.pathname)?.[1];
   const brandSlug = /^\/brands\/([a-z0-9-]+)$/.exec(url.pathname)?.[1];
-  const listing = ["/products", "/search"].includes(url.pathname) || Boolean(categorySlug || brandSlug);
+  const listing =
+    ["/products", "/search"].includes(url.pathname) || Boolean(categorySlug || brandSlug);
   const home = url.pathname === "/";
   const setup = url.pathname === "/setup";
   const productId = /^\/products\/([a-z0-9-]+)$/.exec(url.pathname)?.[1] || null;
@@ -52,9 +59,23 @@ export function useCatalog({ route, navigate, productIds = [], homeFeaturedSort 
   useEffect(() => {
     if (!productId || data.routeKey !== routeKey || !data.detailProduct?.slug) return;
     const canonical = productUrl(data.detailProduct);
-    if (url.pathname !== canonical) navigate(canonical + url.search + url.hash, false, { replace: true });
-  }, [productId, data.routeKey, data.detailProduct, routeKey, url.pathname, url.search, url.hash, navigate]);
-  const queryState = { ...Object.fromEntries(url.searchParams), ...(categorySlug ? {category:categorySlug} : {}), ...(brandSlug ? {brand:brandSlug} : {}) };
+    if (url.pathname !== canonical)
+      navigate(canonical + url.search + url.hash, false, { replace: true });
+  }, [
+    productId,
+    data.routeKey,
+    data.detailProduct,
+    routeKey,
+    url.pathname,
+    url.search,
+    url.hash,
+    navigate,
+  ]);
+  const queryState = {
+    ...Object.fromEntries(url.searchParams),
+    ...(categorySlug ? { category: categorySlug } : {}),
+    ...(brandSlug ? { brand: brandSlug } : {}),
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,7 +90,9 @@ export function useCatalog({ route, navigate, productIds = [], homeFeaturedSort 
             : [allProductsCategory],
         );
         setBrands(Array.isArray(brandData) ? brandData : brandData?.items || []);
-        setBrandTotal(brandData?.pagination?.total || (Array.isArray(brandData) ? brandData.length : 0));
+        setBrandTotal(
+          brandData?.pagination?.total || (Array.isArray(brandData) ? brandData.length : 0),
+        );
       })
       .catch((error) => {
         if (error.name !== "AbortError") {
@@ -93,7 +116,14 @@ export function useCatalog({ route, navigate, productIds = [], homeFeaturedSort 
         if (home) {
           const [requests, selectedResult] = await Promise.all([
             Promise.allSettled([
-              apiGet(listUrl({ limit: "24", page: featuredSort === "newest" ? "2" : "1", sort: featuredSort }), { signal }),
+              apiGet(
+                listUrl({
+                  limit: "24",
+                  page: featuredSort === "newest" ? "2" : "1",
+                  sort: featuredSort,
+                }),
+                { signal },
+              ),
               apiGet(listUrl({ trending: "1", limit: "24", sort: "recommended" }), { signal }),
               apiGet(listUrl({ sale: "1", limit: "24", sort: "newest" }), { signal }),
               apiGet(listUrl({ sort: homeArrivalSort, limit: "24" }), { signal }),
@@ -140,8 +170,8 @@ export function useCatalog({ route, navigate, productIds = [], homeFeaturedSort 
             if (routeUrl.searchParams.has(key)) params.set(key, routeUrl.searchParams.get(key));
           const categoryMatch = /^\/categories\/([a-z0-9-]+)$/.exec(routeUrl.pathname);
           const brandMatch = /^\/brands\/([a-z0-9-]+)$/.exec(routeUrl.pathname);
-          if (categoryMatch) params.set("category",categoryMatch[1]);
-          if (brandMatch) params.set("brand",brandMatch[1]);
+          if (categoryMatch) params.set("category", categoryMatch[1]);
+          if (brandMatch) params.set("brand", brandMatch[1]);
           params.set("limit", "24");
           const [listResult, selectedResult] = await Promise.allSettled([
             apiGet(`/products?${params}`, { signal }).then(normalizeList),
@@ -182,11 +212,14 @@ export function useCatalog({ route, navigate, productIds = [], homeFeaturedSort 
           const selected = selectedResult.status === "fulfilled" ? selectedResult.value.items : [];
           // Render the purchasable product as soon as its own API confirms it.
           // Related recommendations are noncritical and must not delay the gallery.
-          if (!signal.aborted) save({
-            detailProduct: product,
-            products: [...new Map([product, ...selected].map((item) => [item.id, item])).values()],
-            error: selectedResult.status === "rejected" ? selectedResult.reason : null,
-          });
+          if (!signal.aborted)
+            save({
+              detailProduct: product,
+              products: [
+                ...new Map([product, ...selected].map((item) => [item.id, item])).values(),
+              ],
+              error: selectedResult.status === "rejected" ? selectedResult.reason : null,
+            });
           const [recommendationsResult] = await Promise.allSettled([
             apiGet(listUrl({ category: product.category, limit: "8", sort: "recommended" }), {
               signal,
@@ -246,9 +279,21 @@ export function useCatalog({ route, navigate, productIds = [], homeFeaturedSort 
     };
     void load();
     return () => controller.abort();
-  }, [catalogRoute, routeKey, home, listing, productId, setup, idsKey, featuredSort, homeArrivalSort]);
+  }, [
+    catalogRoute,
+    routeKey,
+    home,
+    listing,
+    productId,
+    setup,
+    idsKey,
+    featuredSort,
+    homeArrivalSort,
+  ]);
 
-  const activeCategory = listing ? categorySlug || url.searchParams.get("category") || "all" : "all";
+  const activeCategory = listing
+    ? categorySlug || url.searchParams.get("category") || "all"
+    : "all";
   const sortBy = url.searchParams.get("sort") || "newest";
   const setQuery = (key, value) => {
     navigate(updateCatalogQuery(route, key, value));

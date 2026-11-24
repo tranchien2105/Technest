@@ -116,9 +116,10 @@ export function createSeoService(repository: SeoRepository, catalog: Catalog, co
       const variant =
         product.variants.find((v) => v.id === url.searchParams.get("variant")) ||
         product.variants[0];
-      const selectedImage = product.images.find((item) => item.variantId === variant?.id)
-        || product.images.find((item) => !item.variantId)
-        || product.images[0];
+      const selectedImage =
+        product.images.find((item) => item.variantId === variant?.id) ||
+        product.images.find((item) => !item.variantId) ||
+        product.images[0];
       const image = selectedImage?.url;
       if (image && result.image === absolute("/seo-social.png")) result.image = absolute(image);
       result.type = "product";
@@ -301,7 +302,7 @@ export function createSeoService(repository: SeoRepository, catalog: Catalog, co
       return result;
     }
     const privateRoute =
-      /^\/(admin|account|cart|checkout|login|register|forgot-password|order-success|favorites|compare|setup)(\/|$)/.test(
+      /^\/(admin|account|cart|checkout|login|register|forgot-password|reset-password|order-success|favorites|compare|setup)(\/|$)/.test(
         path,
       );
     if (privateRoute) return { ...base("Technest", path, true), content: "", schemas: [] };

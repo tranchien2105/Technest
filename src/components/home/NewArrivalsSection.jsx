@@ -51,7 +51,9 @@ function ArrivalCard({
             {product.name}
           </button>
         </h3>
-        {product.description && <p className="arrival-product-description">{product.description}</p>}
+        {product.description && (
+          <p className="arrival-product-description">{product.description}</p>
+        )}
         <div className="arrival-product-bottom">
           <div className="arrival-product-price">
             <strong>{formatPrice(product.price)}</strong>

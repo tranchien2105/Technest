@@ -55,7 +55,8 @@ export default function ProductDetailPage({
     document.body.classList.add("has-detail-purchase-bar");
     const updateHeight = () => {
       const height = purchaseBarRef.current?.getBoundingClientRect().height;
-      if (height) document.body.style.setProperty("--detail-purchase-bar-height", `${Math.ceil(height)}px`);
+      if (height)
+        document.body.style.setProperty("--detail-purchase-bar-height", `${Math.ceil(height)}px`);
     };
     updateHeight();
     const observer = new ResizeObserver(updateHeight);
@@ -71,8 +72,8 @@ export default function ProductDetailPage({
   const selectedVariantId = variantUrl.searchParams.get("variant") || activeVariants[0]?.id || "";
   const setSelectedVariantId = (id) => {
     if (id === activeVariants[0]?.id) variantUrl.searchParams.delete("variant");
-    else variantUrl.searchParams.set("variant",id);
-    navigate(variantUrl.pathname + variantUrl.search + variantUrl.hash, false, {replace:true});
+    else variantUrl.searchParams.set("variant", id);
+    navigate(variantUrl.pathname + variantUrl.search + variantUrl.hash, false, { replace: true });
   };
   const selectedVariant =
     activeVariants.find((variant) => variant.id === selectedVariantId) || activeVariants[0];
@@ -83,22 +84,45 @@ export default function ProductDetailPage({
     let requestVersion = 0;
     const load = () => {
       const version = ++requestVersion;
-      return flashSalesApi.list({ signal: controller.signal }).then(({ campaigns, serverNow }) => {
-        if (!active || version !== requestVersion) return;
-        const receivedAt = Date.now();
-        const serverTime = Date.parse(serverNow);
-        setFlashTick(receivedAt);
-        setFlashClockOffset(serverTime - receivedAt);
-        setFlashDeal(findVariantFlashDeal(campaigns, selectedVariant.id, serverTime, selectedVariant.price ?? product.price));
-      }).catch(() => { if (active && version === requestVersion) setFlashDeal(null); });
+      return flashSalesApi
+        .list({ signal: controller.signal })
+        .then(({ campaigns, serverNow }) => {
+          if (!active || version !== requestVersion) return;
+          const receivedAt = Date.now();
+          const serverTime = Date.parse(serverNow);
+          setFlashTick(receivedAt);
+          setFlashClockOffset(serverTime - receivedAt);
+          setFlashDeal(
+            findVariantFlashDeal(
+              campaigns,
+              selectedVariant.id,
+              serverTime,
+              selectedVariant.price ?? product.price,
+            ),
+          );
+        })
+        .catch(() => {
+          if (active && version === requestVersion) setFlashDeal(null);
+        });
     };
     void load();
     const timer = window.setInterval(load, 15_000);
     const clock = window.setInterval(() => setFlashTick(Date.now()), 1000);
     const events = apiEventSource("/flash-sales/events");
-    ["flash-sale:campaign-started", "flash-sale:campaign-ended", "flash-sale:item-updated", "flash-sale:campaign-updated"].forEach((name) => events.addEventListener(name, load));
+    [
+      "flash-sale:campaign-started",
+      "flash-sale:campaign-ended",
+      "flash-sale:item-updated",
+      "flash-sale:campaign-updated",
+    ].forEach((name) => events.addEventListener(name, load));
     events.onopen = load;
-    return () => { active = false; controller.abort(); clearInterval(timer); clearInterval(clock); events.close(); };
+    return () => {
+      active = false;
+      controller.abort();
+      clearInterval(timer);
+      clearInterval(clock);
+      events.close();
+    };
   }, [selectedVariant?.id, selectedVariant?.price, product?.price]);
   const variantKey = `${product?.id || ""}:${selectedVariant?.id || "default"}`;
   const detailQuantity = quantityState.key === variantKey ? quantityState.quantity : 1;
@@ -131,17 +155,41 @@ export default function ProductDetailPage({
           ],
         }
       : product;
-  const activeFlashDeal = flashDeal?.variantId === String(selectedVariant?.id) && Date.parse(flashDeal.endsAt) > flashTick + flashClockOffset ? flashDeal : null;
-  const flashPurchaseLimit = activeFlashDeal && baseDisplayedProduct
-    ? Math.min(baseDisplayedProduct.availableQuantity ?? activeFlashDeal.stockAvailable, activeFlashDeal.availableQuantity, activeFlashDeal.perCustomerLimit)
+  const activeFlashDeal =
+    flashDeal?.variantId === String(selectedVariant?.id) &&
+    Date.parse(flashDeal.endsAt) > flashTick + flashClockOffset
+      ? flashDeal
+      : null;
+  const flashPurchaseLimit =
+    activeFlashDeal && baseDisplayedProduct
+      ? Math.min(
+          baseDisplayedProduct.availableQuantity ?? activeFlashDeal.stockAvailable,
+          activeFlashDeal.availableQuantity,
+          activeFlashDeal.perCustomerLimit,
+        )
+      : 0;
+  const displayedProduct =
+    activeFlashDeal && baseDisplayedProduct
+      ? {
+          ...baseDisplayedProduct,
+          price: activeFlashDeal.flashPrice,
+          oldPrice: activeFlashDeal.originalPrice,
+          flashSalePrice: activeFlashDeal.flashPrice,
+          flashSaleItemId: activeFlashDeal.id,
+          flashSaleAvailableQuantity: flashPurchaseLimit,
+          availableQuantity: flashPurchaseLimit,
+          stockStatus: flashPurchaseLimit > 0 ? "IN_STOCK" : "OUT_OF_STOCK",
+        }
+      : baseDisplayedProduct;
+  const flashRemaining = activeFlashDeal
+    ? Math.max(0, new Date(activeFlashDeal.endsAt).getTime() - (flashTick + flashClockOffset))
     : 0;
-  const displayedProduct = activeFlashDeal && baseDisplayedProduct ? { ...baseDisplayedProduct, price: activeFlashDeal.flashPrice, oldPrice: activeFlashDeal.originalPrice, flashSalePrice: activeFlashDeal.flashPrice, flashSaleItemId: activeFlashDeal.id, flashSaleAvailableQuantity: flashPurchaseLimit, availableQuantity: flashPurchaseLimit, stockStatus: flashPurchaseLimit > 0 ? "IN_STOCK" : "OUT_OF_STOCK" } : baseDisplayedProduct;
-  const flashRemaining = activeFlashDeal ? Math.max(0, new Date(activeFlashDeal.endsAt).getTime() - (flashTick + flashClockOffset)) : 0;
-  const flashCountdown = `${String(Math.floor(flashRemaining / 3_600_000)).padStart(2,"0")}:${String(Math.floor(flashRemaining % 3_600_000 / 60_000)).padStart(2,"0")}:${String(Math.floor(flashRemaining % 60_000 / 1000)).padStart(2,"0")}`;
+  const flashCountdown = `${String(Math.floor(flashRemaining / 3_600_000)).padStart(2, "0")}:${String(Math.floor((flashRemaining % 3_600_000) / 60_000)).padStart(2, "0")}:${String(Math.floor((flashRemaining % 60_000) / 1000)).padStart(2, "0")}`;
   const productAttributes = displayedProduct?.attributes || {};
-  const technicalSpecifications = productAttributes.specifications && typeof productAttributes.specifications === "object"
-    ? Object.entries(productAttributes.specifications)
-    : [];
+  const technicalSpecifications =
+    productAttributes.specifications && typeof productAttributes.specifications === "object"
+      ? Object.entries(productAttributes.specifications)
+      : [];
   const isIllustration = productAttributes.dataset === "development-illustration";
   const allCategories = categories.flatMap((category) => [category, ...(category.children || [])]);
   const cards = (items) => <ProductGrid {...cardProps} items={items} />;
@@ -198,7 +246,8 @@ export default function ProductDetailPage({
     [
       tx("Category", "Danh mục", lang),
       allCategories.find((c) => c.id === product.category)?.[language] ||
-        allCategories.find((c) => c.id === product.category)?.name || product.category,
+        allCategories.find((c) => c.id === product.category)?.name ||
+        product.category,
     ],
     [
       tx("Availability", "Tình trạng", lang),
@@ -208,7 +257,10 @@ export default function ProductDetailPage({
           ? tx("Out of stock", "Hết hàng", lang)
           : tx("Availability cannot be confirmed", "Chưa xác nhận được tồn kho", lang),
     ],
-    [tx("Warranty", "Bảo hành", lang), productAttributes.warranty || tx("Not specified", "Chưa có thông tin", lang)],
+    [
+      tx("Warranty", "Bảo hành", lang),
+      productAttributes.warranty || tx("Not specified", "Chưa có thông tin", lang),
+    ],
   ];
   return (
     <section className="store-page product-detail-page">
@@ -274,19 +326,33 @@ export default function ProductDetailPage({
                   <div>
                     <del>{formatPrice(activeFlashDeal.originalPrice)}</del>
                     <span>
-                      -{Number(
-                        ((BigInt(activeFlashDeal.originalPrice) - BigInt(activeFlashDeal.flashPrice)) * 100n) /
+                      -
+                      {Number(
+                        ((BigInt(activeFlashDeal.originalPrice) -
+                          BigInt(activeFlashDeal.flashPrice)) *
+                          100n) /
                           BigInt(activeFlashDeal.originalPrice),
-                      )}%
+                      )}
+                      %
                     </span>
                   </div>
                 </div>
                 <div className="detail-flash-strip">
-                  <strong><Flame size={17} fill="currentColor"/> Flash Sale</strong>
-                  <span className="detail-flash-countdown" aria-label={`Kết thúc sau ${flashCountdown}`}>
-                    {flashCountdown.split(":").map((part, index) => <span key={`${part}-${index}`}>{part}</span>)}
+                  <strong>
+                    <Flame size={17} fill="currentColor" /> Flash Sale
+                  </strong>
+                  <span
+                    className="detail-flash-countdown"
+                    aria-label={`Kết thúc sau ${flashCountdown}`}
+                  >
+                    {flashCountdown.split(":").map((part, index) => (
+                      <span key={`${part}-${index}`}>{part}</span>
+                    ))}
                   </span>
-                  <span className="detail-flash-quota"><Flame size={15} fill="currentColor"/> Còn {activeFlashDeal.availableQuantity}/{activeFlashDeal.quota} suất</span>
+                  <span className="detail-flash-quota">
+                    <Flame size={15} fill="currentColor" /> Còn {activeFlashDeal.availableQuantity}/
+                    {activeFlashDeal.quota} suất
+                  </span>
                 </div>
                 <p>Giới hạn {activeFlashDeal.perCustomerLimit} sản phẩm mỗi khách</p>
               </section>
@@ -326,17 +392,19 @@ export default function ProductDetailPage({
               )}
             </p>
           )}
-          {!activeFlashDeal && <p className="stock-note" role="status">
-            {displayedProduct.stockStatus === "IN_STOCK"
-              ? `${tx("In stock", "Còn hàng", lang)} · ${displayedProduct.availableQuantity} ${tx("available", "có thể mua", lang)}. ${tx("Availability is informational and may change before checkout.", "Tồn kho chỉ mang tính tham khảo và có thể thay đổi trước khi thanh toán.", lang)}`
-              : displayedProduct.stockStatus === "OUT_OF_STOCK"
-                ? tx("Currently out of stock.", "Sản phẩm hiện đã hết hàng.", lang)
-                : tx(
-                    "Availability cannot be confirmed right now.",
-                    "Hiện chưa xác nhận được tồn kho.",
-                    lang,
-                  )}
-          </p>}
+          {!activeFlashDeal && (
+            <p className="stock-note" role="status">
+              {displayedProduct.stockStatus === "IN_STOCK"
+                ? `${tx("In stock", "Còn hàng", lang)} · ${displayedProduct.availableQuantity} ${tx("available", "có thể mua", lang)}. ${tx("Availability is informational and may change before checkout.", "Tồn kho chỉ mang tính tham khảo và có thể thay đổi trước khi thanh toán.", lang)}`
+                : displayedProduct.stockStatus === "OUT_OF_STOCK"
+                  ? tx("Currently out of stock.", "Sản phẩm hiện đã hết hàng.", lang)
+                  : tx(
+                      "Availability cannot be confirmed right now.",
+                      "Hiện chưa xác nhận được tồn kho.",
+                      lang,
+                    )}
+            </p>
+          )}
           {activeVariants.length > 1 && (
             <label className="detail-variant-select">
               {tx("Variant", "Phiên bản", lang)}
@@ -359,14 +427,23 @@ export default function ProductDetailPage({
             {isIllustration ? (
               <>
                 <span>✓ {tx("Illustrative listing", "Sản phẩm minh họa", lang)}</span>
-                <span>✓ {tx("Specifications require verification", "Thông số cần đối chiếu", lang)}</span>
+                <span>
+                  ✓ {tx("Specifications require verification", "Thông số cần đối chiếu", lang)}
+                </span>
                 <span>✓ {tx("Local development data", "Dữ liệu phát triển cục bộ", lang)}</span>
               </>
             ) : (
               <>
                 <span>✓ {tx("Authentic products", "Sản phẩm chính hãng", lang)}</span>
                 <span>✓ {tx("Official warranty", "Bảo hành đầy đủ", lang)}</span>
-                <span>✓ {tx("Free shipping over 1,000,000₫", "Miễn phí giao hàng đơn từ 1.000.000₫", lang)}</span>
+                <span>
+                  ✓{" "}
+                  {tx(
+                    "Free shipping over 1,000,000₫",
+                    "Miễn phí giao hàng đơn từ 1.000.000₫",
+                    lang,
+                  )}
+                </span>
               </>
             )}
           </div>
@@ -418,13 +495,39 @@ export default function ProductDetailPage({
         <section className="detail-information">
           <h2>{tx("Description", "Mô tả sản phẩm", lang)}</h2>
           <p>{product.description}</p>
-          {Object.entries(productAttributes).some(([name, value]) => !["specifications", "dataset", "categoryLabel", "warranty", "note", "seedKey", "seedOrdinal"].includes(name) && typeof value !== "object") && (
+          {Object.entries(productAttributes).some(
+            ([name, value]) =>
+              ![
+                "specifications",
+                "dataset",
+                "categoryLabel",
+                "warranty",
+                "note",
+                "seedKey",
+                "seedOrdinal",
+              ].includes(name) && typeof value !== "object",
+          ) && (
             <>
               <h2>{tx("Product attributes", "Thuộc tính sản phẩm", lang)}</h2>
               <ul>
                 {Object.entries(productAttributes)
-                  .filter(([name, value]) => !["specifications", "dataset", "categoryLabel", "warranty", "note", "seedKey", "seedOrdinal"].includes(name) && typeof value !== "object")
-                  .map(([name, value]) => <li key={name}>{name}: {String(value)}</li>)}
+                  .filter(
+                    ([name, value]) =>
+                      ![
+                        "specifications",
+                        "dataset",
+                        "categoryLabel",
+                        "warranty",
+                        "note",
+                        "seedKey",
+                        "seedOrdinal",
+                      ].includes(name) && typeof value !== "object",
+                  )
+                  .map(([name, value]) => (
+                    <li key={name}>
+                      {name}: {String(value)}
+                    </li>
+                  ))}
               </ul>
             </>
           )}
@@ -483,23 +586,54 @@ export default function ProductDetailPage({
         toggleCompare={toggleCompare}
         onViewProduct={(item) => navigate(getProductUrl(item))}
       />
-      <div ref={purchaseBarRef} className="detail-purchase-bar" role="region" aria-label={tx("Product purchase", "Mua sản phẩm", lang)}>
+      <div
+        ref={purchaseBarRef}
+        className="detail-purchase-bar"
+        role="region"
+        aria-label={tx("Product purchase", "Mua sản phẩm", lang)}
+      >
         <div className="detail-purchase-bar-inner">
           <div className="detail-purchase-product">
             <ProductImage src={displayedProduct.image} alt="" />
-            <div><strong>{product.name}</strong><span>{selectedVariant?.name || displayedProduct.sku} · {tx("Quantity", "Số lượng", lang)}: {detailQuantity}</span></div>
+            <div>
+              <strong>{product.name}</strong>
+              <span>
+                {selectedVariant?.name || displayedProduct.sku} · {tx("Quantity", "Số lượng", lang)}
+                : {detailQuantity}
+              </span>
+            </div>
           </div>
           <div className="detail-purchase-actions">
-          <div className="detail-purchase-total">
-            <span>{tx("Subtotal", "Tạm tính", lang)}</span>
-            <strong>{formatPrice(BigInt(displayedProduct.price) * BigInt(detailQuantity))}</strong>
-          </div>
-          <button type="button" className="detail-purchase-cart" disabled={displayedProduct.stockStatus !== "IN_STOCK" || detailQuantity > displayedProduct.availableQuantity} onClick={() => addToCart(displayedProduct, detailQuantity)}>
-            <ShoppingCart size={20}/><span>{tx("Add to cart", "Thêm vào giỏ", lang)}</span>
-          </button>
-          <button type="button" className="detail-purchase-buy" disabled={displayedProduct.stockStatus !== "IN_STOCK" || detailQuantity > displayedProduct.availableQuantity} onClick={() => buyNow(displayedProduct, detailQuantity)}>
-            {tx("Buy now", "Mua ngay", lang)}<ArrowRight size={17}/>
-          </button>
+            <div className="detail-purchase-total">
+              <span>{tx("Subtotal", "Tạm tính", lang)}</span>
+              <strong>
+                {formatPrice(BigInt(displayedProduct.price) * BigInt(detailQuantity))}
+              </strong>
+            </div>
+            <button
+              type="button"
+              className="detail-purchase-cart"
+              disabled={
+                displayedProduct.stockStatus !== "IN_STOCK" ||
+                detailQuantity > displayedProduct.availableQuantity
+              }
+              onClick={() => addToCart(displayedProduct, detailQuantity)}
+            >
+              <ShoppingCart size={20} />
+              <span>{tx("Add to cart", "Thêm vào giỏ", lang)}</span>
+            </button>
+            <button
+              type="button"
+              className="detail-purchase-buy"
+              disabled={
+                displayedProduct.stockStatus !== "IN_STOCK" ||
+                detailQuantity > displayedProduct.availableQuantity
+              }
+              onClick={() => buyNow(displayedProduct, detailQuantity)}
+            >
+              {tx("Buy now", "Mua ngay", lang)}
+              <ArrowRight size={17} />
+            </button>
           </div>
         </div>
       </div>

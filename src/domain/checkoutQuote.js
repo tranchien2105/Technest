@@ -1,4 +1,5 @@
-const lineKey = (item) => `${String(item.variantId)}:${item.flashSaleItemId == null ? "standard" : String(item.flashSaleItemId)}`;
+const lineKey = (item) =>
+  `${String(item.variantId)}:${item.flashSaleItemId == null ? "standard" : String(item.flashSaleItemId)}`;
 
 /** A quote belongs to these exact cart lines, quantities and catalog snapshots. */
 export function checkoutQuoteKey(items) {

@@ -68,9 +68,21 @@ export default function AdminBulkActions({ ids, onComplete, onClear }) {
           <option value="ARCHIVED">Lưu trữ</option>
         </select>
       ) : action === "CATEGORY" ? (
-        <AdminReferencePicker kind="categories" label="Danh mục hàng loạt" value={categoryId} onChange={setCategoryId} disabled={busy}/>
+        <AdminReferencePicker
+          kind="categories"
+          label="Danh mục hàng loạt"
+          value={categoryId}
+          onChange={setCategoryId}
+          disabled={busy}
+        />
       ) : action === "BRAND" ? (
-        <AdminReferencePicker kind="brands" label="Thương hiệu hàng loạt" value={brandId} onChange={setBrandId} disabled={busy}/>
+        <AdminReferencePicker
+          kind="brands"
+          label="Thương hiệu hàng loạt"
+          value={brandId}
+          onChange={setBrandId}
+          disabled={busy}
+        />
       ) : (
         <>
           <select
@@ -83,9 +95,20 @@ export default function AdminBulkActions({ ids, onComplete, onClear }) {
             <option value="DECREASE_PERCENT">Giảm (%)</option>
           </select>
           {priceMode === "SET" ? (
-            <CurrencyInput aria-label="Giá trị cập nhật" value={price} onValueChange={setPrice} placeholder="Giá bán mới" />
+            <CurrencyInput
+              aria-label="Giá trị cập nhật"
+              value={price}
+              onValueChange={setPrice}
+              placeholder="Giá bán mới"
+            />
           ) : (
-            <input aria-label="Giá trị cập nhật" inputMode="numeric" value={price} onChange={(e) => setPrice(e.target.value.replace(/\D/g, ""))} placeholder="0–100%" />
+            <input
+              aria-label="Giá trị cập nhật"
+              inputMode="numeric"
+              value={price}
+              onChange={(e) => setPrice(e.target.value.replace(/\D/g, ""))}
+              placeholder="0–100%"
+            />
           )}
           <label>
             <input

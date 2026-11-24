@@ -269,23 +269,49 @@ export function createInventoryService(db: Database) {
   async function increaseStock(
     variantId: string | bigint,
     quantity: number,
-    options: { transaction?: Transaction; idempotencyKey?: string; reference?: { type: string; id: string } } = {},
+    options: {
+      transaction?: Transaction;
+      idempotencyKey?: string;
+      reference?: { type: string; id: string };
+    } = {},
   ) {
-    return mutateStock(variantId, "INBOUND", quantity, options.idempotencyKey, options.reference, options.transaction);
+    return mutateStock(
+      variantId,
+      "INBOUND",
+      quantity,
+      options.idempotencyKey,
+      options.reference,
+      options.transaction,
+    );
   }
 
   async function decreaseStock(
     variantId: string | bigint,
     quantity: number,
-    options: { transaction?: Transaction; idempotencyKey?: string; reference?: { type: string; id: string } } = {},
+    options: {
+      transaction?: Transaction;
+      idempotencyKey?: string;
+      reference?: { type: string; id: string };
+    } = {},
   ) {
-    return mutateStock(variantId, "OUTBOUND", quantity, options.idempotencyKey, options.reference, options.transaction);
+    return mutateStock(
+      variantId,
+      "OUTBOUND",
+      quantity,
+      options.idempotencyKey,
+      options.reference,
+      options.transaction,
+    );
   }
 
   async function adjustStock(
     variantId: string | bigint,
     newQuantity: number,
-    options: { transaction?: Transaction; idempotencyKey?: string; reference?: { type: string; id: string } } = {},
+    options: {
+      transaction?: Transaction;
+      idempotencyKey?: string;
+      reference?: { type: string; id: string };
+    } = {},
   ) {
     return mutateStock(
       variantId,
@@ -375,7 +401,11 @@ export function createInventoryService(db: Database) {
     return options.transaction ? run(options.transaction) : db.transaction(run);
   }
 
-  async function finishReservation(idValue: string | bigint, action: "RELEASED" | "CONFIRMED", transaction?: Transaction) {
+  async function finishReservation(
+    idValue: string | bigint,
+    action: "RELEASED" | "CONFIRMED",
+    transaction?: Transaction,
+  ) {
     const id = parseId(idValue);
     const run = async (tx: Transaction) => {
       const [reservation] = await tx
@@ -387,7 +417,8 @@ export function createInventoryService(db: Database) {
       if (!reservation) throw new AppError(404, "RESERVATION_NOT_FOUND", "Reservation not found");
       if (reservation.status !== "ACTIVE") return serializeReservation(reservation);
       const row = await ensureLockedInventory(tx, reservation.variantId);
-      const expired = reservation.referenceType !== "order" && reservation.expiresAt.getTime() <= Date.now();
+      const expired =
+        reservation.referenceType !== "order" && reservation.expiresAt.getTime() <= Date.now();
       const status: ReservationStatus = expired ? "EXPIRED" : action;
       const now = new Date();
       if (status === "CONFIRMED") {

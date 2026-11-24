@@ -6,8 +6,12 @@ export function useHomepageConfig() {
   useEffect(() => {
     const controller = new AbortController();
     apiGet("/homepage/config", { signal: controller.signal })
-      .then((config) => { if (!controller.signal.aborted) setState({ config, loading: false, error: null }); })
-      .catch((error) => { if (!controller.signal.aborted) setState({ config: null, loading: false, error }); });
+      .then((config) => {
+        if (!controller.signal.aborted) setState({ config, loading: false, error: null });
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted) setState({ config: null, loading: false, error });
+      });
     return () => controller.abort();
   }, []);
   return state;

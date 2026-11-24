@@ -50,16 +50,23 @@ export default function FavoritesPage({
         </p>
       )}
       {favorites.length ? (
-        products.some((x) => favorites.some((id) => String(id) === String(x.id))) ?
-          cards(products.filter((x) => favorites.some((id) => String(id) === String(x.id)))) :
-          !catalogLoading && !catalogError && (
+        products.some((x) => favorites.some((id) => String(id) === String(x.id))) ? (
+          cards(products.filter((x) => favorites.some((id) => String(id) === String(x.id))))
+        ) : (
+          !catalogLoading &&
+          !catalogError && (
             <Empty
               title={tx("Saved products unavailable", "Sản phẩm đã lưu không còn khả dụng", lang)}
-              text={tx("These products may have been removed from the catalog.", "Sản phẩm có thể đã bị gỡ khỏi danh mục.", lang)}
+              text={tx(
+                "These products may have been removed from the catalog.",
+                "Sản phẩm có thể đã bị gỡ khỏi danh mục.",
+                lang,
+              )}
               go={navigate}
               lang={lang}
             />
           )
+        )
       ) : (
         <Empty
           title={tx("Nothing saved yet", "Chưa có sản phẩm yêu thích", lang)}

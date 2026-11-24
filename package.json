@@ -8,8 +8,9 @@
     "build": "node scripts/build-frontend.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{js,jsx,css}\" \"*.{js,json,html}\"",
-    "test": "node --test tests/*.test.js"
+    "format": "prettier --write \"src/**/*.{js,jsx,css}\" \"backend/src/**/*.{ts,tsx}\" \"backend/tests/**/*.ts\" \"backend/scripts/*.{ts,mjs}\" \"backend/*.{ts,mjs,json}\" \"scripts/*.mjs\" \"tests/*.js\" \"*.{js,json,html}\"",
+    "test": "node --test tests/*.test.js",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,css}\" \"backend/src/**/*.{ts,tsx}\" \"backend/tests/**/*.ts\" \"backend/scripts/*.{ts,mjs}\" \"backend/*.{ts,mjs,json}\" \"scripts/*.mjs\" \"tests/*.js\" \"*.{js,json,html}\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

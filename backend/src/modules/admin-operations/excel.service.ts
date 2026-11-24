@@ -267,7 +267,10 @@ export function createExcelService(db: Database) {
         stock: stock === "" ? null : Number(stock),
       } as unknown as Record<string, unknown>;
       const group = groups.get(slug!) || [];
-      if (group.length >= 50) { errors.push({row:n,message:"Mỗi sản phẩm hỗ trợ tối đa 50 SKU."}); continue; }
+      if (group.length >= 50) {
+        errors.push({ row: n, message: "Mỗi sản phẩm hỗ trợ tối đa 50 SKU." });
+        continue;
+      }
       if (
         group.length &&
         JSON.stringify({ ...group[0], variants: null, stock: null }) !==
@@ -352,16 +355,14 @@ export function createExcelService(db: Database) {
           if (!saved) throw new Error("Không lưu được sản phẩm");
           await tx.delete(productImages).where(eq(productImages.productId, saved.id));
           if (p.images.length)
-            await tx
-              .insert(productImages)
-              .values(
-                p.images.map((img, index) => ({
-                  productId: saved.id,
-                  url: img.url,
-                  altText: p.name,
-                  sortOrder: index,
-                })),
-              );
+            await tx.insert(productImages).values(
+              p.images.map((img, index) => ({
+                productId: saved.id,
+                url: img.url,
+                altText: p.name,
+                sortOrder: index,
+              })),
+            );
           for (const item of entry.variants) {
             const v = productInput.shape.variants.element.parse(item.variant);
             const [existing] = await tx

@@ -1,11 +1,18 @@
-import {seoApiRouter,seoAdminRouter,seoStorefrontRouter} from "./modules/seo/seo.routes.js";
-import type {SeoService} from "./modules/seo/seo.service.js";
-import { createOperationsRouter, createOperationsPublicRouter } from "./modules/admin-operations/operations.routes.js";
+import { seoApiRouter, seoAdminRouter, seoStorefrontRouter } from "./modules/seo/seo.routes.js";
+import type { SeoService } from "./modules/seo/seo.service.js";
+import {
+  createOperationsRouter,
+  createOperationsPublicRouter,
+} from "./modules/admin-operations/operations.routes.js";
 import { uploadDirectory } from "./modules/admin-operations/uploads.js";
 import { adminAudit } from "./modules/admin-operations/audit.js";
 import { adminAccess } from "./modules/admin-operations/permissions.js";
 import { authenticate } from "./modules/auth/auth.middleware.js";
-import { createCheckoutRouter, createCustomerOrdersRouter, createAdminOrdersRouter } from "./modules/orders/orders.routes.js";
+import {
+  createCheckoutRouter,
+  createCustomerOrdersRouter,
+  createAdminOrdersRouter,
+} from "./modules/orders/orders.routes.js";
 import type { OrdersService } from "./modules/orders/orders.service.js";
 import type { OrderEventHub } from "./modules/orders/order-events.js";
 import type { OrderStatusNotifier } from "./modules/orders/orders.controller.js";
@@ -37,30 +44,74 @@ import type { AccountService } from "./modules/account/account.service.js";
 import { createNotificationsRouter } from "./modules/notifications/notifications.routes.js";
 import type { NotificationsService } from "./modules/notifications/notifications.service.js";
 import { createAdminNotificationsRouter } from "./modules/notifications/admin-notifications.routes.js";
-import { createHomepageAdminRouter, createHomepagePublicRouter } from "./modules/homepage-cms/homepage-cms.routes.js";
-import { createPublicFlashSalesRouter, createAdminFlashSalesRouter } from "./modules/flash-sales/flash-sales.routes.js";
+import {
+  createHomepageAdminRouter,
+  createHomepagePublicRouter,
+} from "./modules/homepage-cms/homepage-cms.routes.js";
+import {
+  createPublicFlashSalesRouter,
+  createAdminFlashSalesRouter,
+} from "./modules/flash-sales/flash-sales.routes.js";
 import type { FlashSalesService } from "./modules/flash-sales/flash-sales.service.js";
 
+import type { PasswordResetService } from "./modules/auth/password-reset.service.js";
+
 interface AppOptions {
-  seo?: {service:SeoService;distDirectory:string};
-  orders?: { service: OrdersService; auth: AuthService; hub: OrderEventHub; notify: OrderStatusNotifier };
+  seo?: { service: SeoService; distDirectory: string };
+  orders?: {
+    service: OrdersService;
+    auth: AuthService;
+    hub: OrderEventHub;
+    notify: OrderStatusNotifier;
+  };
   logger: Logger;
   corsOrigin: string;
   health: HealthDependencies;
-  auth?: { service: AuthService; env: Env; redis: RedisClientType };
+  auth?: {
+    service: AuthService;
+    env: Env;
+    redis: RedisClientType;
+    passwordReset?: PasswordResetService;
+  };
   catalog?: ReturnType<typeof createCatalogService>;
   inventory?: { service: InventoryService; auth: AuthService };
-  admin?: { db: NodePgDatabase<typeof schema>; auth: AuthService; notify?: Parameters<typeof createAdminRouter>[2] };
-  account?: { service: AccountService; auth: AuthService; redis: RedisClientType; notify?: Parameters<typeof createAccountRouter>[3] };
+  admin?: {
+    db: NodePgDatabase<typeof schema>;
+    auth: AuthService;
+    notify?: Parameters<typeof createAdminRouter>[2];
+  };
+  account?: {
+    service: AccountService;
+    auth: AuthService;
+    redis: RedisClientType;
+    notify?: Parameters<typeof createAccountRouter>[3];
+  };
   notifications?: { service: NotificationsService; auth: AuthService };
   flashSales?: FlashSalesService;
-  publishNotification?: (recipientUserId: string, notification: NonNullable<Awaited<ReturnType<NotificationsService["createNotification"]>>>) => void;
+  publishNotification?: (
+    recipientUserId: string,
+    notification: NonNullable<Awaited<ReturnType<NotificationsService["createNotification"]>>>,
+  ) => void;
 }
 
-export function createApp({ logger, corsOrigin, health, auth, catalog, inventory, admin, account, notifications, flashSales, publishNotification, orders, seo }: AppOptions) {
+export function createApp({
+  logger,
+  corsOrigin,
+  health,
+  auth,
+  catalog,
+  inventory,
+  admin,
+  account,
+  notifications,
+  flashSales,
+  publishNotification,
+  orders,
+  seo,
+}: AppOptions) {
   const app = express();
   app.disable("x-powered-by");
-  if (seo?.service.config.proxyHops) app.set("trust proxy",seo.service.config.proxyHops);
+  if (seo?.service.config.proxyHops) app.set("trust proxy", seo.service.config.proxyHops);
   app.use(
     pinoHttp({
       logger,
@@ -80,15 +131,30 @@ export function createApp({ logger, corsOrigin, health, auth, catalog, inventory
     }),
   );
   app.use(cors({ origin: corsOrigin, credentials: true, exposedHeaders: ["X-Request-Id"] }));
-  app.use("/images/uploads", express.static(uploadDirectory, { maxAge: "7d", immutable: true, dotfiles: "deny" }));
+  app.use(
+    "/images/uploads",
+    express.static(uploadDirectory, { maxAge: "7d", immutable: true, dotfiles: "deny" }),
+  );
   app.use(express.json({ limit: "1mb" }));
-  app.use("/api", (_request,response,next) => { response.set("X-Robots-Tag","noindex, nofollow"); next(); });
+  app.use("/api", (_request, response, next) => {
+    response.set("X-Robots-Tag", "noindex, nofollow");
+    next();
+  });
   app.use("/api/v1/health", createHealthRouter(health));
-  if (auth) app.use("/api/v1/auth", createAuthRouter(auth.service, auth.env, auth.redis));
+  if (auth)
+    app.use(
+      "/api/v1/auth",
+      createAuthRouter(auth.service, auth.env, auth.redis, auth.passwordReset),
+    );
   if (catalog) app.use("/api/v1", createCatalogRouter(catalog));
   if (flashSales) app.use("/api/v1", createPublicFlashSalesRouter(flashSales));
-  if (admin) app.use("/api/v1/admin", authenticate(admin.auth), adminAccess(), adminAudit(admin.db));
-  if (notifications && admin) app.use("/api/v1/admin/notifications", createAdminNotificationsRouter(notifications.service, admin.auth, publishNotification));
+  if (admin)
+    app.use("/api/v1/admin", authenticate(admin.auth), adminAccess(), adminAudit(admin.db));
+  if (notifications && admin)
+    app.use(
+      "/api/v1/admin/notifications",
+      createAdminNotificationsRouter(notifications.service, admin.auth, publishNotification),
+    );
   if (inventory) {
     app.use("/api/v1/inventory", createPublicInventoryRouter(inventory.service));
     app.use(
@@ -96,24 +162,42 @@ export function createApp({ logger, corsOrigin, health, auth, catalog, inventory
       createAdminInventoryRouter(inventory.service, inventory.auth),
     );
   }
-  if (admin) { app.use("/api/v1", createOperationsPublicRouter(admin.db, admin.auth)); app.use("/api/v1/admin", createOperationsRouter(admin.db)); }
+  if (admin) {
+    app.use("/api/v1", createOperationsPublicRouter(admin.db, admin.auth));
+    app.use("/api/v1/admin", createOperationsRouter(admin.db));
+  }
   if (admin) {
     app.use("/api/v1/homepage", createHomepagePublicRouter(admin.db));
     app.use("/api/v1/admin/homepage", createHomepageAdminRouter(admin.db));
   }
   if (admin) app.use("/api/v1/admin", createAdminRouter(admin.db, admin.auth, admin.notify));
-  if (admin && flashSales) app.use("/api/v1/admin/flash-sales", createAdminFlashSalesRouter(flashSales));
-  if (account) app.use("/api/v1/account", createAccountRouter(account.service, account.auth, account.redis, account.notify));
-  if (notifications) app.use("/api/v1/notifications", createNotificationsRouter(notifications.service, notifications.auth));
+  if (admin && flashSales)
+    app.use("/api/v1/admin/flash-sales", createAdminFlashSalesRouter(flashSales));
+  if (account)
+    app.use(
+      "/api/v1/account",
+      createAccountRouter(account.service, account.auth, account.redis, account.notify),
+    );
+  if (notifications)
+    app.use(
+      "/api/v1/notifications",
+      createNotificationsRouter(notifications.service, notifications.auth),
+    );
   if (orders) {
     app.use("/api/v1/checkout", createCheckoutRouter(orders.service, orders.auth));
-    app.use("/api/v1/orders", createCustomerOrdersRouter(orders.service, orders.auth, orders.hub, orders.notify));
-    app.use("/api/v1/admin/orders", createAdminOrdersRouter(orders.service, orders.auth, orders.hub, orders.notify));
+    app.use(
+      "/api/v1/orders",
+      createCustomerOrdersRouter(orders.service, orders.auth, orders.hub, orders.notify),
+    );
+    app.use(
+      "/api/v1/admin/orders",
+      createAdminOrdersRouter(orders.service, orders.auth, orders.hub, orders.notify),
+    );
   }
   if (seo) {
     app.use("/api/v1", seoApiRouter(seo.service));
     if (admin) app.use("/api/v1/admin", seoAdminRouter(seo.service, admin.auth));
-    app.use(seoStorefrontRouter(seo.service,seo.distDirectory));
+    app.use(seoStorefrontRouter(seo.service, seo.distDirectory));
   }
   app.use(notFound);
   app.use(errorHandler(logger));

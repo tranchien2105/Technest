@@ -19,10 +19,16 @@ export const envSchema = z.object({
   HOST: z.string().min(1).default("127.0.0.1"),
   PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   CORS_ORIGIN: connectionUrl(["http:", "https:"]).default("http://localhost:5173"),
-  SEO_ENFORCE_ORIGIN: z.enum(["true","false"]).default("false").transform(value=>value==="true"),
+  SEO_ENFORCE_ORIGIN: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((value) => value === "true"),
   SEO_TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(2).default(0),
   SEO_SITE_URL: z.string().url().optional(),
-  SEO_INDEXING_ENABLED: z.enum(["true", "false"]).default("false").transform(value => value === "true"),
+  SEO_INDEXING_ENABLED: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((value) => value === "true"),
   SEO_GOOGLE_VERIFICATION: z.string().max(200).optional(),
   STOREFRONT_DIST: z.string().optional(),
   AUTH_JWT_SECRET: z.string().min(32),

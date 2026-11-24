@@ -32,8 +32,10 @@ export function createOperationsRouter(db: Database) {
   router.post("/uploads", imageUpload, async (req, res) =>
     sendData(res, await saveImages((req.files || []) as Express.Multer.File[]), 201),
   );
-  router.get("/products/references", validateRequest({ query: referenceQuery }), async (_req, res) =>
-    sendData(res, await catalogReferences(db, res.locals.validated.query)),
+  router.get(
+    "/products/references",
+    validateRequest({ query: referenceQuery }),
+    async (_req, res) => sendData(res, await catalogReferences(db, res.locals.validated.query)),
   );
   router.post("/products/bulk", validateRequest({ body: bulkInput }), async (_req, res) =>
     sendData(res, await s.bulk(res.locals.validated.body, res.locals.user.id)),
@@ -71,8 +73,11 @@ export function createOperationsRouter(db: Database) {
   router.get("/banners/:id", validateRequest({ params }), async (_req, res) =>
     sendData(res, await s.getBanner(res.locals.validated.params.id)),
   );
-  router.put("/banners/placements", validateRequest({ body: bannerPlacementsInput }), async (_req, res) =>
-    sendData(res, await s.saveBannerPlacements(res.locals.validated.body.placements)),
+  router.put(
+    "/banners/placements",
+    validateRequest({ body: bannerPlacementsInput }),
+    async (_req, res) =>
+      sendData(res, await s.saveBannerPlacements(res.locals.validated.body.placements)),
   );
   router.post("/banners", validateRequest({ body: bannerInput }), async (_req, res) =>
     sendData(res, await s.saveBanner(res.locals.validated.body), 201),
@@ -140,7 +145,18 @@ export function createOperationsRouter(db: Database) {
 export function createOperationsPublicRouter(db: Database, auth: AuthService) {
   const router = Router(),
     s = createOperationsService(db);
-  const publicBannerQuery = z.object({ position: z.enum(["HOME_HERO", "HOME_HERO_RIGHT_TOP", "HOME_HERO_RIGHT_BOTTOM", "HOME_PROMO", "HOME_BOTTOM", "HOME_SETUP_STUDIO"]).optional() });
+  const publicBannerQuery = z.object({
+    position: z
+      .enum([
+        "HOME_HERO",
+        "HOME_HERO_RIGHT_TOP",
+        "HOME_HERO_RIGHT_BOTTOM",
+        "HOME_PROMO",
+        "HOME_BOTTOM",
+        "HOME_SETUP_STUDIO",
+      ])
+      .optional(),
+  });
   router.get("/banners", validateRequest({ query: publicBannerQuery }), async (_req, res) =>
     sendData(res, await s.publicBanners(res.locals.validated.query.position)),
   );

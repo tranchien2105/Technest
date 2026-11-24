@@ -14,7 +14,14 @@ export default function AnnouncementBar({ shipping, language, config }) {
   const messages = (
     <>
       <span>
-        <Truck size={15} /> {config?.href ? <a href={config.href} style={{ color: "inherit", textDecoration: "none" }}>{shippingMessage}</a> : shippingMessage}
+        <Truck size={15} />{" "}
+        {config?.href ? (
+          <a href={config.href} style={{ color: "inherit", textDecoration: "none" }}>
+            {shippingMessage}
+          </a>
+        ) : (
+          shippingMessage
+        )}
       </span>
       <span>
         <BadgeCheck size={15} />{" "}
@@ -34,7 +41,12 @@ export default function AnnouncementBar({ shipping, language, config }) {
         <div className="announcement-left">
           <div className="announcement-track">
             {[0, 1, 2, 3].map((copy) => (
-              <div className="announcement-group" key={copy} aria-hidden={copy > 0} inert={copy > 0 ? true : undefined}>
+              <div
+                className="announcement-group"
+                key={copy}
+                aria-hidden={copy > 0}
+                inert={copy > 0 ? true : undefined}
+              >
                 {messages}
               </div>
             ))}

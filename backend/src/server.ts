@@ -1,6 +1,6 @@
-import {fileURLToPath} from "node:url";
-import {createSeoRepository} from "./modules/seo/seo.repository.js";
-import {createSeoService} from "./modules/seo/seo.service.js";
+import { fileURLToPath } from "node:url";
+import { createSeoRepository } from "./modules/seo/seo.repository.js";
+import { createSeoService } from "./modules/seo/seo.service.js";
 import { Server } from "socket.io";
 import { createOrdersService } from "./modules/orders/orders.service.js";
 import { createOrderEventHub } from "./modules/orders/order-events.js";
@@ -19,6 +19,10 @@ import { createAccountService } from "./modules/account/account.service.js";
 import { createNotificationsService } from "./modules/notifications/notifications.service.js";
 import { createFlashSalesService } from "./modules/flash-sales/flash-sales.service.js";
 
+import { createPasswordResetRepository } from "./modules/auth/password-reset.repository.js";
+import { createPasswordResetService } from "./modules/auth/password-reset.service.js";
+import { createPasswordResetMail } from "./modules/email/password-reset-email.js";
+
 const env = loadEnv();
 const logger = createLogger(env.LOG_LEVEL);
 const { pool, db } = createDatabase(env.DATABASE_URL);
@@ -27,12 +31,23 @@ const inventoryService = createInventoryService(db);
 const authService = createAuthService(createAuthRepository(db), env.AUTH_JWT_SECRET);
 const emailRuntime = createTransactionalEmailRuntime(db, env, logger);
 const notificationsService = createNotificationsService(db);
-const flashSales = createFlashSalesService(db, (event, payload) => io?.to("public:flash-sales").emit(event, payload), redis);
+const flashSales = createFlashSalesService(
+  db,
+  (event, payload) => io?.to("public:flash-sales").emit(event, payload),
+  redis,
+);
 const ordersService = createOrdersService(db, (itemId) => flashSales.notifyItemUpdated(itemId));
 pool.on("error", () => logger.error("Unexpected PostgreSQL pool error"));
 redis.on("error", () => logger.error("Redis connection error"));
 const hub = createOrderEventHub();
-const notify = (payload: { userId: string; orderId: string; orderNumber: string; status: string; updatedAt: string; notification?: Awaited<ReturnType<typeof notificationsService.createNotification>> }) => {
+const notify = (payload: {
+  userId: string;
+  orderId: string;
+  orderNumber: string;
+  status: string;
+  updatedAt: string;
+  notification?: Awaited<ReturnType<typeof notificationsService.createNotification>>;
+}) => {
   const { userId, notification, ...event } = payload;
   hub.publish(userId, event);
   io?.to(`user:${userId}`).to("admin:orders").emit("order:status-updated", event);
@@ -40,16 +55,32 @@ const notify = (payload: { userId: string; orderId: string; orderNumber: string;
     publishNotification(userId, notification);
   }
 };
-const publishNotification = (userId: string, notification: NonNullable<Awaited<ReturnType<typeof notificationsService.createNotification>>>) => {
+const publishNotification = (
+  userId: string,
+  notification: NonNullable<Awaited<ReturnType<typeof notificationsService.createNotification>>>,
+) => {
   io?.to(`user:${userId}`).emit("notification:new", notification);
-  void notificationsService.getUnreadCount(Number(userId)).then((unreadCount) => {
-    io?.to(`user:${userId}`).emit("notification:unread-count", { unreadCount });
-  }).catch(() => logger.warn("Could not publish notification unread count"));
+  void notificationsService
+    .getUnreadCount(Number(userId))
+    .then((unreadCount) => {
+      io?.to(`user:${userId}`).emit("notification:unread-count", { unreadCount });
+    })
+    .catch(() => logger.warn("Could not publish notification unread count"));
 };
-const catalogService=createCatalogService(db);
-const seoService=createSeoService(createSeoRepository(pool),catalogService,{enforceOrigin:env.SEO_ENFORCE_ORIGIN,proxyHops:env.SEO_TRUST_PROXY_HOPS,environment:env.NODE_ENV,siteUrl:env.SEO_SITE_URL,indexingEnabled:env.SEO_INDEXING_ENABLED,verification:env.SEO_GOOGLE_VERIFICATION});
+const catalogService = createCatalogService(db);
+const seoService = createSeoService(createSeoRepository(pool), catalogService, {
+  enforceOrigin: env.SEO_ENFORCE_ORIGIN,
+  proxyHops: env.SEO_TRUST_PROXY_HOPS,
+  environment: env.NODE_ENV,
+  siteUrl: env.SEO_SITE_URL,
+  indexingEnabled: env.SEO_INDEXING_ENABLED,
+  verification: env.SEO_GOOGLE_VERIFICATION,
+});
 const app = createApp({
-  seo:{service:seoService,distDirectory:env.STOREFRONT_DIST||fileURLToPath(new URL("../../dist",import.meta.url))},
+  seo: {
+    service: seoService,
+    distDirectory: env.STOREFRONT_DIST || fileURLToPath(new URL("../../dist", import.meta.url)),
+  },
   orders: { service: ordersService, auth: authService, hub, notify },
   logger,
   corsOrigin: env.CORS_ORIGIN,
@@ -60,6 +91,11 @@ const app = createApp({
   },
   auth: {
     service: authService,
+    passwordReset: createPasswordResetService(
+      createPasswordResetRepository(db),
+      createPasswordResetMail(env),
+      (code) => logger.error({ code }, "Password reset email delivery failed"),
+    ),
     env,
     redis,
   },
@@ -68,7 +104,12 @@ const app = createApp({
     service: inventoryService,
     auth: authService,
   },
-  account: { service: createAccountService(db), auth: authService, redis, notify: publishNotification },
+  account: {
+    service: createAccountService(db),
+    auth: authService,
+    redis,
+    notify: publishNotification,
+  },
   notifications: { service: notificationsService, auth: authService },
   flashSales,
   publishNotification,
@@ -81,13 +122,23 @@ io.use(async (socket, next) => {
     const token: unknown = socket.handshake.auth.token;
     socket.data.user = typeof token === "string" ? await authService.authenticate(token) : null;
     next();
-  } catch { next(new Error("UNAUTHENTICATED")); }
+  } catch {
+    next(new Error("UNAUTHENTICATED"));
+  }
 });
 io.on("connection", (socket) => {
   const user = socket.data.user;
-  if (!user) { void socket.join("public:flash-sales"); return; }
+  if (!user) {
+    void socket.join("public:flash-sales");
+    return;
+  }
   void socket.join(`user:${user.id}`);
-  if (user.role === "ADMIN" || (user.role === "STAFF" && (user.permissions?.includes("orders:read") || user.permissions?.includes("orders:write")))) void socket.join("admin:orders");
+  if (
+    user.role === "ADMIN" ||
+    (user.role === "STAFF" &&
+      (user.permissions?.includes("orders:read") || user.permissions?.includes("orders:write")))
+  )
+    void socket.join("admin:orders");
   const expiry = setTimeout(() => socket.disconnect(true), 60_000);
   expiry.unref();
   socket.on("disconnect", () => clearTimeout(expiry));
@@ -173,7 +224,13 @@ try {
     await expireReservations();
     reservationExpiryWorker = setInterval(() => void expireReservations(), 60_000);
     reservationExpiryWorker.unref();
-    flashSaleScheduleWorker = setInterval(() => void flashSales.announceTimeTransitions().catch(() => logger.warn("Flash Sale schedule event check failed")), 5_000);
+    flashSaleScheduleWorker = setInterval(
+      () =>
+        void flashSales
+          .announceTimeTransitions()
+          .catch(() => logger.warn("Flash Sale schedule event check failed")),
+      5_000,
+    );
     flashSaleScheduleWorker.unref();
     await flashSales.announceTimeTransitions();
     server.listen(env.PORT, env.HOST, () =>

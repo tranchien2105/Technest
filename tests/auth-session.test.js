@@ -13,7 +13,13 @@ for (const role of ["CUSTOMER", "ADMIN"]) {
       else delete globalThis.document;
     });
 
-    const user = { id: 42, email: "session@example.test", fullName: "Test User", role, status: "ACTIVE" };
+    const user = {
+      id: 42,
+      email: "session@example.test",
+      fullName: "Test User",
+      role,
+      status: "ACTIVE",
+    };
     const calls = [];
     t.mock.method(globalThis, "fetch", async (url, options) => {
       calls.push({ url, options });
@@ -21,7 +27,10 @@ for (const role of ["CUSTOMER", "ADMIN"]) {
       if (url.endsWith("/auth/refresh")) {
         assert.equal(options.method, "POST");
         assert.equal(options.headers["X-CSRF-Token"], "test-csrf-cookie");
-        return Response.json({ success: true, data: { accessToken: "restored-access-token", csrfToken: "rotated-csrf-token", user } });
+        return Response.json({
+          success: true,
+          data: { accessToken: "restored-access-token", csrfToken: "rotated-csrf-token", user },
+        });
       }
       assert.ok(url.endsWith("/auth/me"));
       assert.equal(options.headers.Authorization, "Bearer restored-access-token");
